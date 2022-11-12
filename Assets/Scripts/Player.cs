@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     public GameObject CameraTr;
     float hAxis;
     float vAxis;
+    public bool isRun;
     public float speed;
     Vector3 moveVec;
     Animator anim;
@@ -24,11 +25,16 @@ public class Player : MonoBehaviour
     {
         hAxis = Input.GetAxisRaw("Horizontal");
         vAxis = Input.GetAxisRaw("Vertical");
-
+        isRun = Input.GetButton("Run");
         moveVec = new Vector3(hAxis, 0, vAxis).normalized;
 
-        transform.position += moveVec * speed * Time.deltaTime;
+        anim.SetBool("isWalk", moveVec != Vector3.zero);
+        anim.SetBool("isRun", isRun);
+
+        transform.position += moveVec * (isRun ? speed * 3 : speed) * Time.deltaTime;
         transform.LookAt(transform.position + moveVec);
+        
+
         
     }
 
