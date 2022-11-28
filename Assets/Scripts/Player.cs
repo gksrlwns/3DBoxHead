@@ -5,6 +5,9 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public GameObject CameraTr;
+    public GameObject[] weapons;
+
+    public bool[] hasweapons;
     public float speed;
 
     float hAxis;
