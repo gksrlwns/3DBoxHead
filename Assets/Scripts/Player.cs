@@ -6,9 +6,17 @@ public class Player : MonoBehaviour
 {
     public GameObject CameraTr;
     public GameObject[] weapons;
-
     public bool[] hasweapons;
     public float speed;
+
+    public int ammo;
+    public int coin;
+    public int health;
+    public int maxAmmo;
+    public int maxCoin;
+    public int maxHealth;
+
+    
 
     float hAxis;
     float vAxis;
@@ -19,19 +27,23 @@ public class Player : MonoBehaviour
     bool s1Down;
     bool s2Down;
     bool s3Down;
+    bool fDown;
     
 
     bool isRun;
     bool isDodge;
     bool isSwap;
+    bool isFireReady;
 
     int equipWeaponIndex = -1;
+    float fireDelay;
     
     Vector3 moveVec;
     Vector3 dodgeVec;
     Animator anim;
     Rigidbody rigid;
-    GameObject nearObject;
+    Weapon equipWeapon;
+
     private void Awake()
     {
         anim = GetComponentInChildren<Animator>();
@@ -51,6 +63,7 @@ public class Player : MonoBehaviour
         Dodge();
         Reload();
         Swap();
+        Attack();
     }
 
     void GetInput()
@@ -63,6 +76,7 @@ public class Player : MonoBehaviour
         s1Down = Input.GetButtonDown("Swap1");
         s2Down = Input.GetButtonDown("Swap2");
         s3Down = Input.GetButtonDown("Swap3");
+        fDown = Input.GetButtonDown("Fire1");
     }
 
     void Move()
@@ -73,6 +87,21 @@ public class Player : MonoBehaviour
         transform.position += moveVec * (shiftDown ? speed/2 : speed) * Time.deltaTime;
         anim.SetBool("isWalk", shiftDown);
         anim.SetBool("isRun", moveVec != Vector3.zero);
+    }
+
+    void Attack()
+    {
+       if (equipWeapon == null) return;
+
+       fireDelay += Time.deltaTime;
+       isFireReady = equipWeapon.rate < fireDelay;
+
+       if (fDown && isFireReady && !isDodge && !isSwap)
+       {
+            equipWeapon.Use();
+            anim.SetTrigger("doSwing");
+            fireDelay = 0;
+       }
     }
 
     void Swap()
@@ -87,12 +116,11 @@ public class Player : MonoBehaviour
         if (s3Down && hasweapons[2]) weaponIndex = 2;
         if((s1Down || s2Down || s3Down) && !isDodge)
         {
-            for(int i = 0; i < weapons.Length; i++)
-            {
-                weapons[i].SetActive(false);
-            }
+            if (equipWeapon != null)
+                equipWeapon.gameObject.SetActive(false);
             equipWeaponIndex = weaponIndex;
-            weapons[weaponIndex].SetActive(true);
+            equipWeapon = weapons[weaponIndex].GetComponent<Weapon>();
+            equipWeapon.gameObject.SetActive(true);
             
             anim.SetTrigger("doSwap");
             isSwap = true;
@@ -112,7 +140,7 @@ public class Player : MonoBehaviour
 
     void Dodge()
     {
-        if(spaceDown && !isDodge && !shiftDown &!isSwap)
+        if(spaceDown && moveVec != Vector3.zero && !isDodge && !shiftDown &&!isSwap)
         {
             dodgeVec = moveVec;
             speed *= 2;
@@ -148,11 +176,31 @@ public class Player : MonoBehaviour
     {
         if(other.CompareTag("Weapon"))
         {
-            nearObject = other.gameObject;
-            Item item = nearObject.GetComponent<Item>();
+            Item item = other.GetComponent<Item>();
             int weaponIndex = item.value;
             hasweapons[weaponIndex] = true;
             Destroy(other.gameObject);
+        }
+        if(other.CompareTag("Item"))
+        {
+            Item item = other.GetComponent<Item>();
+            switch(item.type)
+            {
+                case Item.Type.Ammo:
+                    ammo += item.value;
+                    if (ammo > maxAmmo) ammo = maxAmmo;
+                    break;
+                case Item.Type.Heart:
+                    health += item.value;
+                    if (health > maxHealth) health = maxHealth;
+                    break;
+                case Item.Type.Coin:
+                    coin += item.value;
+                    if (coin > maxCoin) coin = maxCoin;
+                    break;
+            }
+            Destroy(other.gameObject);
+            
         }
     }
 }
