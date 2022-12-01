@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1688968155790786677}
   - component: {fileID: 1906105439870617307}
   - component: {fileID: 8923175037637575564}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Weapon Hammer
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -104,7 +104,7 @@ GameObject:
   - component: {fileID: 3795394221413912330}
   - component: {fileID: 5461448736420954416}
   - component: {fileID: 9094779724165721898}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Particle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4857,7 +4857,7 @@ GameObject:
   - component: {fileID: 6439890568510780344}
   - component: {fileID: 7961086101996764887}
   - component: {fileID: 2981544207785944751}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Mesh Object
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4935,7 +4935,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2633153507503044887}
   - component: {fileID: 2931797960596288475}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}

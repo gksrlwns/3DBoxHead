@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7330929707770128008}
   - component: {fileID: 8485550919630465844}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 7920790046229534113}
   - component: {fileID: 3586055086705821937}
   - component: {fileID: 842691304462062503}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Mesh Object
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -182,7 +182,7 @@ GameObject:
   - component: {fileID: 656890965934828870}
   - component: {fileID: 234435270624468003}
   - component: {fileID: 1219146306832291613}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Particle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4937,7 +4937,7 @@ GameObject:
   - component: {fileID: 1835055306950966405}
   - component: {fileID: 3020272611925785111}
   - component: {fileID: 2058337561569959384}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Item Ammo
   m_TagString: Item
   m_Icon: {fileID: 0}
