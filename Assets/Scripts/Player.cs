@@ -31,6 +31,7 @@ public class Player : MonoBehaviour
     
 
     bool isRun;
+    bool isReload;
     bool isDodge;
     bool isSwap;
     bool isFireReady;
@@ -51,7 +52,7 @@ public class Player : MonoBehaviour
     }
     void Start()
     {
-        //SetCamPosition();
+        SetCamPosition();
     }
 
     // Update is called once per frame
@@ -76,7 +77,7 @@ public class Player : MonoBehaviour
         s1Down = Input.GetButtonDown("Swap1");
         s2Down = Input.GetButtonDown("Swap2");
         s3Down = Input.GetButtonDown("Swap3");
-        fDown = Input.GetButtonDown("Fire1");
+        fDown = Input.GetButton("Fire1");
     }
 
     void Move()
@@ -91,17 +92,17 @@ public class Player : MonoBehaviour
 
     void Attack()
     {
-       if (equipWeapon == null) return;
-
-       fireDelay += Time.deltaTime;
-       isFireReady = equipWeapon.rate < fireDelay;
-
-       if (fDown && isFireReady && !isDodge && !isSwap)
-       {
+        if (equipWeapon == null) return;
+        if (equipWeapon.curAmmo == 0) return;
+        fireDelay += Time.deltaTime;
+        isFireReady = equipWeapon.rate < fireDelay;
+        
+        if (fDown && isFireReady && !isDodge && !isSwap)
+        {
             equipWeapon.Use();
             anim.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
             fireDelay = 0;
-       }
+        }
     }
 
     void Swap()
@@ -160,10 +161,26 @@ public class Player : MonoBehaviour
 
     void Reload()
     {
-        if(rDown && moveVec == Vector3.zero && !isDodge & !isSwap)
+        if (!equipWeapon) return;
+        if (equipWeapon.type == Weapon.Type.Melee) return;
+        if (ammo == 0) return;
+
+        if((rDown && !isDodge & !isSwap && isFireReady ) || (equipWeapon.curAmmo == 0 && fDown && !isReload))
         {
+            isReload = true;
             anim.SetTrigger("doReload");
+
+            Invoke("ReloadOut", 3f);
         }
+    }
+
+    void ReloadOut()
+    {
+        int reAmmo = ammo < equipWeapon.maxAmmo ? ammo : equipWeapon.maxAmmo;
+        Debug.Log($"리로드{reAmmo},{ammo}");
+        equipWeapon.curAmmo = reAmmo;
+        ammo -= reAmmo;
+        isReload = false;
     }
     void SetCamPosition()
     {

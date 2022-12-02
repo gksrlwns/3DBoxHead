@@ -7,6 +7,8 @@ public class Weapon : MonoBehaviour
     public enum Type { Melee, Range};
     public Type type;
     public int damage;
+    public int curAmmo;
+    public int maxAmmo;
     public float rate;
     public BoxCollider meleeArea;
     public TrailRenderer trailEff;
@@ -17,12 +19,13 @@ public class Weapon : MonoBehaviour
 
     public void Use()
     {
-        if(type == Type.Melee)
+        if (type == Type.Melee)
         {
             StopCoroutine("Swing");
             StartCoroutine("Swing");
-        }else if(type == Type.Range)
+        } else if (type == Type.Range && curAmmo != 0)
         {
+            curAmmo--;
             StartCoroutine("Shot");
         }
         
@@ -45,6 +48,7 @@ public class Weapon : MonoBehaviour
         GameObject bulletClone = Instantiate(bullet, bulletPos.position, bulletPos.rotation);
         Rigidbody bulletRigid = bulletClone.GetComponent<Rigidbody>();
         bulletRigid.velocity = bulletPos.forward * 50f;
+
         yield return null;
         GameObject bulletCaseClone = Instantiate(bulletCase, bulletCasePos.position, bulletCasePos.rotation);
         Rigidbody bulletCaseRigid = bulletCaseClone.GetComponent<Rigidbody>();
