@@ -5,18 +5,24 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public GameObject CameraTr;
+    public GameObject Camera2Tr;
     public GameObject[] weapons;
     public bool[] hasweapons;
-    public float speed;
+    [Header("속도")]
+    public float moveSpeed;
+    public float mouseSensitivity;
 
+    [Header("카메라")]
+    public float cameraRotationMaxLimit;
+    public float cameraRotationMinLimit;
+    public float currentCameraRotation = 0;
+    [Header("아이템")]
     public int ammo;
     public int coin;
     public int health;
     public int maxAmmo;
     public int maxCoin;
     public int maxHealth;
-
-    
 
     float hAxis;
     float vAxis;
@@ -28,6 +34,7 @@ public class Player : MonoBehaviour
     bool s2Down;
     bool s3Down;
     bool fDown;
+    bool f2Down;
     
 
     bool isRun;
@@ -44,22 +51,26 @@ public class Player : MonoBehaviour
     Animator anim;
     Rigidbody rigid;
     Weapon equipWeapon;
+    Camera playerCamera;
 
     private void Awake()
     {
+        SetCamPosition();
+        playerCamera = GetComponentInChildren<Camera>();
         anim = GetComponentInChildren<Animator>();
         rigid = GetComponent<Rigidbody>();
     }
     void Start()
     {
-        SetCamPosition();
+        
     }
 
-    // Update is called once per frame
     void Update()
     {
         GetInput();
         Move();
+        CameraRotation();
+        AimSetCamPosition();
         Turn();
         Dodge();
         Reload();
@@ -78,14 +89,19 @@ public class Player : MonoBehaviour
         s2Down = Input.GetButtonDown("Swap2");
         s3Down = Input.GetButtonDown("Swap3");
         fDown = Input.GetButton("Fire1");
+        f2Down = Input.GetButton("Fire2");
     }
 
     void Move()
     {
-        moveVec = new Vector3(hAxis, 0, vAxis).normalized;
+        //moveVec = new Vector3(hAxis, 0, vAxis).normalized;
+        Vector3 moveX = transform.right * hAxis;
+        Vector3 moveZ = transform.forward * vAxis;
+        moveVec = (moveX + moveZ).normalized * (shiftDown ? moveSpeed / 2 : moveSpeed);
+        rigid.MovePosition(transform.position + moveVec * Time.deltaTime);
         if (isDodge) moveVec = dodgeVec;
         if (isSwap) moveVec = Vector3.zero;
-        transform.position += moveVec * (shiftDown ? speed/2 : speed) * Time.deltaTime;
+        //transform.position += moveVec * (shiftDown ? speed/2 : speed) * Time.deltaTime;
         anim.SetBool("isWalk", shiftDown);
         anim.SetBool("isRun", moveVec != Vector3.zero);
     }
@@ -93,7 +109,7 @@ public class Player : MonoBehaviour
     void Attack()
     {
         if (equipWeapon == null) return;
-        if (equipWeapon.curAmmo == 0) return;
+        //if (equipWeapon.type == Weapon.Type.Range && equipWeapon.curAmmo == 0) return;
         fireDelay += Time.deltaTime;
         isFireReady = equipWeapon.rate < fireDelay;
         
@@ -104,13 +120,11 @@ public class Player : MonoBehaviour
             fireDelay = 0;
         }
     }
-
     void Swap()
     {
         if (s1Down && (!hasweapons[0] || equipWeaponIndex == 0)) return;
         if (s2Down && (!hasweapons[1] || equipWeaponIndex == 1)) return;
         if (s3Down && (!hasweapons[2] || equipWeaponIndex == 2)) return;
-
         int weaponIndex = -1;
         if (s1Down && hasweapons[0]) weaponIndex = 0;
         if (s2Down && hasweapons[1]) weaponIndex = 1;
@@ -127,38 +141,60 @@ public class Player : MonoBehaviour
             isSwap = true;
             Invoke("SwapOut", 0.5f);
         }
-        
     }
-
     void SwapOut()
     {
         isSwap = false;
     }
+
+    void AimSetCamPosition()
+    {
+        if (f2Down && !isDodge)
+        {
+            Camera.main.transform.parent = Camera2Tr.transform;
+            Camera.main.transform.localPosition = Vector3.zero;
+            Camera.main.transform.localRotation = Quaternion.identity;
+        }
+        else
+            SetCamPosition();
+    }
+    void SetCamPosition()
+    {
+        Camera.main.transform.parent = CameraTr.transform;
+        Camera.main.transform.localPosition = Vector3.zero;
+        Camera.main.transform.localRotation = Quaternion.identity;
+    }
+    void CameraRotation()
+    {
+        float xRotation = Input.GetAxisRaw("Mouse Y");
+        float camerRotationX = xRotation * mouseSensitivity;
+        currentCameraRotation = Mathf.Clamp(currentCameraRotation, cameraRotationMinLimit, cameraRotationMaxLimit);
+        currentCameraRotation -= camerRotationX;
+        Camera.main.transform.localEulerAngles = new Vector3(currentCameraRotation, 0, 0);
+    }
     void Turn()
     {
-        transform.LookAt(transform.position + moveVec);
+        //transform.LookAt(transform.position + moveVec);
+        float yRotation = Input.GetAxisRaw("Mouse X");
+        Vector3 playerRotationY = new Vector3(0, yRotation, 0) * mouseSensitivity;
+        rigid.MoveRotation(rigid.rotation * Quaternion.Euler(playerRotationY));
     }
-
     void Dodge()
     {
         if(spaceDown && moveVec != Vector3.zero && !isDodge && !shiftDown &&!isSwap)
         {
             dodgeVec = moveVec;
-            speed *= 2;
+            moveSpeed *= 2;
             anim.SetTrigger("doDodge");
             isDodge = true;
-
             Invoke("DodgeOut", 0.5f);
-        }
-        
+        }        
     }
-
     void DodgeOut()
     {
-        speed /= 2;
+        moveSpeed /= 2;
         isDodge = false;
     }
-
     void Reload()
     {
         if (!equipWeapon) return;
@@ -169,7 +205,6 @@ public class Player : MonoBehaviour
         {
             isReload = true;
             anim.SetTrigger("doReload");
-
             Invoke("ReloadOut", 3f);
         }
     }
@@ -181,12 +216,6 @@ public class Player : MonoBehaviour
         equipWeapon.curAmmo = reAmmo;
         ammo -= reAmmo;
         isReload = false;
-    }
-    void SetCamPosition()
-    {
-        Camera.main.transform.parent = CameraTr.transform;
-        Camera.main.transform.localPosition = Vector3.zero;
-        Camera.main.transform.localRotation = Quaternion.identity;
     }
 
     private void OnTriggerEnter(Collider other)
