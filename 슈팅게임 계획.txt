@@ -25,7 +25,7 @@ UI
 게임 : ammo, health, coin 표시 + 무기 표시 + 적 마릿수 표시 + 스테이지 표시
 
 
-
+https://ansohxxn.github.io/unity%20lesson%203/ch2-7/
 
 
 

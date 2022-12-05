@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: cae3f9537776dea41855a724b56dd2c9
+guid: 28840bccd5510d842810df7bda632d0d
 ModelImporter:
   serializedVersion: 19301
   internalIDToNameTable:
@@ -45,6 +45,12 @@ ModelImporter:
   - first:
       74: 8349542763059015795
     second: Walk
+  - first:
+      74: -2459116968204564406
+    second: Armature|Attack B
+  - first:
+      74: -3176884680461750752
+    second: Aim
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -103,11 +109,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Attack A
-      takeName: Armature|Attack A
+      name: Armature|Attack B
+      takeName: Armature|Attack B
       internalID: 0
       firstFrame: 0
-      lastFrame: 25
+      lastFrame: 15
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -405,6 +411,35 @@ ModelImporter:
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Aim
+      takeName: Armature|Attack B
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0

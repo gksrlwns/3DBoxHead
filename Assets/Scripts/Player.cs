@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public GameObject CameraTr;
-    public GameObject Camera2Tr;
+    public Transform CameraTr;
+    public Transform Camera2Tr;
+    public Transform curCamTr;
     public GameObject[] weapons;
+    public GameObject crossHair;
     public bool[] hasweapons;
     [Header("속도")]
     public float moveSpeed;
     public float mouseSensitivity;
+    public float cameraSpeed;
 
     [Header("카메라")]
     public float cameraRotationMaxLimit;
@@ -42,6 +45,7 @@ public class Player : MonoBehaviour
     bool isDodge;
     bool isSwap;
     bool isFireReady;
+    bool isAim;
 
     int equipWeaponIndex = -1;
     float fireDelay;
@@ -52,17 +56,18 @@ public class Player : MonoBehaviour
     Rigidbody rigid;
     Weapon equipWeapon;
     Camera playerCamera;
+    
 
     private void Awake()
     {
-        SetCamPosition();
-        playerCamera = GetComponentInChildren<Camera>();
         anim = GetComponentInChildren<Animator>();
         rigid = GetComponent<Rigidbody>();
     }
     void Start()
     {
-        
+        Camera.main.transform.parent = curCamTr;
+        Camera.main.transform.localPosition = Vector3.zero;
+        Camera.main.transform.localRotation = Quaternion.identity;
     }
 
     void Update()
@@ -109,7 +114,7 @@ public class Player : MonoBehaviour
     void Attack()
     {
         if (equipWeapon == null) return;
-        //if (equipWeapon.type == Weapon.Type.Range && equipWeapon.curAmmo == 0) return;
+        if (equipWeapon.type == Weapon.Type.Range && equipWeapon.curAmmo == 0) return;
         fireDelay += Time.deltaTime;
         isFireReady = equipWeapon.rate < fireDelay;
         
@@ -149,20 +154,18 @@ public class Player : MonoBehaviour
 
     void AimSetCamPosition()
     {
+        if (!equipWeapon || equipWeapon.type == Weapon.Type.Melee) return;
+        
         if (f2Down && !isDodge)
         {
-            Camera.main.transform.parent = Camera2Tr.transform;
-            Camera.main.transform.localPosition = Vector3.zero;
-            Camera.main.transform.localRotation = Quaternion.identity;
+            curCamTr.position = Vector3.Lerp(curCamTr.position, Camera2Tr.position, cameraSpeed * Time.deltaTime);
+            crossHair.SetActive(true);
         }
         else
-            SetCamPosition();
-    }
-    void SetCamPosition()
-    {
-        Camera.main.transform.parent = CameraTr.transform;
-        Camera.main.transform.localPosition = Vector3.zero;
-        Camera.main.transform.localRotation = Quaternion.identity;
+        {
+            curCamTr.position = Vector3.Lerp(curCamTr.position, CameraTr.position, cameraSpeed * Time.deltaTime);
+            crossHair.SetActive(false);
+        }
     }
     void CameraRotation()
     {
@@ -183,6 +186,7 @@ public class Player : MonoBehaviour
     {
         if(spaceDown && moveVec != Vector3.zero && !isDodge && !shiftDown &&!isSwap)
         {
+            //transform.LookAt(transform.position + moveVec);
             dodgeVec = moveVec;
             moveSpeed *= 2;
             anim.SetTrigger("doDodge");
