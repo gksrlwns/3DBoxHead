@@ -45,6 +45,9 @@ ModelImporter:
   - first:
       74: 8349542763059015795
     second: Walk
+  - first:
+      74: 300441804898236626
+    second: Armature|Attack A
   externalObjects: {}
   materials:
     materialImportMode: 1

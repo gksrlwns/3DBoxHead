@@ -9,6 +9,8 @@ public class Player : MonoBehaviour
     public Transform curCamTr;
     public GameObject[] weapons;
     public GameObject crossHair;
+    public GameObject playerHead;
+    public GameObject playerWeaponHand;
     public bool[] hasweapons;
     [Header("속도")]
     public float moveSpeed;
@@ -37,7 +39,7 @@ public class Player : MonoBehaviour
     bool s2Down;
     bool s3Down;
     bool fDown;
-    bool f2Down;
+    public bool f2Down;
     
 
     bool isRun;
@@ -45,13 +47,14 @@ public class Player : MonoBehaviour
     bool isDodge;
     bool isSwap;
     bool isFireReady;
-    bool isAim;
+    public bool isAim;
 
     int equipWeaponIndex = -1;
     float fireDelay;
     
     Vector3 moveVec;
     Vector3 dodgeVec;
+    Transform playerHandRt;
     Animator anim;
     Rigidbody rigid;
     Weapon equipWeapon;
@@ -65,6 +68,8 @@ public class Player : MonoBehaviour
     }
     void Start()
     {
+        playerHandRt = playerWeaponHand.transform;
+        Debug.Log(playerHandRt.localEulerAngles);
         Camera.main.transform.parent = curCamTr;
         Camera.main.transform.localPosition = Vector3.zero;
         Camera.main.transform.localRotation = Quaternion.identity;
@@ -160,10 +165,14 @@ public class Player : MonoBehaviour
         {
             curCamTr.position = Vector3.Lerp(curCamTr.position, Camera2Tr.position, cameraSpeed * Time.deltaTime);
             crossHair.SetActive(true);
+            anim.SetBool("isAim", f2Down);
+            isAim = true;
         }
         else
         {
+            if (curCamTr.position == CameraTr.position) return;
             curCamTr.position = Vector3.Lerp(curCamTr.position, CameraTr.position, cameraSpeed * Time.deltaTime);
+            isAim = false;
             crossHair.SetActive(false);
         }
     }
@@ -174,6 +183,14 @@ public class Player : MonoBehaviour
         currentCameraRotation = Mathf.Clamp(currentCameraRotation, cameraRotationMinLimit, cameraRotationMaxLimit);
         currentCameraRotation -= camerRotationX;
         Camera.main.transform.localEulerAngles = new Vector3(currentCameraRotation, 0, 0);
+        playerHead.transform.localEulerAngles = new Vector3(currentCameraRotation, 0, 0);
+        
+        if (isAim)
+        {
+            playerWeaponHand.transform.localEulerAngles = new Vector3(0, 0, playerHandRt.localEulerAngles.z - currentCameraRotation);
+                //new Vector3(playerHandRt.localEulerAngles.x, playerHandRt.localEulerAngles.y, playerHandRt.localEulerAngles.z - currentCameraRotation);
+        }
+
     }
     void Turn()
     {

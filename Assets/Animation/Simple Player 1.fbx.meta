@@ -47,10 +47,13 @@ ModelImporter:
     second: Walk
   - first:
       74: -2459116968204564406
-    second: Armature|Attack B
+    second: Shot
   - first:
       74: -3176884680461750752
     second: Aim
+  - first:
+      74: 7109314376336957253
+    second: realAim
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -109,7 +112,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Attack B
+      name: Shot
       takeName: Armature|Attack B
       internalID: 0
       firstFrame: 0
