@@ -187,7 +187,7 @@ public class Player : MonoBehaviour
         
         if (isAim)
         {
-            playerWeaponHand.transform.localEulerAngles = new Vector3(0, 0, playerHandRt.localEulerAngles.z - currentCameraRotation);
+            //playerWeaponHand.transform.localEulerAngles = new Vector3(0, 0, playerHandRt.localEulerAngles.z - currentCameraRotation);
                 //new Vector3(playerHandRt.localEulerAngles.x, playerHandRt.localEulerAngles.y, playerHandRt.localEulerAngles.z - currentCameraRotation);
         }
 
