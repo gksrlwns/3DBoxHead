@@ -4,14 +4,10 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public Transform CameraTr;
-    public Transform Camera2Tr;
-    public Transform curCamTr;
+    [Header("무기")]
     public GameObject[] weapons;
-    public GameObject crossHair;
-    public GameObject playerHead;
-    public GameObject playerWeaponHand;
     public bool[] hasweapons;
+    public GameObject bulletPos;
     [Header("속도")]
     public float moveSpeed;
     public float mouseSensitivity;
@@ -21,6 +17,13 @@ public class Player : MonoBehaviour
     public float cameraRotationMaxLimit;
     public float cameraRotationMinLimit;
     public float currentCameraRotation = 0;
+    public Transform CameraTr;
+    public Transform Camera2Tr;
+    public Transform curCamTr;
+    public Vector3 playerWeaponHandRt;
+    public GameObject playerHead;
+    public GameObject playerWeaponHand;
+    public GameObject crossHair;
     [Header("아이템")]
     public int ammo;
     public int coin;
@@ -160,19 +163,16 @@ public class Player : MonoBehaviour
     void AimSetCamPosition()
     {
         if (!equipWeapon || equipWeapon.type == Weapon.Type.Melee) return;
-        
+        anim.SetBool("isAim", f2Down);
         if (f2Down && !isDodge)
         {
             curCamTr.position = Vector3.Lerp(curCamTr.position, Camera2Tr.position, cameraSpeed * Time.deltaTime);
             crossHair.SetActive(true);
-            anim.SetBool("isAim", f2Down);
-            isAim = true;
         }
         else
         {
             if (curCamTr.position == CameraTr.position) return;
             curCamTr.position = Vector3.Lerp(curCamTr.position, CameraTr.position, cameraSpeed * Time.deltaTime);
-            isAim = false;
             crossHair.SetActive(false);
         }
     }
@@ -184,10 +184,10 @@ public class Player : MonoBehaviour
         currentCameraRotation -= camerRotationX;
         Camera.main.transform.localEulerAngles = new Vector3(currentCameraRotation, 0, 0);
         playerHead.transform.localEulerAngles = new Vector3(currentCameraRotation, 0, 0);
-        
-        if (isAim)
+        bulletPos.transform.localEulerAngles = new Vector3(currentCameraRotation, 0, 0);
+        if (f2Down)
         {
-            //playerWeaponHand.transform.localEulerAngles = new Vector3(0, 0, playerHandRt.localEulerAngles.z - currentCameraRotation);
+            playerWeaponHand.transform.localEulerAngles = new Vector3(playerWeaponHandRt.x, playerWeaponHandRt.y, playerWeaponHandRt.z - currentCameraRotation);
                 //new Vector3(playerHandRt.localEulerAngles.x, playerHandRt.localEulerAngles.y, playerHandRt.localEulerAngles.z - currentCameraRotation);
         }
 
@@ -205,7 +205,7 @@ public class Player : MonoBehaviour
         {
             //transform.LookAt(transform.position + moveVec);
             dodgeVec = moveVec;
-            moveSpeed *= 2;
+            //moveSpeed *= 2;
             anim.SetTrigger("doDodge");
             isDodge = true;
             Invoke("DodgeOut", 0.5f);
@@ -213,7 +213,7 @@ public class Player : MonoBehaviour
     }
     void DodgeOut()
     {
-        moveSpeed /= 2;
+        //moveSpeed /= 2;
         isDodge = false;
     }
     void Reload()

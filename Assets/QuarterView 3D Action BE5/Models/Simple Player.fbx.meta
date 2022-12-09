@@ -48,6 +48,9 @@ ModelImporter:
   - first:
       74: 300441804898236626
     second: Armature|Attack A
+  - first:
+      74: -2459116968204564406
+    second: Armature|Attack B
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -106,11 +109,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Attack A
-      takeName: Armature|Attack A
+      name: Armature|Attack B
+      takeName: Armature|Attack B
       internalID: 0
       firstFrame: 0
-      lastFrame: 25
+      lastFrame: 15
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
