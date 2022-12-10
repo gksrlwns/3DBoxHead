@@ -89,6 +89,20 @@ public class Player : MonoBehaviour
         Reload();
         Swap();
         Attack();
+        AimTarget();
+    }
+
+    void AimTarget()
+    {
+        //Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * 100f, Color.red, 0.5f);
+        RaycastHit hit;
+        if(Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit))
+        {
+            bulletPos.transform.LookAt(hit.point);
+            //Debug.DrawRay(bulletPos.transform.position, bulletPos.transform.forward * 100f, Color.green, 0.5f);
+        }
+        
+        
     }
 
     void GetInput()
@@ -142,7 +156,7 @@ public class Player : MonoBehaviour
         if (s1Down && hasweapons[0]) weaponIndex = 0;
         if (s2Down && hasweapons[1]) weaponIndex = 1;
         if (s3Down && hasweapons[2]) weaponIndex = 2;
-        if((s1Down || s2Down || s3Down) && !isDodge)
+        if((s1Down || s2Down || s3Down) && !isDodge && !isSwap)
         {
             if (equipWeapon != null)
                 equipWeapon.gameObject.SetActive(false);
