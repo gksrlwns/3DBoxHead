@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
     public GameObject playerHead;
     public GameObject playerWeaponHand;
     public GameObject crossHair;
+    public GameObject bulletAim;
     [Header("아이템")]
     public int ammo;
     public int coin;
@@ -63,7 +64,6 @@ public class Player : MonoBehaviour
     Weapon equipWeapon;
     Camera playerCamera;
     
-
     private void Awake()
     {
         anim = GetComponentInChildren<Animator>();
@@ -92,13 +92,35 @@ public class Player : MonoBehaviour
         AimTarget();
     }
 
+    void FixRotation()
+    {
+        rigid.angularVelocity = Vector3.zero;
+    }
+    private void FixedUpdate()
+    {
+        FixRotation();
+    }
+
     void AimTarget()
     {
         //Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * 100f, Color.red, 0.5f);
         RaycastHit hit;
+        RaycastHit bulHit;
+        int layerMask = 1 << LayerMask.NameToLayer("MiddleWall");
         if(Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit))
         {
+            Debug.DrawLine(Camera.main.transform.position, hit.point);
             bulletPos.transform.LookAt(hit.point);
+            //layer로 bullet과 충돌 x, bulhit을 플레이어 방향으로 조금 이동
+            if(Physics.Linecast(bulletPos.transform.position, hit.point, out bulHit, layerMask))
+            {
+                Debug.DrawLine(bulletPos.transform.position, bulHit.point);
+                Vector3 dir = transform.position - bulHit.point;
+                dir.Normalize();
+                bulletAim.transform.forward = dir;
+                bulletAim.transform.position = bulHit.point + dir * 0.5f;
+                Debug.Log(bulHit.point);
+            }
             //Debug.DrawRay(bulletPos.transform.position, bulletPos.transform.forward * 100f, Color.green, 0.5f);
         }
         
@@ -283,5 +305,15 @@ public class Player : MonoBehaviour
             Destroy(other.gameObject);
             
         }
+
+        if(other.CompareTag("EnemyBullet"))
+        {
+            Bullet bullet = other.GetComponent<Bullet>();
+            health -= bullet.bullet_damage;
+        }
+    }
+    IEnumerator OnDamage()
+    {
+        yield return null;
     }
 }

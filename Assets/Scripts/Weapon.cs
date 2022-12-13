@@ -12,7 +12,7 @@ public class Weapon : MonoBehaviour
     public float rate;
     public BoxCollider meleeArea;
     public TrailRenderer trailEff;
-    public GameObject bullet;
+    public GameObject bulletPrefab;
     public Transform bulletPos;
     public GameObject bulletCase;
     public Transform bulletCasePos;
@@ -45,8 +45,10 @@ public class Weapon : MonoBehaviour
     IEnumerator Shot()
     {
         yield return null;
-        GameObject bulletClone = Instantiate(bullet, bulletPos.position, bulletPos.rotation);
+        GameObject bulletClone = Instantiate(bulletPrefab, bulletPos.position, bulletPos.rotation);
         Rigidbody bulletRigid = bulletClone.GetComponent<Rigidbody>();
+        Bullet bullet = bulletClone.GetComponent<Bullet>();
+        bullet.BulletDamege(damage);
         bulletRigid.velocity = bulletPos.forward * 50f;
 
         yield return null;

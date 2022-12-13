@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1264409353434109177}
   m_Layer: 9
   m_Name: Bullet SubMachineGun
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -164,7 +164,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 497207874061601198}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.2
@@ -181,3 +181,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b9283ca890f10a4ca941c4e4d71de37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isMelee: 0
+  bullet_damage: 0

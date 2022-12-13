@@ -8,6 +8,9 @@ TagManager:
   - Wall
   - Weapon
   - Item
+  - Enemy
+  - Bullet
+  - EnemyBullet
   layers:
   - Default
   - TransparentFX
@@ -21,12 +24,12 @@ TagManager:
   - Bullet
   - BulletCase
   - Item
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - MiddleWall
+  - Enemy
+  - EnemyDead
+  - Floor
+  - Wall
+  - EnemyBullet
   - 
   - 
   - 
