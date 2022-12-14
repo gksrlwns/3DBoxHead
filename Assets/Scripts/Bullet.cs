@@ -17,11 +17,13 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!isMelee && other.gameObject.CompareTag("Wall"))
+        if (!isMelee && (other.gameObject.CompareTag("Wall") || other.gameObject.CompareTag("Floor")))
         {
             Destroy(this.gameObject);
         }
     }
+
+    
 
     public void BulletDamege(int damage)
     {

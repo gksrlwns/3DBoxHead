@@ -51,6 +51,7 @@ public class Player : MonoBehaviour
     bool isDodge;
     bool isSwap;
     bool isFireReady;
+    bool isDamage;
     public bool isAim;
 
     int equipWeaponIndex = -1;
@@ -63,11 +64,13 @@ public class Player : MonoBehaviour
     Rigidbody rigid;
     Weapon equipWeapon;
     Camera playerCamera;
+    MeshRenderer[] meshs;
     
     private void Awake()
     {
         anim = GetComponentInChildren<Animator>();
         rigid = GetComponent<Rigidbody>();
+        meshs = GetComponentsInChildren<MeshRenderer>();
     }
     void Start()
     {
@@ -95,6 +98,7 @@ public class Player : MonoBehaviour
     void FixRotation()
     {
         rigid.angularVelocity = Vector3.zero;
+        rigid.velocity = new Vector3(rigid.velocity.x, 0, rigid.velocity.z);
     }
     private void FixedUpdate()
     {
@@ -126,6 +130,8 @@ public class Player : MonoBehaviour
         
         
     }
+
+    #region 플레이어 동작
 
     void GetInput()
     {
@@ -274,7 +280,21 @@ public class Player : MonoBehaviour
         ammo -= reAmmo;
         isReload = false;
     }
+    #endregion
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Enemy"))
+        {
+            if (!isDamage)
+            {
+                Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+                health -= enemy.enemyPhysicalDamage;
+                StartCoroutine(OnDamage());
+            }
+        }
+        
+    }
     private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("Weapon"))
@@ -303,17 +323,26 @@ public class Player : MonoBehaviour
                     break;
             }
             Destroy(other.gameObject);
-            
+        }
+        if (other.CompareTag("EnemyBullet"))
+        {
+            if (!isDamage)
+            {
+                Bullet bullet = other.GetComponent<Bullet>();
+                health -= bullet.bullet_damage;
+                StartCoroutine(OnDamage());
+            }
         }
 
-        if(other.CompareTag("EnemyBullet"))
-        {
-            Bullet bullet = other.GetComponent<Bullet>();
-            health -= bullet.bullet_damage;
-        }
     }
     IEnumerator OnDamage()
     {
-        yield return null;
+        isDamage = true;
+        for (int i = 0; i < meshs.Length; i++)
+            meshs[i].material.color = new Color(1, 1, 1, 0.5f);
+        yield return new WaitForSeconds(1f);
+        isDamage = false;
+        for (int i = 0; i < meshs.Length; i++)
+            meshs[i].material.color = new Color(1, 1, 1, 1);
     }
 }
