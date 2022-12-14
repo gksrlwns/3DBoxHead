@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour
     public float maxHp;
     public float curHp;
     public float targetRadius = 1.5f;
-    public float targetRange = 3f;
+    public float targetRange = 2f;
     public int enemyPhysicalDamage = 10;
     public int enemyBulletDamage;
 
@@ -47,8 +47,8 @@ public class Enemy : MonoBehaviour
     }
     private void Update()
     {
-        if (!nav.enabled) return;
-        nav.SetDestination(player.position);
+        if (nav.enabled) 
+            nav.SetDestination(player.position);
         TargetAttackRange();
     }
 
@@ -80,18 +80,20 @@ public class Enemy : MonoBehaviour
     {
         isChase = false;
         isAttack = true;
-        anim.SetBool("isAttack", isAttack);
-
+        anim.SetBool("isAttack", true);
+        nav.enabled = false;
         switch (enemyType)
         {
             case Type.A:
+                //rigid.AddForce(transform.forward * 5, ForceMode.Impulse);
                 yield return new WaitForSeconds(1f);
                 break;
             case Type.B:
-                rigid.AddForce(transform.forward * 20, ForceMode.Impulse);
+                rigid.AddForce(transform.forward * 30, ForceMode.Impulse);
                 yield return new WaitForSeconds(3f);
                 break;
             case Type.C:
+                yield return new WaitForSeconds(0.5f);
                 var enemyBulletClone = Instantiate(enemyBulletPrefab, enemyBulletPos.position,enemyBulletPos.rotation);
                 Rigidbody enemyBulletRigid = enemyBulletClone.GetComponent<Rigidbody>();
                 Bullet enemyBullet = enemyBulletClone.GetComponent<Bullet>();
@@ -102,7 +104,8 @@ public class Enemy : MonoBehaviour
         }
         isChase = true;
         isAttack = false;
-        anim.SetBool("isAttack", isAttack);
+        anim.SetBool("isAttack", false);
+        nav.enabled = true;
     }
     private void OnDrawGizmos()
     {
@@ -146,7 +149,7 @@ public class Enemy : MonoBehaviour
             nav.enabled = false;
             //넉백
             reactVec = reactVec.normalized;
-            reactVec += Vector3.up * 3;
+            reactVec += Vector3.up;
             rigid.AddForce(reactVec * 10, ForceMode.Impulse);
             anim.SetTrigger("doDie");
             Destroy(this.gameObject, 2f);
