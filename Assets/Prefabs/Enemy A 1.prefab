@@ -77,7 +77,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyType: 0
-  player: {fileID: 0}
+  player: {fileID: 5903297864969995812, guid: be088041be0f442468a0f00974221200, type: 3}
   enemyBulletPrefab: {fileID: 0}
   enemyBulletPos: {fileID: 0}
   maxHp: 50

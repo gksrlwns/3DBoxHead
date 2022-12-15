@@ -22,9 +22,6 @@ public class Bullet : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-
-    
-
     public void BulletDamege(int damage)
     {
         bullet_damage = damage;

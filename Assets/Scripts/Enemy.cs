@@ -5,9 +5,9 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    public enum Type {A, B, C};
+    public enum Type {A, B, C, D};
     public Type enemyType;
-    public Transform player;
+    public Transform target;
     public GameObject enemyBulletPrefab;
     public Transform enemyBulletPos;
     public float maxHp;
@@ -20,25 +20,23 @@ public class Enemy : MonoBehaviour
     bool isChase;
     bool isAttack;
 
-    
-
-    Type type;
-    NavMeshAgent nav;
-    Rigidbody rigid;
-    Material mat;
-    Animator anim;
+    protected NavMeshAgent nav;
+    protected Rigidbody rigid;
+    protected MeshRenderer[] meshs;
+    protected Animator anim;
     
 
     private void Awake()
     {
         nav = GetComponent<NavMeshAgent>();
         rigid = GetComponent<Rigidbody>();
-        mat = GetComponentInChildren<MeshRenderer>().material;
+        meshs = GetComponentsInChildren<MeshRenderer>();
         anim = GetComponentInChildren<Animator>();
     }
     private void Start()
     {
-        Invoke("ChaseOn", 2f);
+        if(enemyType != Type.D)
+            Invoke("ChaseOn", 2f);
     }
     
     private void FixedUpdate()
@@ -48,7 +46,7 @@ public class Enemy : MonoBehaviour
     private void Update()
     {
         if (nav.enabled) 
-            nav.SetDestination(player.position);
+            nav.SetDestination(target.position);
         TargetAttackRange();
     }
 
@@ -59,7 +57,7 @@ public class Enemy : MonoBehaviour
     }
     void FixRotation()
     {
-        if (isChase)
+        if(isChase)
         {
             rigid.velocity = Vector3.zero;
             rigid.angularVelocity = Vector3.zero;
@@ -68,7 +66,8 @@ public class Enemy : MonoBehaviour
 
     void TargetAttackRange()
     {
-        
+        if (enemyType != Type.D) return;
+
         RaycastHit[] raycastHits = Physics.SphereCastAll(transform.position, targetRadius, transform.forward, targetRange, LayerMask.GetMask("Player"));
 
         if(raycastHits.Length > 0 && !isAttack)
@@ -82,10 +81,11 @@ public class Enemy : MonoBehaviour
         isAttack = true;
         anim.SetBool("isAttack", true);
         nav.enabled = false;
+        yield return new WaitForSeconds(0.5f);
         switch (enemyType)
         {
             case Type.A:
-                //rigid.AddForce(transform.forward * 5, ForceMode.Impulse);
+                rigid.AddForce(transform.forward * 5, ForceMode.Impulse);
                 yield return new WaitForSeconds(1f);
                 break;
             case Type.B:
@@ -93,7 +93,6 @@ public class Enemy : MonoBehaviour
                 yield return new WaitForSeconds(3f);
                 break;
             case Type.C:
-                yield return new WaitForSeconds(0.5f);
                 var enemyBulletClone = Instantiate(enemyBulletPrefab, enemyBulletPos.position,enemyBulletPos.rotation);
                 Rigidbody enemyBulletRigid = enemyBulletClone.GetComponent<Rigidbody>();
                 Bullet enemyBullet = enemyBulletClone.GetComponent<Bullet>();
@@ -137,13 +136,22 @@ public class Enemy : MonoBehaviour
 
     IEnumerator OnDamage(Vector3 reactVec)
     {
-        mat.color = Color.red;
+        for (int i = 0; i < meshs.Length; i++)
+        {
+            meshs[i].material.color = Color.red;
+        }
         yield return new WaitForSeconds(0.1f);
         if (curHp > 0)
-            mat.color = Color.white;
+            for (int i = 0; i < meshs.Length; i++)
+            {
+                meshs[i].material.color = Color.white;
+            }
         else
         {
-            mat.color = Color.gray;
+            for (int i = 0; i < meshs.Length; i++)
+            {
+                meshs[i].material.color = Color.gray;
+            }
             this.gameObject.layer = 14;
             isChase = false;
             nav.enabled = false;
