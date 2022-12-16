@@ -123,7 +123,7 @@ public class Player : MonoBehaviour
                 dir.Normalize();
                 bulletAim.transform.forward = dir;
                 bulletAim.transform.position = bulHit.point + dir * 0.5f;
-                Debug.Log(bulHit.point);
+                //Debug.Log(bulHit.point);
             }
             //Debug.DrawRay(bulletPos.transform.position, bulletPos.transform.forward * 100f, Color.green, 0.5f);
         }
@@ -329,9 +329,11 @@ public class Player : MonoBehaviour
             if (!isDamage)
             {
                 Bullet bullet = other.GetComponent<Bullet>();
-                health -= bullet.bullet_damage;
                 StartCoroutine(OnDamage());
+                Debug.Log($"{bullet.bullet_damage} 데미지");
+                health -= bullet.bullet_damage;
             }
+            Destroy(other.gameObject);
         }
 
     }

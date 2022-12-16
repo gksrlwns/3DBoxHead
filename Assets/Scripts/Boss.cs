@@ -34,7 +34,9 @@ public class Boss : Enemy
     IEnumerator BossPattern()
     {
         yield return new WaitForSeconds(0.1f);
-        StartCoroutine(Shot());
+        //StartCoroutine(Shot());
+
+
         //int random = Random.Range(0, 3);
         //switch(random)
         //{
@@ -54,14 +56,19 @@ public class Boss : Enemy
     {
         anim.SetTrigger("doShot");
         var bulletCloneA = Instantiate(BossBulletPrefab, BossBulletPosA.position, BossBulletPosA.rotation);
-        var bulletCloneB = Instantiate(BossBulletPrefab, BossBulletPosB.position, BossBulletPosB.rotation);
         BossBullet bulletA = bulletCloneA.GetComponent<BossBullet>();
-        BossBullet bulletB = bulletCloneB.GetComponent<BossBullet>();
+        bulletA.Seek(target);
         bulletA.BulletDamege(BossBulletDamage);
+
+        yield return new WaitForSeconds(0.5f);
+
+        var bulletCloneB = Instantiate(BossBulletPrefab, BossBulletPosB.position, BossBulletPosB.rotation);
+        BossBullet bulletB = bulletCloneB.GetComponent<BossBullet>();
+        bulletB.Seek(target);
         bulletB.BulletDamege(BossBulletDamage);
-        bulletA.target = target;
-        bulletB.target = target;
+
         yield return new WaitForSeconds(3f);
+
         StartCoroutine(BossPattern());
     }
     IEnumerator BigShot()

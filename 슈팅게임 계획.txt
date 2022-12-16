@@ -1,6 +1,17 @@
+보스패턴 : Bullet 발사, 내려찍기, enemy 소환
+
+보스 UI : 체력바 UI
+
+플레이어 UI : 오른쪽 하단 애니메이션을 통해 스왑하는 형식 구현
+
+스테이지 : 4기둥 4벽
+보스스테이지 : 스케일만 더 크게
+
+GM : 남은시간, 몬스터 수, Game Over, Game Start UI
+
+Photon
+
 FPS 조작감
-
-
 해야할 것 Enemy 만들기, Player UI 만들기 Stage(맵)만들기, GM게임 로직 만들기, 포톤서버 추가
 
 

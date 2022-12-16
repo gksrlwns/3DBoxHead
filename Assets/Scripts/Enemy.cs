@@ -32,10 +32,11 @@ public class Enemy : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         meshs = GetComponentsInChildren<MeshRenderer>();
         anim = GetComponentInChildren<Animator>();
+        
     }
     private void Start()
     {
-        if(enemyType != Type.D)
+        if (enemyType != Type.D)
             Invoke("ChaseOn", 2f);
     }
     

@@ -6,6 +6,7 @@ public class Bullet : MonoBehaviour
 {
     public bool isMelee;
     public int bullet_damage;
+
     private void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.CompareTag("Floor"))
