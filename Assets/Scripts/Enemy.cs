@@ -19,6 +19,7 @@ public class Enemy : MonoBehaviour
 
     bool isChase;
     bool isAttack;
+    protected bool isDead;
 
     protected NavMeshAgent nav;
     protected Rigidbody rigid;
@@ -32,6 +33,7 @@ public class Enemy : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         meshs = GetComponentsInChildren<MeshRenderer>();
         anim = GetComponentInChildren<Animator>();
+        target = FindObjectOfType<Player>().transform;
         
     }
     private void Start()
@@ -40,7 +42,7 @@ public class Enemy : MonoBehaviour
             Invoke("ChaseOn", 2f);
     }
     
-    private void FixedUpdate()
+    protected void FixedUpdate()
     {
         FixRotation();
     }
@@ -56,9 +58,9 @@ public class Enemy : MonoBehaviour
         isChase = true;
         anim.SetBool("isWalk", isChase);
     }
-    void FixRotation()
+    protected void FixRotation()
     {
-        if(isChase)
+        if (isChase)
         {
             rigid.velocity = Vector3.zero;
             rigid.angularVelocity = Vector3.zero;
@@ -67,7 +69,7 @@ public class Enemy : MonoBehaviour
 
     void TargetAttackRange()
     {
-        if (enemyType != Type.D) return;
+        if (isDead && enemyType != Type.D) return;
 
         RaycastHit[] raycastHits = Physics.SphereCastAll(transform.position, targetRadius, transform.forward, targetRange, LayerMask.GetMask("Player"));
 
@@ -155,6 +157,7 @@ public class Enemy : MonoBehaviour
             }
             this.gameObject.layer = 14;
             isChase = false;
+            isDead = false;
             nav.enabled = false;
             //넉백
             reactVec = reactVec.normalized;

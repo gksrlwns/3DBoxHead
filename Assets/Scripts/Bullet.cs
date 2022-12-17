@@ -5,6 +5,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public bool isMelee;
+    public bool isBossBullet;
     public int bullet_damage;
 
     private void OnCollisionEnter(Collision collision)
@@ -22,6 +23,8 @@ public class Bullet : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+        if (isBossBullet)
+            Destroy(this.gameObject);
     }
     public void BulletDamege(int damage)
     {

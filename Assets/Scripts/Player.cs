@@ -326,25 +326,32 @@ public class Player : MonoBehaviour
         }
         if (other.CompareTag("EnemyBullet"))
         {
+            Bullet bullet = other.GetComponent<Bullet>();
             if (!isDamage)
             {
-                Bullet bullet = other.GetComponent<Bullet>();
-                StartCoroutine(OnDamage());
+                
+                bool isBossAttack = other.name == "BossMeleeArea";
+                StartCoroutine(OnDamage(isBossAttack));
                 Debug.Log($"{bullet.bullet_damage} 데미지");
                 health -= bullet.bullet_damage;
             }
-            Destroy(other.gameObject);
+            if(!bullet.isMelee)
+                Destroy(other.gameObject);
         }
 
     }
-    IEnumerator OnDamage()
+    IEnumerator OnDamage(bool isBossAttack = false)
     {
         isDamage = true;
+        if (isBossAttack)
+            rigid.AddForce(transform.forward * -20f, ForceMode.Impulse);
         for (int i = 0; i < meshs.Length; i++)
             meshs[i].material.color = new Color(1, 1, 1, 0.5f);
         yield return new WaitForSeconds(1f);
         isDamage = false;
         for (int i = 0; i < meshs.Length; i++)
             meshs[i].material.color = new Color(1, 1, 1, 1);
+        if (isBossAttack)
+            rigid.velocity = Vector3.zero;
     }
 }
