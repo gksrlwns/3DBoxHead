@@ -857,7 +857,7 @@ MonoBehaviour:
   health: 100
   maxAmmo: 999
   maxCoin: 99999
-  maxHealth: 1100
+  maxHealth: 100
   f2Down: 0
   isAim: 0
 --- !u!54 &1080030158

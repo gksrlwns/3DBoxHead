@@ -52,7 +52,9 @@ public class Player : MonoBehaviour
     bool isSwap;
     bool isFireReady;
     bool isDamage;
-    public bool isAim;
+    bool isAim;
+    public bool isDead;
+    
 
     int equipWeaponIndex = -1;
     float fireDelay;
@@ -83,6 +85,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if (isDead) return;
         GetInput();
         Move();
         CameraRotation();
@@ -93,6 +96,12 @@ public class Player : MonoBehaviour
         Swap();
         Attack();
         AimTarget();
+        if(health <= 0)
+        {
+            anim.SetTrigger("doDie");
+            isDead = true;
+            this.gameObject.layer = 18;
+        }
     }
 
     void FixRotation()
