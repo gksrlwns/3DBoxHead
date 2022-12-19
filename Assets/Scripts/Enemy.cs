@@ -13,7 +13,8 @@ public class Enemy : MonoBehaviour
     public float maxHp;
     public float curHp;
     public float targetRadius = 1.5f;
-    public float targetRange = 2f;
+    public float targeAttackRange = 2f;
+    public float targetSearchRange = 20f;
     public int enemyPhysicalDamage = 10;
     public int enemyBulletDamage;
 
@@ -38,6 +39,7 @@ public class Enemy : MonoBehaviour
     }
     private void Start()
     {
+        //nav.enabled = false;
         if (enemyType != Type.D)
             Invoke("ChaseOn", 2f);
     }
@@ -48,7 +50,13 @@ public class Enemy : MonoBehaviour
     }
     private void Update()
     {
-        if (nav.enabled) 
+        TargetSearching();
+        if (!target)
+        {
+            anim.SetBool("isWalk", false);
+            return;
+        }
+        if (nav.enabled)
             nav.SetDestination(target.position);
         TargetAttackRange();
     }
@@ -66,12 +74,38 @@ public class Enemy : MonoBehaviour
             rigid.angularVelocity = Vector3.zero;
         }
     }
+    void TargetSearching()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, targetSearchRange);
+        
+        float shortesDistance = Mathf.Infinity;
+        GameObject nearPlayer = null;
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            if (colliders[i].CompareTag("Player"))
+            {
+                float distanceToenemy = Vector3.Distance(transform.position, colliders[i].transform.position);
+                if (distanceToenemy < shortesDistance)
+                {
+                    shortesDistance = distanceToenemy;
+                    nearPlayer = colliders[i].gameObject;
+                }
+            }
+        }
+        if (nearPlayer)
+        {
+            target = nearPlayer.transform;
+            //nav.enabled = true;
+        }
+        else
+            target = null;
+    }
 
     void TargetAttackRange()
     {
         if (isDead && enemyType != Type.D) return;
 
-        RaycastHit[] raycastHits = Physics.SphereCastAll(transform.position, targetRadius, transform.forward, targetRange, LayerMask.GetMask("Player"));
+        RaycastHit[] raycastHits = Physics.SphereCastAll(transform.position, targetRadius, transform.forward, targeAttackRange, LayerMask.GetMask("Player"));
 
         if(raycastHits.Length > 0 && !isAttack)
         {
@@ -112,8 +146,9 @@ public class Enemy : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, targetRange);
+        Gizmos.DrawWireSphere(transform.position, targetSearchRange);
         Gizmos.DrawWireSphere(transform.position, targetRadius);
+        Gizmos.DrawWireSphere(transform.position, targeAttackRange);
     }
     private void OnTriggerEnter(Collider other)
     {

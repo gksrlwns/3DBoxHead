@@ -12,6 +12,7 @@ TagManager:
   - Bullet
   - EnemyBullet
   - Melee
+  - PlayerDead
   layers:
   - Default
   - TransparentFX

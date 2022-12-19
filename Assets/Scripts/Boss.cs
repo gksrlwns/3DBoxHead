@@ -62,7 +62,7 @@ public class Boss : Enemy
                 StartCoroutine(SpawnEnemy());
                 break;
             case 2:
-                RaycastHit[] raycastHits = Physics.SphereCastAll(transform.position, targetRadius, transform.forward, targetRange, LayerMask.GetMask("Player"));
+                RaycastHit[] raycastHits = Physics.SphereCastAll(transform.position, targetRadius, transform.forward, targetSearchRange, LayerMask.GetMask("Player"));
                 if (raycastHits.Length > 0 && isLockOn)
                 {
                     StartCoroutine(Taunt());

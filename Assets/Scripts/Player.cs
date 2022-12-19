@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
     public GameObject playerWeaponHand;
     public GameObject crossHair;
     public GameObject bulletAim;
+    
     [Header("아이템")]
     public int ammo;
     public int coin;
@@ -43,7 +44,7 @@ public class Player : MonoBehaviour
     bool s2Down;
     bool s3Down;
     bool fDown;
-    public bool f2Down;
+    bool f2Down;
     
 
     bool isRun;
@@ -53,6 +54,7 @@ public class Player : MonoBehaviour
     bool isFireReady;
     bool isDamage;
     bool isAim;
+    bool isMove = true;
     public bool isDead;
     
 
@@ -65,22 +67,24 @@ public class Player : MonoBehaviour
     Animator anim;
     Rigidbody rigid;
     Weapon equipWeapon;
-    Camera playerCamera;
     MeshRenderer[] meshs;
-    
+    Camera playerCamera;
+
     private void Awake()
     {
         anim = GetComponentInChildren<Animator>();
         rigid = GetComponent<Rigidbody>();
         meshs = GetComponentsInChildren<MeshRenderer>();
+        playerCamera = Camera.main;
     }
     void Start()
     {
         playerHandRt = playerWeaponHand.transform;
-        Debug.Log(playerHandRt.localEulerAngles);
-        Camera.main.transform.parent = curCamTr;
-        Camera.main.transform.localPosition = Vector3.zero;
-        Camera.main.transform.localRotation = Quaternion.identity;
+        //Debug.Log(playerHandRt.localEulerAngles);
+        playerCamera.transform.parent = curCamTr;
+        playerCamera.transform.localPosition = Vector3.zero;
+        playerCamera.transform.localRotation = Quaternion.identity;
+        //secondCamera.enabled = false;
     }
 
     void Update()
@@ -91,16 +95,14 @@ public class Player : MonoBehaviour
         CameraRotation();
         AimSetCamPosition();
         Turn();
-        Dodge();
+        //Dodge();
         Reload();
         Swap();
         Attack();
         AimTarget();
         if(health <= 0)
         {
-            anim.SetTrigger("doDie");
-            isDead = true;
-            this.gameObject.layer = 18;
+            Dead();
         }
     }
 
@@ -116,13 +118,14 @@ public class Player : MonoBehaviour
 
     void AimTarget()
     {
+        if (isDodge) return;
         //Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * 100f, Color.red, 0.5f);
         RaycastHit hit;
         RaycastHit bulHit;
         int layerMask = 1 << LayerMask.NameToLayer("MiddleWall");
-        if(Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit))
+        if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit))
         {
-            Debug.DrawLine(Camera.main.transform.position, hit.point);
+            Debug.DrawLine(playerCamera.transform.position, hit.point);
             bulletPos.transform.LookAt(hit.point);
             //layer로 bullet과 충돌 x, bulhit을 플레이어 방향으로 조금 이동
             if(Physics.Linecast(bulletPos.transform.position, hit.point, out bulHit, layerMask))
@@ -147,7 +150,7 @@ public class Player : MonoBehaviour
         hAxis = Input.GetAxisRaw("Horizontal");
         vAxis = Input.GetAxisRaw("Vertical");
         shiftDown = Input.GetButton("Walk");
-        spaceDown = Input.GetButtonDown("Dodge");
+        //spaceDown = Input.GetButtonDown("Dodge");
         rDown = Input.GetButtonDown("Reload");
         s1Down = Input.GetButtonDown("Swap1");
         s2Down = Input.GetButtonDown("Swap2");
@@ -158,17 +161,49 @@ public class Player : MonoBehaviour
 
     void Move()
     {
-        //moveVec = new Vector3(hAxis, 0, vAxis).normalized;
+        //dodgeVec = new Vector3(hAxis, 0, vAxis).normalized;
+        if (!isMove) return;
         Vector3 moveX = transform.right * hAxis;
         Vector3 moveZ = transform.forward * vAxis;
         moveVec = (moveX + moveZ).normalized * (shiftDown ? moveSpeed / 2 : moveSpeed);
         rigid.MovePosition(transform.position + moveVec * Time.deltaTime);
-        if (isDodge) moveVec = dodgeVec;
-        if (isSwap) moveVec = Vector3.zero;
-        //transform.position += moveVec * (shiftDown ? speed/2 : speed) * Time.deltaTime;
+        //if (isDodge) moveVec = dodgeVec;
+        //transform.LookAt(transform.position + moveVec);
+        //if (isSwap) moveVec = Vector3.zero;
+        //transform.position += moveVec * (shiftDown ? moveSpeed/2 : moveSpeed) * Time.deltaTime;
         anim.SetBool("isWalk", shiftDown);
         anim.SetBool("isRun", moveVec != Vector3.zero);
     }
+    //void Dodge()
+    //{
+    //    if (spaceDown && moveVec != Vector3.zero && !isDodge && !shiftDown && !isSwap)
+    //    {
+    //        isMove = false;
+    //        dodgeVec = new Vector3(0, moveVec.y, 0);
+    //        mesh.transform.rotation = Quaternion.Lerp(mesh.transform.rotation, Quaternion.LookRotation(moveVec), 10f);
+    //        // transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(dir), Time.deltaTime * rotateSpeed);
+    //        //Vector3 playerRotationY = new Vector3(0, yRotation, 0) * mouseSensitivity;
+    //        //rigid.MoveRotation(rigid.rotation * Quaternion.Euler(playerRotationY));
+    //        //dodgeVec = moveVec;
+    //        //mesh.transform.localRotation = Quaternion.Euler(0,moveVec.y,0);
+    //        rigid.AddForce(moveVec * 2f, ForceMode.Impulse);
+    //        //moveSpeed *= 2;
+    //        anim.SetTrigger("doDodge");
+    //        isDodge = true;
+    //        //playerCamera.enabled = false;
+    //        //secondCamera.enabled = true;
+    //        Invoke("DodgeOut", 0.5f);
+    //    }
+    //}
+    //void DodgeOut()
+    //{
+    //    //moveSpeed /= 2;
+    //    rigid.velocity = Vector3.zero;
+    //    //playerCamera.enabled = true;
+    //    //secondCamera.enabled = false;
+    //    isMove = true;
+    //    isDodge = false;
+    //}
 
     void Attack()
     {
@@ -229,11 +264,12 @@ public class Player : MonoBehaviour
     }
     void CameraRotation()
     {
+        if (isDodge) return;
         float xRotation = Input.GetAxisRaw("Mouse Y");
         float camerRotationX = xRotation * mouseSensitivity;
         currentCameraRotation = Mathf.Clamp(currentCameraRotation, cameraRotationMinLimit, cameraRotationMaxLimit);
         currentCameraRotation -= camerRotationX;
-        Camera.main.transform.localEulerAngles = new Vector3(currentCameraRotation, 0, 0);
+        playerCamera.transform.localEulerAngles = new Vector3(currentCameraRotation, 0, 0);
         playerHead.transform.localEulerAngles = new Vector3(currentCameraRotation, 0, 0);
         bulletPos.transform.localEulerAngles = new Vector3(currentCameraRotation, 0, 0);
         if (f2Down)
@@ -250,23 +286,7 @@ public class Player : MonoBehaviour
         Vector3 playerRotationY = new Vector3(0, yRotation, 0) * mouseSensitivity;
         rigid.MoveRotation(rigid.rotation * Quaternion.Euler(playerRotationY));
     }
-    void Dodge()
-    {
-        if(spaceDown && moveVec != Vector3.zero && !isDodge && !shiftDown &&!isSwap)
-        {
-            //transform.LookAt(transform.position + moveVec);
-            dodgeVec = moveVec;
-            //moveSpeed *= 2;
-            anim.SetTrigger("doDodge");
-            isDodge = true;
-            Invoke("DodgeOut", 0.5f);
-        }        
-    }
-    void DodgeOut()
-    {
-        //moveSpeed /= 2;
-        isDodge = false;
-    }
+    
     void Reload()
     {
         if (!equipWeapon) return;
@@ -288,6 +308,15 @@ public class Player : MonoBehaviour
         equipWeapon.curAmmo = reAmmo;
         ammo -= reAmmo;
         isReload = false;
+    }
+    void Dead()
+    {
+        anim.SetTrigger("doDie");
+        isDead = true;
+        this.gameObject.layer = 18;
+        this.gameObject.tag = "PlayerDead";
+        for (int i = 0; i < meshs.Length; i++)
+            meshs[i].material.color = Color.gray;
     }
     #endregion
 
@@ -338,7 +367,6 @@ public class Player : MonoBehaviour
             Bullet bullet = other.GetComponent<Bullet>();
             if (!isDamage)
             {
-                
                 bool isBossAttack = other.name == "BossMeleeArea";
                 StartCoroutine(OnDamage(isBossAttack));
                 Debug.Log($"{bullet.bullet_damage} 데미지");
@@ -347,7 +375,6 @@ public class Player : MonoBehaviour
             if(!bullet.isMelee)
                 Destroy(other.gameObject);
         }
-
     }
     IEnumerator OnDamage(bool isBossAttack = false)
     {

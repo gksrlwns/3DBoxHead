@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Application.targetFrameRate = 60;
-        crossHair = gamePanel.transform.Find("Crosshair").gameObject;
+        //crossHair = gamePanel.transform.Find("Crosshair").gameObject;
     }
 
     private void Start()
@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
         gamePanel.SetActive(true);
         playerClone = Instantiate(playerPrefab, playerSpawnSpot.position, playerSpawnSpot.rotation);
         player = playerClone.GetComponent<Player>();
-        player.crossHair = crossHair;        
+        //player.crossHair = crossHair;        
         for (int i = 0; i < enemySpawnSpots.Length; i++)
         {
             Instantiate(enemyPrefab, enemySpawnSpots[i].position, enemySpawnSpots[i].rotation);
