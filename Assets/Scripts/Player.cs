@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
     public GameObject playerHead;
     public GameObject playerWeaponHand;
     public GameObject crossHair;
-    public GameObject bulletAim;
+    public GameObject blockedAim;
     
     [Header("아이템")]
     public int ammo;
@@ -118,6 +118,7 @@ public class Player : MonoBehaviour
 
     void AimTarget()
     {
+        
         if (isDodge) return;
         //Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * 100f, Color.red, 0.5f);
         RaycastHit hit;
@@ -125,6 +126,7 @@ public class Player : MonoBehaviour
         int layerMask = 1 << LayerMask.NameToLayer("MiddleWall");
         if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit))
         {
+            //hit 과 bulhit이 같은 지점이 아니라면 blockedAim true
             Debug.DrawLine(playerCamera.transform.position, hit.point);
             bulletPos.transform.LookAt(hit.point);
             //layer로 bullet과 충돌 x, bulhit을 플레이어 방향으로 조금 이동
@@ -133,8 +135,8 @@ public class Player : MonoBehaviour
                 Debug.DrawLine(bulletPos.transform.position, bulHit.point);
                 Vector3 dir = transform.position - bulHit.point;
                 dir.Normalize();
-                bulletAim.transform.forward = dir;
-                bulletAim.transform.position = bulHit.point + dir * 0.5f;
+                blockedAim.transform.forward = dir;
+                blockedAim.transform.position = bulHit.point + dir * 0.5f;
                 //Debug.Log(bulHit.point);
             }
             //Debug.DrawRay(bulletPos.transform.position, bulletPos.transform.forward * 100f, Color.green, 0.5f);
@@ -254,12 +256,15 @@ public class Player : MonoBehaviour
         {
             curCamTr.position = Vector3.Lerp(curCamTr.position, Camera2Tr.position, cameraSpeed * Time.deltaTime);
             crossHair.SetActive(true);
+            blockedAim.SetActive(true);
+            AimTarget();
         }
         else
         {
             if (curCamTr.position == CameraTr.position) return;
             curCamTr.position = Vector3.Lerp(curCamTr.position, CameraTr.position, cameraSpeed * Time.deltaTime);
             crossHair.SetActive(false);
+            blockedAim.SetActive(false);
         }
     }
     void CameraRotation()

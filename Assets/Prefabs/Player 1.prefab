@@ -185,12 +185,12 @@ GameObject:
   - component: {fileID: 419415239}
   - component: {fileID: 419415238}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: BlockedAim
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &419415241
 Transform:
   m_ObjectHideFlags: 0
@@ -1361,14 +1361,13 @@ MonoBehaviour:
   playerHead: {fileID: 4643542085976373775}
   playerWeaponHand: {fileID: 4200349321776992397}
   crossHair: {fileID: 2065624354}
-  bulletAim: {fileID: 419415237}
+  blockedAim: {fileID: 419415237}
   ammo: 300
   coin: 0
   health: 100
   maxAmmo: 999
   maxCoin: 99999
   maxHealth: 100
-  f2Down: 0
   isDead: 0
 --- !u!54 &1080030158
 Rigidbody:

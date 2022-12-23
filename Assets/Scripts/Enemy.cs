@@ -44,7 +44,7 @@ public class Enemy : MonoBehaviour
             Invoke("ChaseOn", 2f);
     }
     
-    protected void FixedUpdate()
+    void FixedUpdate()
     {
         FixRotation();
     }
@@ -66,7 +66,7 @@ public class Enemy : MonoBehaviour
         isChase = true;
         anim.SetBool("isWalk", isChase);
     }
-    protected void FixRotation()
+    void FixRotation()
     {
         if (isChase)
         {
@@ -74,7 +74,7 @@ public class Enemy : MonoBehaviour
             rigid.angularVelocity = Vector3.zero;
         }
     }
-    void TargetSearching()
+    protected void TargetSearching()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, targetSearchRange);
         

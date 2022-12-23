@@ -29,11 +29,22 @@ public class Boss : Enemy
         nav.isStopped = true;
         StartCoroutine(BossPattern());
     }
+    private void FixedUpdate()
+    {
+        rigid.velocity = Vector3.zero;
+        rigid.angularVelocity = Vector3.zero;
+    }
     private void Update()
     {
         if (isDead)
             StopAllCoroutines();
-        if(isLockOn)
+        TargetSearching();
+        if (!target)
+        {
+            anim.SetBool("isWalk", false);
+            return;
+        }
+        if (isLockOn)
             PlayerSearching();
         else
             nav.SetDestination(tauntVec);
