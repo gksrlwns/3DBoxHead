@@ -108,14 +108,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyType: 2
-  player: {fileID: 5903297864969995812, guid: be088041be0f442468a0f00974221200, type: 3}
+  target: {fileID: 0}
   enemyBulletPrefab: {fileID: 8687621084049323187, guid: 5f1505276fbb7534ab2a478968549159,
     type: 3}
+  gameManager: {fileID: 0}
   enemyBulletPos: {fileID: 1713794878}
   maxHp: 200
   curHp: 200
   targetRadius: 1.5
-  targetRange: 30
+  targeAttackRange: 50
+  targetSearchRange: 100
   enemyPhysicalDamage: 10
   enemyBulletDamage: 30
 --- !u!195 &384042276

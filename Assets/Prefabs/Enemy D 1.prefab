@@ -274,11 +274,13 @@ MonoBehaviour:
   enemyType: 3
   target: {fileID: 0}
   enemyBulletPrefab: {fileID: 0}
+  gameManager: {fileID: 0}
   enemyBulletPos: {fileID: 0}
   maxHp: 200
   curHp: 200
   targetRadius: 1.5
-  targetRange: 45
+  targeAttackRange: 2
+  targetSearchRange: 100
   enemyPhysicalDamage: 10
   enemyBulletDamage: 0
   BossBulletPrefab: {fileID: 3533313218899643882, guid: cf0ab0f6f1783ec4e887a6c8a80d430e,

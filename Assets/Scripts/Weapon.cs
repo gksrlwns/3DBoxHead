@@ -28,8 +28,6 @@ public class Weapon : MonoBehaviour
             curAmmo--;
             StartCoroutine("Shot");
         }
-        
-        
     }
     IEnumerator Swing()
     {

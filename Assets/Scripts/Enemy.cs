@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour
     public Type enemyType;
     public Transform target;
     public GameObject enemyBulletPrefab;
+    public GameManager gameManager;
     public Transform enemyBulletPos;
     public float maxHp;
     public float curHp;
@@ -34,8 +35,6 @@ public class Enemy : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         meshs = GetComponentsInChildren<MeshRenderer>();
         anim = GetComponentInChildren<Animator>();
-        target = FindObjectOfType<Player>().transform;
-        
     }
     private void Start()
     {
@@ -192,8 +191,9 @@ public class Enemy : MonoBehaviour
             }
             this.gameObject.layer = 14;
             isChase = false;
-            isDead = false;
+            isDead = true;
             nav.enabled = false;
+            gameManager.enemyCnt--;
             //넉백
             reactVec = reactVec.normalized;
             reactVec += Vector3.up;

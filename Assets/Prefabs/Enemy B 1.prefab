@@ -120,11 +120,13 @@ MonoBehaviour:
   enemyType: 1
   target: {fileID: 0}
   enemyBulletPrefab: {fileID: 0}
+  gameManager: {fileID: 0}
   enemyBulletPos: {fileID: 0}
   maxHp: 80
   curHp: 80
   targetRadius: 3
-  targetRange: 12
+  targeAttackRange: 20
+  targetSearchRange: 100
   enemyPhysicalDamage: 20
   enemyBulletDamage: 0
 --- !u!1001 &4106025580532918517

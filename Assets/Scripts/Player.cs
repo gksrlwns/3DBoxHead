@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class Player : MonoBehaviour
     public GameObject[] weapons;
     public bool[] hasweapons;
     public GameObject bulletPos;
+
     [Header("속도")]
     public float moveSpeed;
     public float mouseSensitivity;
@@ -34,6 +36,13 @@ public class Player : MonoBehaviour
     public int maxCoin;
     public int maxHealth;
 
+    [Header("UI")]
+    public Text hpText;
+    public Text ammoText;
+    public Text coinText;
+    public GameObject[] equipWeaponImages;
+    public GameManager gameManager;
+
     float hAxis;
     float vAxis;
 
@@ -58,7 +67,7 @@ public class Player : MonoBehaviour
     public bool isDead;
     
 
-    int equipWeaponIndex = -1;
+    public int equipWeaponIndex = -1;
     float fireDelay;
     
     Vector3 moveVec;
@@ -69,6 +78,7 @@ public class Player : MonoBehaviour
     Weapon equipWeapon;
     MeshRenderer[] meshs;
     Camera playerCamera;
+    
 
     private void Awake()
     {
@@ -89,6 +99,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if (!gameManager.isGame) return;
         if (isDead) return;
         GetInput();
         Move();
@@ -100,7 +111,8 @@ public class Player : MonoBehaviour
         Swap();
         Attack();
         AimTarget();
-        if(health <= 0)
+        PlayerState();
+        if(health == 0)
         {
             Dead();
         }
@@ -115,7 +127,12 @@ public class Player : MonoBehaviour
     {
         FixRotation();
     }
-
+    void PlayerState()
+    {
+        hpText.text = $"{health} / {maxHealth}";
+        ammoText.text = $"{ammo} / {maxAmmo}";
+        coinText.text = $"{coin}";
+    }
     void AimTarget()
     {
         
@@ -233,11 +250,19 @@ public class Player : MonoBehaviour
         if((s1Down || s2Down || s3Down) && !isDodge && !isSwap)
         {
             if (equipWeapon != null)
+            {
                 equipWeapon.gameObject.SetActive(false);
+                for (int i = 0; i < equipWeaponImages.Length; i++)
+                {
+                    equipWeaponImages[i].SetActive(false);
+                }
+            }
+                
             equipWeaponIndex = weaponIndex;
             equipWeapon = weapons[weaponIndex].GetComponent<Weapon>();
             equipWeapon.gameObject.SetActive(true);
-            
+            equipWeaponImages[equipWeaponIndex].SetActive(true);
+
             anim.SetTrigger("doSwap");
             isSwap = true;
             Invoke("SwapOut", 0.5f);
@@ -376,6 +401,8 @@ public class Player : MonoBehaviour
                 StartCoroutine(OnDamage(isBossAttack));
                 Debug.Log($"{bullet.bullet_damage} 데미지");
                 health -= bullet.bullet_damage;
+                if (health < 0)
+                    health = 0;
             }
             if(!bullet.isMelee)
                 Destroy(other.gameObject);
