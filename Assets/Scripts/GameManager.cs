@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public Transform[] enemySpawnSpots;
+    public Transform[] itemSpawnSpots;
     public Transform playerSpawnSpot;
     public Transform bossSpawnSpot;
     public GameObject[] enemyPrefabs;
+    public GameObject[] itemPrefabs;
     public GameObject playerPrefab;
     public Transform enemys;
     public int enemyCnt;
@@ -18,6 +21,8 @@ public class GameManager : MonoBehaviour
     public Text showTimeText;
     public GameObject bossGameobj;
     public RectTransform bossHp;
+    public GameObject victoryPanel;
+    public GameObject DefeatPanel;
     
     public bool isGame;
 
@@ -48,18 +53,41 @@ public class GameManager : MonoBehaviour
         {
             timer += Time.deltaTime;
             timerText.text = timer.ToString("00");
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
         }
-        if(enemyCnt == 0 && timer != 0)
+        else
         {
-            //StartCoroutine(SpawnBoss());
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
         }
-        if (!boss) return;
-        bossHp.localScale = new Vector3(boss.curHp / boss.maxHp, 1, 1);
+        if(enemyCnt == 0 && timer > 60 && !boss)
+        {
+            StartCoroutine(SpawnBoss());
+        }
+        if (boss)
+        {
+            bossHp.localScale = new Vector3(boss.curHp / boss.maxHp, 1, 1);
+            if (boss.isDead)
+                GameVictory();
+        }
+        if (player.isDead)
+            GameDefeat();
+    }
+    void GameVictory()
+    {
+        isGame = false;
+        victoryPanel.SetActive(true);
+    }
+    void GameDefeat()
+    {
+        isGame = false;
+        DefeatPanel.SetActive(true);
+    }
 
-        //EquipWeapon(player.equipWeaponIndex);
-        //PlayerState();
-        //if (player.isDead)
-        //    Destroy(playerClone, 2f);
+    public void SceneBtn(int SceneIndex)
+    {
+        SceneManager.LoadScene(SceneIndex);
     }
     IEnumerator ShowTimer()
     {
@@ -73,10 +101,17 @@ public class GameManager : MonoBehaviour
         isGame = true;
         yield return new WaitForSeconds(1f);
         showTimeText.text = "";
-        var enemyClone = Instantiate(enemyPrefabs[3], bossSpawnSpot.position, bossSpawnSpot.rotation);
-        bossGameobj.SetActive(true);
-        boss = enemyClone.GetComponent<Boss>();
-        //StartCoroutine(SpawnEnemy());
+        StartCoroutine(SpawnEnemy());
+        StartCoroutine(SpawnItem());
+        //StartCoroutine(TestSpawn());
+    }
+    IEnumerator TestSpawn()
+    {
+        yield return null;
+        var enemyClone = Instantiate(enemyPrefabs[0], enemySpawnSpots[0].position, enemySpawnSpots[0].rotation, enemys);
+        Enemy enemy = enemyClone.GetComponent<Enemy>();
+        enemy.gameManager = this;
+        enemyCnt++;
     }
     IEnumerator SpawnEnemy()
     {
@@ -111,9 +146,23 @@ public class GameManager : MonoBehaviour
         isGame = false;
         timer = 0;
         yield return new WaitForSeconds(3f);
+        showTimeText.text = "";
         var enemyClone = Instantiate(enemyPrefabs[3], bossSpawnSpot.position, bossSpawnSpot.rotation);
         bossGameobj.SetActive(true);
         boss = enemyClone.GetComponent<Boss>();
+        boss.gameManager = this;
         isGame = true;
+    }
+
+    IEnumerator SpawnItem()
+    {
+        while(isGame)
+        {
+            int itemIndex = Random.Range(0, itemPrefabs.Length);
+            int spawnIndex = Random.Range(0, itemSpawnSpots.Length);
+            var itemClone = Instantiate(itemPrefabs[itemIndex], itemSpawnSpots[spawnIndex].position, Quaternion.identity);
+            yield return new WaitForSeconds(10f);
+        }
+        
     }
 }

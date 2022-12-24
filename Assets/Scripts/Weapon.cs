@@ -48,6 +48,7 @@ public class Weapon : MonoBehaviour
         Bullet bullet = bulletClone.GetComponent<Bullet>();
         bullet.BulletDamege(damage);
         bulletRigid.velocity = bulletPos.forward * 50f;
+        Destroy(bulletClone, 5f);
 
         yield return null;
         GameObject bulletCaseClone = Instantiate(bulletCase, bulletCasePos.position, bulletCasePos.rotation);

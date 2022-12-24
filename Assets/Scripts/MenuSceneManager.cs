@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class MenuSceneManager : MonoBehaviour
 {
@@ -24,12 +25,8 @@ public class MenuSceneManager : MonoBehaviour
         soloBtn.SetActive(true);
         coBtn.SetActive(true);
     }
-    public void SoloPlayBtn()
+    public void PlayBtn(int SceneIndex)
     {
-        
-    }
-    public void CoPlayBtn()
-    {
-
+        SceneManager.LoadScene(SceneIndex);
     }
 }

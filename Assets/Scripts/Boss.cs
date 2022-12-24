@@ -110,6 +110,8 @@ public class Boss : Enemy
         int random = Random.Range(0, enemyPrefabs.Length);
         var enemyClone = Instantiate(enemyPrefabs[random], spawnSpot.position, spawnSpot.rotation);
         Enemy enemy = enemyClone.GetComponent<Enemy>();
+        enemy.bossSpawnEnemy = true;
+        enemy.gameManager = gameManager;
         enemy.target = target;
         yield return new WaitForSeconds(3f);
         StartCoroutine(BossPattern());

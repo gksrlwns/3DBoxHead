@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
     public GameObject blockedAim;
     
     [Header("아이템")]
-    public int ammo;
+    public int hasAmmo;
     public int coin;
     public int health;
     public int maxAmmo;
@@ -112,7 +112,7 @@ public class Player : MonoBehaviour
         Attack();
         AimTarget();
         PlayerState();
-        if(health == 0)
+        if (health == 0)
         {
             Dead();
         }
@@ -130,7 +130,12 @@ public class Player : MonoBehaviour
     void PlayerState()
     {
         hpText.text = $"{health} / {maxHealth}";
-        ammoText.text = $"{ammo} / {maxAmmo}";
+        if (!equipWeapon)
+            ammoText.text = $" - / {hasAmmo}";
+        else if (equipWeapon.type == Weapon.Type.Melee)
+            ammoText.text = $" - / {hasAmmo}";
+        else if (equipWeapon.type == Weapon.Type.Range)
+            ammoText.text = $"{equipWeapon.curAmmo} / {hasAmmo}";
         coinText.text = $"{coin}";
     }
     void AimTarget()
@@ -150,6 +155,10 @@ public class Player : MonoBehaviour
             if(Physics.Linecast(bulletPos.transform.position, hit.point, out bulHit, layerMask))
             {
                 Debug.DrawLine(bulletPos.transform.position, bulHit.point);
+                if(hit.point != bulHit.point)
+                    blockedAim.SetActive(true);
+                else
+                    blockedAim.SetActive(false);
                 Vector3 dir = transform.position - bulHit.point;
                 dir.Normalize();
                 blockedAim.transform.forward = dir;
@@ -281,7 +290,6 @@ public class Player : MonoBehaviour
         {
             curCamTr.position = Vector3.Lerp(curCamTr.position, Camera2Tr.position, cameraSpeed * Time.deltaTime);
             crossHair.SetActive(true);
-            blockedAim.SetActive(true);
             AimTarget();
         }
         else
@@ -289,7 +297,6 @@ public class Player : MonoBehaviour
             if (curCamTr.position == CameraTr.position) return;
             curCamTr.position = Vector3.Lerp(curCamTr.position, CameraTr.position, cameraSpeed * Time.deltaTime);
             crossHair.SetActive(false);
-            blockedAim.SetActive(false);
         }
     }
     void CameraRotation()
@@ -321,7 +328,7 @@ public class Player : MonoBehaviour
     {
         if (!equipWeapon) return;
         if (equipWeapon.type == Weapon.Type.Melee) return;
-        if (ammo == 0) return;
+        if (hasAmmo == 0) return;
 
         if((rDown && !isDodge & !isSwap && isFireReady ) || (equipWeapon.curAmmo == 0 && fDown && !isReload))
         {
@@ -333,10 +340,10 @@ public class Player : MonoBehaviour
 
     void ReloadOut()
     {
-        int reAmmo = ammo < equipWeapon.maxAmmo ? ammo : equipWeapon.maxAmmo;
-        Debug.Log($"리로드{reAmmo},{ammo}");
+        int reAmmo = hasAmmo < equipWeapon.maxAmmo ? hasAmmo : equipWeapon.maxAmmo;
+        Debug.Log($"리로드{reAmmo},{hasAmmo}");
         equipWeapon.curAmmo = reAmmo;
-        ammo -= reAmmo;
+        hasAmmo -= reAmmo;
         isReload = false;
     }
     void Dead()
@@ -378,8 +385,8 @@ public class Player : MonoBehaviour
             switch(item.type)
             {
                 case Item.Type.Ammo:
-                    ammo += item.value;
-                    if (ammo > maxAmmo) ammo = maxAmmo;
+                    hasAmmo += item.value;
+                    if (hasAmmo > maxAmmo) hasAmmo = maxAmmo;
                     break;
                 case Item.Type.Heart:
                     health += item.value;

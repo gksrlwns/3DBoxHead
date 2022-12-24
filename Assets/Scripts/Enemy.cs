@@ -18,10 +18,11 @@ public class Enemy : MonoBehaviour
     public float targetSearchRange = 20f;
     public int enemyPhysicalDamage = 10;
     public int enemyBulletDamage;
+    public bool bossSpawnEnemy = false;
 
     bool isChase;
     bool isAttack;
-    protected bool isDead;
+    public bool isDead;
 
     protected NavMeshAgent nav;
     protected Rigidbody rigid;
@@ -49,6 +50,7 @@ public class Enemy : MonoBehaviour
     }
     private void Update()
     {
+        if (!gameManager.isGame) return;
         TargetSearching();
         if (!target)
         {
@@ -58,6 +60,11 @@ public class Enemy : MonoBehaviour
         if (nav.enabled)
             nav.SetDestination(target.position);
         TargetAttackRange();
+    }
+    private void OnDestroy()
+    {
+        if(!bossSpawnEnemy)
+            gameManager.enemyCnt--;
     }
 
     void ChaseOn()
@@ -193,7 +200,6 @@ public class Enemy : MonoBehaviour
             isChase = false;
             isDead = true;
             nav.enabled = false;
-            gameManager.enemyCnt--;
             //넉백
             reactVec = reactVec.normalized;
             reactVec += Vector3.up;
