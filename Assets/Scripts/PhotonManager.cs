@@ -18,16 +18,16 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     [Header("채팅 요소")]
     public Text chattingText;
     public InputField chatInput;
+
+    bool isConnect = false;
     private void Awake()
     {
-        Disconnect();
         _photonView = GetComponent<PhotonView>();
         PhotonNetwork.AutomaticallySyncScene = true;
-        PhotonNetwork.ConnectUsingSettings();
     }
     private void Start()
     {
-
+        print("00. 포톤 매니저 시작");
     }
 
     public void Disconnect() => PhotonNetwork.Disconnect();
@@ -38,6 +38,14 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         //PhotonView 스크립트에 Controller에 저장됨
         PhotonNetwork.LocalPlayer.NickName = nickInput.text;
         PhotonNetwork.ConnectUsingSettings();
+    }
+    public void JoinRoom()
+    {
+        if(isConnect)
+        {
+            PhotonNetwork.JoinRoom("room_1");
+            print("방에 입장하였습니다.");
+        }
     }
 
     private void Update()
@@ -51,13 +59,18 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         //ConnectUsingSettings가 성공적으로 실행 되었을 때 호출
-        PhotonNetwork.JoinRandomRoom();
+        print("01. 포톤 서버에 접속");
+        string nick = PhotonNetwork.LocalPlayer.NickName;
+        print($"당신의 이름은 {nick} 입니다.");
+        isConnect = true;
     }
 
     //방에 들어가는데 실패
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
+        print("02. 랜덤 룸 접속 실패");
         Debug.LogWarning($"OnJoinRoomFailed! : {message}");
+        
         //방 만들기
         RoomOptions ro = new RoomOptions();
         ro.IsOpen = true;
@@ -68,10 +81,11 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     }
     public override void OnCreatedRoom()
     {
-        Debug.Log("방 생성");
+        Debug.Log("03. 방 생성");
     }
     public override void OnJoinedRoom()
     {
+        print("04. 방 입장 완료");
         if (PhotonNetwork.IsMasterClient)
             PhotonNetwork.LoadLevel("MultiGameScene");
         //JoinRoom이 성공적으로 실행되엇을 때 호출

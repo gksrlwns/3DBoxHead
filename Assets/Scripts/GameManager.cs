@@ -29,9 +29,7 @@ public class GameManager : MonoBehaviour
     Player player;
     Boss boss;
     GameObject playerClone;
-    GameObject crossHair;
     float timer = 0;
-    int curWeaponindex = -1;
 
 
     private void Awake()
