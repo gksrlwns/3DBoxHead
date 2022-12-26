@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
-        if(enemyCnt == 0 && timer > 60 && !boss)
+        if(enemyCnt == 0 && timer > 10 && !boss)
         {
             StartCoroutine(SpawnBoss());
         }
@@ -101,9 +101,9 @@ public class GameManager : MonoBehaviour
         isGame = true;
         yield return new WaitForSeconds(1f);
         showTimeText.text = "";
-        StartCoroutine(SpawnEnemy());
+        //StartCoroutine(SpawnEnemy());
         StartCoroutine(SpawnItem());
-        //StartCoroutine(TestSpawn());
+        StartCoroutine(TestSpawn());
     }
     IEnumerator TestSpawn()
     {

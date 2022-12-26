@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
 public class Player : MonoBehaviour
 {
@@ -42,6 +43,7 @@ public class Player : MonoBehaviour
     public Text coinText;
     public GameObject[] equipWeaponImages;
     public GameManager gameManager;
+    public PhotonView photonView;
 
     float hAxis;
     float vAxis;
@@ -85,6 +87,7 @@ public class Player : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         rigid = GetComponent<Rigidbody>();
         meshs = GetComponentsInChildren<MeshRenderer>();
+        photonView = GetComponent<PhotonView>();
         playerCamera = Camera.main;
     }
     void Start()
@@ -99,7 +102,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (!gameManager.isGame) return;
+        //if (!gameManager.isGame) return;
         if (isDead) return;
         GetInput();
         Move();

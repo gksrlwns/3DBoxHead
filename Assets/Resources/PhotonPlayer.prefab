@@ -2532,8 +2532,9 @@ GameObject:
   - component: {fileID: 1080030156}
   - component: {fileID: 1080030158}
   - component: {fileID: 1080030157}
+  - component: {fileID: 6560244247469241154}
   m_Layer: 8
-  m_Name: Player 1
+  m_Name: PhotonPlayer
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2607,6 +2608,7 @@ MonoBehaviour:
   - {fileID: 1160530229}
   - {fileID: 1260492596}
   gameManager: {fileID: 0}
+  photonView: {fileID: 0}
   isDead: 0
   equipWeaponIndex: -1
 --- !u!54 &1080030158
@@ -2639,6 +2641,28 @@ CapsuleCollider:
   m_Height: 4.5
   m_Direction: 1
   m_Center: {x: 0, y: 2.2, z: 0}
+--- !u!114 &6560244247469241154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5461052779654786451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1001 &211474262
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2824,15 +2848,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a2e051660762cbe4494c17a095a95e10, type: 3}
---- !u!1 &1509416924632594903 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1509416925549156319, guid: a2e051660762cbe4494c17a095a95e10,
-    type: 3}
-  m_PrefabInstance: {fileID: 1273097736}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2285952974863754093 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2285952976136801637, guid: a2e051660762cbe4494c17a095a95e10,
+    type: 3}
+  m_PrefabInstance: {fileID: 1273097736}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1509416924632594903 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1509416925549156319, guid: a2e051660762cbe4494c17a095a95e10,
     type: 3}
   m_PrefabInstance: {fileID: 1273097736}
   m_PrefabAsset: {fileID: 0}
