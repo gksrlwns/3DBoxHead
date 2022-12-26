@@ -8,8 +8,8 @@ public class MenuSceneManager : MonoBehaviour
 {
     public GameObject title;
     public GameObject startBtn;
-    public GameObject soloBtn;
-    public GameObject coBtn;
+    public GameObject choiceObj;
+    public GameObject NickObj;
     Animation anim;
 
     private void Awake()
@@ -21,12 +21,17 @@ public class MenuSceneManager : MonoBehaviour
     {
         //타이틀과 이미지가 위로 올라가고 새로운 버튼 생성
         anim.Play();
-        startBtn.gameObject.SetActive(false);
-        soloBtn.SetActive(true);
-        coBtn.SetActive(true);
+        startBtn.SetActive(false);
+        choiceObj.SetActive(true);
     }
-    public void PlayBtn(int SceneIndex)
+    public void PlayBtn()
     {
-        SceneManager.LoadScene(SceneIndex);
+        SceneManager.LoadScene("SoloGameScene");
+    }
+
+    public void CoBtn()
+    {
+        choiceObj.SetActive(false);
+        NickObj.SetActive(true);
     }
 }
