@@ -44,6 +44,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
     public Text coinText;
     public GameObject[] equipWeaponImages;
     public GameManager gameManager;
+    public GameObject playerCanvas;
 
 
     float hAxis;
@@ -108,18 +109,18 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
         {
             GetInput();
             Move();
+            CameraRotation();
+            AimSetCamPosition();
+            Turn();
+            //Dodge();
+            Reload();
+            Swap();
+            Attack();
+            AimTarget();
+            PlayerState();
         }
-        
-        //Move();
-        //CameraRotation();
-        //AimSetCamPosition();
-        //Turn();
-        ////Dodge();
-        //Reload();
-        //Swap();
-        //Attack();
-        //AimTarget();
-        //PlayerState();
+
+
 
         if (health == 0)
         {
@@ -137,11 +138,12 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
         FixRotation();
     }
 
-    public void SetCamera()
+    public void SetPlayer()
     {
         Camera.main.transform.parent = curCamTr;
         Camera.main.transform.localPosition = Vector3.zero;
         Camera.main.transform.localRotation = Quaternion.identity;
+        playerCanvas.SetActive(true);
     }
     void PlayerState()
     {
@@ -156,7 +158,6 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
     }
     void AimTarget()
     {
-
         if (isDodge) return;
         //Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * 100f, Color.red, 0.5f);
         RaycastHit hit;

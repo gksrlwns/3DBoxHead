@@ -11,7 +11,8 @@ public class MultiGameManager : MonoBehaviour
     private void Start()
     {
         var player = PhotonNetwork.Instantiate("PhotonPlayer", playerSpots[0].position, playerSpots[0].rotation);
-        player.GetComponent<PhotonPlayer>().SetCamera();
+        player.GetComponent<PhotonPlayer>().SetPlayer();
+        
     }
 
     public void TestMainSceneBtn()

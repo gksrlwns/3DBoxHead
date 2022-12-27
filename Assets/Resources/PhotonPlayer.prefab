@@ -2262,7 +2262,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1992935628
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2520,6 +2520,59 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &650162066732242255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3403024553794750845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 4
+    SynchronizeType: 1
+    Name: isWalk
+  - Type: 4
+    SynchronizeType: 1
+    Name: isRun
+  - Type: 4
+    SynchronizeType: 1
+    Name: isDodge
+  - Type: 4
+    SynchronizeType: 1
+    Name: isAim
+  - Type: 9
+    SynchronizeType: 1
+    Name: doDodge
+  - Type: 9
+    SynchronizeType: 1
+    Name: doReload
+  - Type: 9
+    SynchronizeType: 1
+    Name: doSwap
+  - Type: 9
+    SynchronizeType: 1
+    Name: doShot
+  - Type: 9
+    SynchronizeType: 1
+    Name: doSwing
+  - Type: 9
+    SynchronizeType: 1
+    Name: doAim
+  - Type: 9
+    SynchronizeType: 1
+    Name: doDie
+  m_SynchronizeLayers:
+  - SynchronizeType: 2
+    LayerIndex: 0
+  - SynchronizeType: 2
+    LayerIndex: 1
 --- !u!1 &5461052779654786451
 GameObject:
   m_ObjectHideFlags: 0
@@ -2529,12 +2582,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5903297864969995812}
-  - component: {fileID: 1080030156}
+  - component: {fileID: -1974923475844830052}
   - component: {fileID: 1080030158}
   - component: {fileID: 1080030157}
   - component: {fileID: 6560244247469241154}
   - component: {fileID: -8112570998527268055}
-  - component: {fileID: -1974923475844830052}
   m_Layer: 8
   m_Name: PhotonPlayer
   m_TagString: Player
@@ -2564,16 +2616,16 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1080030156
+--- !u!114 &-1974923475844830052
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5461052779654786451}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ba07bce1cc1eac47985359c3cdd6711, type: 3}
+  m_Script: {fileID: 11500000, guid: 8d41cf73995b26e4c939763f13b934b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   weapons:
@@ -2600,7 +2652,7 @@ MonoBehaviour:
   coin: 0
   health: 100
   maxAmmo: 999
-  maxCoin: 99999
+  maxCoin: 9999
   maxHealth: 100
   hpText: {fileID: 768297910}
   ammoText: {fileID: 1377302627}
@@ -2610,6 +2662,7 @@ MonoBehaviour:
   - {fileID: 1160530229}
   - {fileID: 1260492596}
   gameManager: {fileID: 0}
+  playerCanvas: {fileID: 1992935627}
   isDead: 0
   equipWeaponIndex: -1
 --- !u!54 &1080030158
@@ -2662,6 +2715,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: -8112570998527268055}
+  - {fileID: 650162066732242255}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -2681,54 +2735,6 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
---- !u!114 &-1974923475844830052
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5461052779654786451}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d41cf73995b26e4c939763f13b934b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weapons:
-  - {fileID: 1348174882152653207}
-  - {fileID: 1509416924632594903}
-  - {fileID: 547435428198181137}
-  hasweapons: 010101
-  bulletPos: {fileID: 570659165}
-  moveSpeed: 30
-  mouseSensitivity: 1
-  cameraSpeed: 5
-  cameraRotationMaxLimit: 15
-  cameraRotationMinLimit: -25
-  currentCameraRotation: 0
-  CameraTr: {fileID: 697365728}
-  Camera2Tr: {fileID: 1412999640}
-  curCamTr: {fileID: 963742179}
-  playerWeaponHandRt: {x: 0, y: 0, z: 0}
-  playerHead: {fileID: 4643542085976373775}
-  playerWeaponHand: {fileID: 4200349321776992397}
-  crossHair: {fileID: 2065624354}
-  blockedAim: {fileID: 419415237}
-  hasAmmo: 300
-  coin: 0
-  health: 100
-  maxAmmo: 999
-  maxCoin: 9999
-  maxHealth: 100
-  hpText: {fileID: 768297910}
-  ammoText: {fileID: 1377302627}
-  coinText: {fileID: 763712456}
-  equipWeaponImages:
-  - {fileID: 672652705}
-  - {fileID: 471069144}
-  - {fileID: 849175950}
-  gameManager: {fileID: 0}
-  isDead: 0
-  equipWeaponIndex: -1
 --- !u!1001 &211474262
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3531,9 +3537,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cae3f9537776dea41855a724b56dd2c9, type: 3}
---- !u!4 &2626205932478927815 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: cae3f9537776dea41855a724b56dd2c9,
+--- !u!1 &3403024553794750845 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: cae3f9537776dea41855a724b56dd2c9,
     type: 3}
   m_PrefabInstance: {fileID: 2591981138735232044}
   m_PrefabAsset: {fileID: 0}
@@ -3555,9 +3561,9 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2591981138735232044}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3403024553794750845 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: cae3f9537776dea41855a724b56dd2c9,
+--- !u!4 &2626205932478927815 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: cae3f9537776dea41855a724b56dd2c9,
     type: 3}
   m_PrefabInstance: {fileID: 2591981138735232044}
   m_PrefabAsset: {fileID: 0}
