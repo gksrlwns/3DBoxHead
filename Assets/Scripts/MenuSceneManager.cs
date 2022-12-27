@@ -34,4 +34,5 @@ public class MenuSceneManager : MonoBehaviour
         choiceObj.SetActive(false);
         NickObj.SetActive(true);
     }
+
 }

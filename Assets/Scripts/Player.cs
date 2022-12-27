@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
     public Text coinText;
     public GameObject[] equipWeaponImages;
     public GameManager gameManager;
-    public PhotonView photonView;
+    
 
     float hAxis;
     float vAxis;
@@ -66,6 +66,7 @@ public class Player : MonoBehaviour
     bool isDamage;
     bool isAim;
     bool isMove = true;
+    public bool isPhoton;
     public bool isDead;
     
 
@@ -80,23 +81,23 @@ public class Player : MonoBehaviour
     Weapon equipWeapon;
     MeshRenderer[] meshs;
     Camera playerCamera;
-    
+    PhotonView photonView;
+
 
     private void Awake()
     {
         anim = GetComponentInChildren<Animator>();
         rigid = GetComponent<Rigidbody>();
         meshs = GetComponentsInChildren<MeshRenderer>();
-        photonView = GetComponent<PhotonView>();
         playerCamera = Camera.main;
+        if (isPhoton)
+            photonView = GetComponent<PhotonView>();
     }
     void Start()
     {
         playerHandRt = playerWeaponHand.transform;
+        SetCamera();
         //Debug.Log(playerHandRt.localEulerAngles);
-        playerCamera.transform.parent = curCamTr;
-        playerCamera.transform.localPosition = Vector3.zero;
-        playerCamera.transform.localRotation = Quaternion.identity;
         //secondCamera.enabled = false;
     }
 
@@ -115,6 +116,7 @@ public class Player : MonoBehaviour
         Attack();
         AimTarget();
         PlayerState();
+
         if (health == 0)
         {
             Dead();
@@ -129,6 +131,13 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         FixRotation();
+    }
+
+    void SetCamera()
+    {
+        playerCamera.transform.parent = curCamTr;
+        playerCamera.transform.localPosition = Vector3.zero;
+        playerCamera.transform.localRotation = Quaternion.identity;
     }
     void PlayerState()
     {

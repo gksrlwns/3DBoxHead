@@ -10,19 +10,27 @@ using Photon.Realtime;
 
 public class PhotonManager : MonoBehaviourPunCallbacks
 {
-    public PhotonView _photonView;
+    //public PhotonView _photonView;
     public InputField nickInput;
     public GameObject connectOBJ;
     public GameObject chatOBJ;
+    [Header("로비")]
+    public GameObject LobbyObj;
+    public GameObject roomPrefab;
+    public Text userText;
+    public Transform scrollContent;
+
+
 
     [Header("채팅 요소")]
     public Text chattingText;
     public InputField chatInput;
 
+    Dictionary<string, GameObject> roomDict = new Dictionary<string, GameObject>();
     bool isConnect = false;
     private void Awake()
     {
-        _photonView = GetComponent<PhotonView>();
+        //_photonView = GetComponent<PhotonView>();
         PhotonNetwork.AutomaticallySyncScene = true;
     }
     private void Start()
@@ -34,11 +42,21 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     public void OnClickConnect()
     {
-        if (nickInput.text == "") return;
+        if (nickInput.text == "") nickInput.text = $"User{Random.Range(0, 100)}";
         //PhotonView 스크립트에 Controller에 저장됨
         PhotonNetwork.LocalPlayer.NickName = nickInput.text;
         PhotonNetwork.ConnectUsingSettings();
     }
+    public void OnClickCreateRoom()
+    {
+        RoomOptions ro = new RoomOptions();
+        ro.IsOpen = true;
+        ro.IsVisible = true;
+        ro.MaxPlayers = 2;
+        //방 들어가기
+        PhotonNetwork.CreateRoom($"room{Random.Range(0, 50)}", ro);
+    }
+
     public void JoinRoom()
     {
         if(isConnect)
@@ -53,6 +71,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         //콘솔창 흰색print/Debug.Log
         //콘솔창 노란색 
         Debug.LogWarning(PhotonNetwork.NetworkClientState);//현재 포톤상의 네트워크 상황을 알 수 있음
+
     }
     #region 포톤 서버 접속코드
 
@@ -62,7 +81,15 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         print("01. 포톤 서버에 접속");
         string nick = PhotonNetwork.LocalPlayer.NickName;
         print($"당신의 이름은 {nick} 입니다.");
+        userText.text = nick;
         isConnect = true;
+        PhotonNetwork.JoinLobby();
+    }
+    public override void OnJoinedLobby()
+    {
+        print("로비 연결");
+        connectOBJ.SetActive(false);
+        LobbyObj.SetActive(true);
     }
 
     //방에 들어가는데 실패
@@ -77,7 +104,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         ro.IsVisible = true;
         ro.MaxPlayers = 2;
         //방 들어가기
-        PhotonNetwork.CreateRoom("room_1", ro);
+        PhotonNetwork.CreateRoom($"room{Random.Range(0, 50)}", ro);
     }
     public override void OnCreatedRoom()
     {
@@ -94,6 +121,35 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         //GameObject player = PhotonNetwork.Instantiate("PhotonPlayer", Vector3.zero, Quaternion.identity);
 
     }
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        GameObject tempRoom = null;
+        foreach(var room in roomList)
+        {
+            if(room.RemovedFromList == true)
+            {
+                roomDict.TryGetValue(room.Name, out tempRoom);
+                Destroy(tempRoom);
+                roomDict.Remove(room.Name);
+            }
+            else
+            {
+                if (roomDict.ContainsKey(room.Name) == false)
+                {
+                    var roomClone = Instantiate(roomPrefab, scrollContent);
+                    roomClone.GetComponent<RoomData>().RoomInfo = room;
+                    roomDict.Add(room.Name, roomClone);
+                }
+                else
+                {
+                    roomDict.TryGetValue(room.Name, out tempRoom);
+                    tempRoom.GetComponent<RoomData>().RoomInfo = room;
+                }
+
+            }
+        }
+    }
+    
     //public override void OnJoinedLobby()
     //{
     //    //JoinLobby가 성공적으로 실행되었을 때 호출
@@ -130,8 +186,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         //if 1, 채팅을 보낼 내용이 없으면? : 그냥 채팅 송신을 하지 말자.
         if (chatInput.text == "") return;
         //우리가 보낼 채팅을, 누가 보냇느냐와 함께 RPC함수에 전송
-        _photonView.RPC("ReceiveMessage", RpcTarget.AllBuffered,
-            PhotonNetwork.LocalPlayer.NickName, chatInput.text);
+        //_photonView.RPC("ReceiveMessage", RpcTarget.AllBuffered, PhotonNetwork.LocalPlayer.NickName, chatInput.text);
         //if 2,채팅을 보내고 난 다음에, 입력창은?
         chatInput.text = "";
     }
