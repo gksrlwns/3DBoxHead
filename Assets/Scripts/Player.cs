@@ -66,7 +66,6 @@ public class Player : MonoBehaviour
     bool isDamage;
     bool isAim;
     bool isMove = true;
-    public bool isPhoton;
     public bool isDead;
     
 
@@ -90,8 +89,6 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         meshs = GetComponentsInChildren<MeshRenderer>();
         playerCamera = Camera.main;
-        if (isPhoton)
-            photonView = GetComponent<PhotonView>();
     }
     void Start()
     {
