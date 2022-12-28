@@ -109,12 +109,12 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
         {
             GetInput();
             Move();
-            CameraRotation();
+            photonView.RPC("CameraRotation", RpcTarget.AllBuffered);
             AimSetCamPosition();
             Turn();
             //Dodge();
             Reload();
-            Swap();
+            photonView.RPC("Swap", RpcTarget.AllBuffered);
             Attack();
             AimTarget();
             PlayerState();
@@ -264,7 +264,8 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
             fireDelay = 0;
         }
     }
-    void Swap()
+    [PunRPC]
+    public void Swap()
     {
         if (s1Down && (!hasweapons[0] || equipWeaponIndex == 0)) return;
         if (s2Down && (!hasweapons[1] || equipWeaponIndex == 1)) return;
@@ -316,7 +317,8 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
             crossHair.SetActive(false);
         }
     }
-    void CameraRotation()
+    [PunRPC]
+    public void CameraRotation()
     {
         if (isDodge) return;
         float xRotation = Input.GetAxisRaw("Mouse Y");
