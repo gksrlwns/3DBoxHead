@@ -1,12 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class PhotonBullet : MonoBehaviour
+public class PhotonBullet : MonoBehaviourPunCallbacks
 {
     public bool isMelee;
     public bool isBossBullet;
     public int bullet_damage;
+    PhotonView bulletPv;
+    private void Awake()
+    {
+        bulletPv = GetComponent<PhotonView>();
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -26,6 +33,7 @@ public class PhotonBullet : MonoBehaviour
         if (isBossBullet)
             Destroy(this.gameObject);
     }
+    [PunRPC]
     public void BulletDamege(int damage)
     {
         bullet_damage = damage;

@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 2083275205025106377}
   - component: {fileID: 2083275205025106376}
   - component: {fileID: 2083275205025106383}
-  - component: {fileID: 6771945863118838222}
+  - component: {fileID: 4933253146219809367}
+  - component: {fileID: -4556619913839442392}
   m_Layer: 9
   m_Name: PhotonBullet HandGun
   m_TagString: Bullet
@@ -169,7 +170,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.25
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6771945863118838222
+--- !u!114 &4933253146219809367
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -178,8 +179,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 2083275205025106382}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b9283ca890f10a4ca941c4e4d71de37, type: 3}
+  m_Script: {fileID: 11500000, guid: 0678b652d9dd9de43b3ac76a7a852094, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isMelee: 0
+  isBossBullet: 0
   bullet_damage: 0
+--- !u!114 &-4556619913839442392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2083275205025106382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0

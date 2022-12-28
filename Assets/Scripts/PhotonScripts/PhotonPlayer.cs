@@ -218,8 +218,8 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
         anim.SetBool("isWalk", shiftDown);
         anim.SetBool("isRun", moveVec != Vector3.zero);
     }
-    
 
+    #region 총관련
     void Attack()
     {
         if (equipWeapon == null) return;
@@ -229,11 +229,12 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
 
         if (fDown && isFireReady && !isDodge && !isSwap)
         {
-            equipWeapon.Use();
+            equipWeapon.Use(equipWeaponIndex);
             anim.SetTrigger(equipWeapon.type == PhotonWeapon.Type.melee ? "doSwing" : "doShot");
             fireDelay = 0;
         }
     }
+
     [PunRPC]
     public void PunSwap(int weaponIndex)
     {
@@ -245,8 +246,8 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
                 equipWeaponImages[i].SetActive(false);
             }
         }
+        equipWeaponIndex = weaponIndex;
         equipWeapon = weapons[weaponIndex].GetComponent<PhotonWeapon>();
-        equipWeapon.weaponPv = pv;
         equipWeapon.gameObject.SetActive(true);
         equipWeaponImages[weaponIndex].SetActive(true);
         //if ((s1Down || s2Down || s3Down) && !isDodge && !isSwap)
@@ -304,6 +305,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
             crossHair.SetActive(false);
         }
     }
+    #endregion
     public void CameraRotation()
     {
         if (isDodge) return;

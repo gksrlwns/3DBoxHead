@@ -20,8 +20,14 @@ public class PhotonWeapon : MonoBehaviourPunCallbacks
     public Transform bulletCasePos;
     public PhotonView weaponPv;
 
+    GameObject bulletClone;
 
-    public void Use()
+    private void Awake()
+    {
+        weaponPv = GetComponent<PhotonView>();
+    }
+
+    public void Use(int weaponIndex)
     {
         if (type == Type.melee)
         {
@@ -31,8 +37,13 @@ public class PhotonWeapon : MonoBehaviourPunCallbacks
         else if (type == Type.range && curAmmo != 0)
         {
             curAmmo--;
-            StartCoroutine("Shot");
+            weaponPv.RPC("ShotRPC", RpcTarget.AllBuffered, weaponIndex);
         }
+    }
+    [PunRPC]
+    public void ShotRPC(int weaponIndex)
+    {
+        StartCoroutine("Shot", weaponIndex);
     }
 
     IEnumerator Swing()
@@ -46,31 +57,45 @@ public class PhotonWeapon : MonoBehaviourPunCallbacks
         trailEff.enabled = false;
     }
 
-    IEnumerator Shot()
+    IEnumerator Shot(int weaponIndex)
     {
         yield return null;
-        weaponPv.RPC("FireBullet", RpcTarget.All);
-
-        yield return null;
-        weaponPv.RPC("FireBulletCase", RpcTarget.All);
-
-    }
-    [PunRPC]
-    public void FireBullet()
-    {
-        GameObject bulletClone = Instantiate(bulletPrefab, bulletPos.position, bulletPos.rotation);
+        if(weaponIndex == 1)
+        {
+            bulletClone = PhotonNetwork.Instantiate("PhotonBullet HandGun", bulletPos.position, bulletPos.rotation);
+        }
+        else if( weaponIndex == 2)
+        {
+            bulletClone = PhotonNetwork.Instantiate("PhotonBulletSubMachineGun", bulletPos.position, bulletPos.rotation);
+        }
+        bulletClone.GetComponent<PhotonView>().RPC("BulletDamege", RpcTarget.All, damage);
         Rigidbody bulletRigid = bulletClone.GetComponent<Rigidbody>();
-        Bullet bullet = bulletClone.GetComponent<Bullet>();
-        bullet.BulletDamege(damage);
         bulletRigid.velocity = bulletPos.forward * 50f;
         Destroy(bulletClone, 5f);
-    }
-    [PunRPC]
-    public void FireBulletCase()
-    {
-        GameObject bulletCaseClone = Instantiate(bulletCase, bulletCasePos.position, bulletCasePos.rotation);
+
+        yield return null;
+        GameObject bulletCaseClone = PhotonNetwork.Instantiate("PhotonBulletCase", bulletCasePos.position, bulletCasePos.rotation);
         Rigidbody bulletCaseRigid = bulletCaseClone.GetComponent<Rigidbody>();
         bulletCaseRigid.AddForce(bulletCasePos.forward * Random.Range(-3, -2) + Vector3.up * Random.Range(2, 3), ForceMode.Impulse);
         bulletCaseRigid.AddTorque(Vector3.up * 10, ForceMode.Impulse);
+
     }
 }
+//    [PunRPC]
+//    public void FireBullet()
+//    {
+//        GameObject bulletClone = Instantiate(bulletPrefab, bulletPos.position, bulletPos.rotation);
+//        Rigidbody bulletRigid = bulletClone.GetComponent<Rigidbody>();
+//        Bullet bullet = bulletClone.GetComponent<Bullet>();
+//        bullet.BulletDamege(damage);
+//        bulletRigid.velocity = bulletPos.forward * 50f;
+//        Destroy(bulletClone, 5f);
+//    }
+//    [PunRPC]
+//    public void FireBulletCase()
+//    {
+//        GameObject bulletCaseClone = Instantiate(bulletCase, bulletCasePos.position, bulletCasePos.rotation);
+//        Rigidbody bulletCaseRigid = bulletCaseClone.GetComponent<Rigidbody>();
+//        bulletCaseRigid.AddForce(bulletCasePos.forward * Random.Range(-3, -2) + Vector3.up * Random.Range(2, 3), ForceMode.Impulse);
+//        bulletCaseRigid.AddTorque(Vector3.up * 10, ForceMode.Impulse);
+//    }

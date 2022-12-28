@@ -50,7 +50,7 @@ public class Enemy : MonoBehaviour
     }
     private void Update()
     {
-        if (!gameManager.isGame) return;
+        //if (!gameManager.isGame) return;
         TargetSearching();
         if (!target)
         {
