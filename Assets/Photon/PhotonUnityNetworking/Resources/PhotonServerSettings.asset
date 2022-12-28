@@ -42,6 +42,10 @@ MonoBehaviour:
   - ReceiveMessage
   - Swap
   - CameraRotation
+  - PunSwap
+  - PunCameraRotation
+  - FireBullet
+  - FireBulletCase
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

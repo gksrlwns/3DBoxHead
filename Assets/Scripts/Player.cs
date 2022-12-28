@@ -73,14 +73,11 @@ public class Player : MonoBehaviour
     float fireDelay;
     
     Vector3 moveVec;
-    Vector3 dodgeVec;
-    Transform playerHandRt;
     Animator anim;
     Rigidbody rigid;
     Weapon equipWeapon;
     MeshRenderer[] meshs;
     Camera playerCamera;
-    PhotonView photonView;
 
 
     private void Awake()
@@ -92,7 +89,6 @@ public class Player : MonoBehaviour
     }
     void Start()
     {
-        playerHandRt = playerWeaponHand.transform;
         SetCamera();
         //Debug.Log(playerHandRt.localEulerAngles);
         //secondCamera.enabled = false;
@@ -149,8 +145,6 @@ public class Player : MonoBehaviour
     }
     void AimTarget()
     {
-        
-        if (isDodge) return;
         //Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * 100f, Color.red, 0.5f);
         RaycastHit hit;
         RaycastHit bulHit;

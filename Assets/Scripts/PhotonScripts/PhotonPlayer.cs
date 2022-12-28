@@ -79,10 +79,10 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
     Transform playerHandRt;
     Animator anim;
     Rigidbody rigid;
-    Weapon equipWeapon;
+    PhotonWeapon equipWeapon;
     MeshRenderer[] meshs;
     Camera Camera;
-    PhotonView photonView;
+    public PhotonView pv;
 
 
     private void Awake()
@@ -91,7 +91,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
         rigid = GetComponent<Rigidbody>();
         meshs = GetComponentsInChildren<MeshRenderer>();
         Camera = Camera.main;
-        photonView = GetComponent<PhotonView>();
+        //photonView = GetComponent<PhotonView>();
     }
     void Start()
     {
@@ -105,16 +105,15 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
     {
         //if (!gameManager.isGame) return;
         if (isDead) return;
-        if(photonView.IsMine)
+        if(pv.IsMine)
         {
             GetInput();
             Move();
-            photonView.RPC("CameraRotation", RpcTarget.AllBuffered);
+            CameraRotation();
             AimSetCamPosition();
             Turn();
-            //Dodge();
             Reload();
-            photonView.RPC("Swap", RpcTarget.AllBuffered);
+            Swap();
             Attack();
             AimTarget();
             PlayerState();
@@ -148,11 +147,11 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
     void PlayerState()
     {
         hpText.text = $"{health} / {maxHealth}";
-        if (!equipWeapon)
+        if (equipWeapon == null)
             ammoText.text = $" - / {hasAmmo}";
-        else if (equipWeapon.type == Weapon.Type.Melee)
+        else if (equipWeapon.type == PhotonWeapon.Type.melee)
             ammoText.text = $" - / {hasAmmo}";
-        else if (equipWeapon.type == Weapon.Type.Range)
+        else if (equipWeapon.type == PhotonWeapon.Type.range)
             ammoText.text = $"{equipWeapon.curAmmo} / {hasAmmo}";
         coinText.text = $"{coin}";
     }
@@ -219,52 +218,53 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
         anim.SetBool("isWalk", shiftDown);
         anim.SetBool("isRun", moveVec != Vector3.zero);
     }
-    //void Dodge()
-    //{
-    //    if (spaceDown && moveVec != Vector3.zero && !isDodge && !shiftDown && !isSwap)
-    //    {
-    //        isMove = false;
-    //        dodgeVec = new Vector3(0, moveVec.y, 0);
-    //        mesh.transform.rotation = Quaternion.Lerp(mesh.transform.rotation, Quaternion.LookRotation(moveVec), 10f);
-    //        // transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(dir), Time.deltaTime * rotateSpeed);
-    //        //Vector3 playerRotationY = new Vector3(0, yRotation, 0) * mouseSensitivity;
-    //        //rigid.MoveRotation(rigid.rotation * Quaternion.Euler(playerRotationY));
-    //        //dodgeVec = moveVec;
-    //        //mesh.transform.localRotation = Quaternion.Euler(0,moveVec.y,0);
-    //        rigid.AddForce(moveVec * 2f, ForceMode.Impulse);
-    //        //moveSpeed *= 2;
-    //        anim.SetTrigger("doDodge");
-    //        isDodge = true;
-    //        //playerCamera.enabled = false;
-    //        //secondCamera.enabled = true;
-    //        Invoke("DodgeOut", 0.5f);
-    //    }
-    //}
-    //void DodgeOut()
-    //{
-    //    //moveSpeed /= 2;
-    //    rigid.velocity = Vector3.zero;
-    //    //playerCamera.enabled = true;
-    //    //secondCamera.enabled = false;
-    //    isMove = true;
-    //    isDodge = false;
-    //}
+    
 
     void Attack()
     {
         if (equipWeapon == null) return;
-        if (equipWeapon.type == Weapon.Type.Range && equipWeapon.curAmmo == 0) return;
+        if (equipWeapon.type == PhotonWeapon.Type.range && equipWeapon.curAmmo == 0) return;
         fireDelay += Time.deltaTime;
         isFireReady = equipWeapon.rate < fireDelay;
 
         if (fDown && isFireReady && !isDodge && !isSwap)
         {
             equipWeapon.Use();
-            anim.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
+            anim.SetTrigger(equipWeapon.type == PhotonWeapon.Type.melee ? "doSwing" : "doShot");
             fireDelay = 0;
         }
     }
     [PunRPC]
+    public void PunSwap(int weaponIndex)
+    {
+        if (equipWeapon != null)
+        {
+            equipWeapon.gameObject.SetActive(false);
+            for (int i = 0; i < equipWeaponImages.Length; i++)
+            {
+                equipWeaponImages[i].SetActive(false);
+            }
+        }
+        equipWeapon = weapons[weaponIndex].GetComponent<PhotonWeapon>();
+        equipWeapon.weaponPv = pv;
+        equipWeapon.gameObject.SetActive(true);
+        equipWeaponImages[weaponIndex].SetActive(true);
+        //if ((s1Down || s2Down || s3Down) && !isDodge && !isSwap)
+        //{
+        //    if (equipWeapon != null)
+        //    {
+        //        equipWeapon.gameObject.SetActive(false);
+        //        for (int i = 0; i < equipWeaponImages.Length; i++)
+        //        {
+        //            equipWeaponImages[i].SetActive(false);
+        //        }
+        //    }
+        //    equipWeaponIndex = weaponIndex;
+        //    equipWeapon = weapons[weaponIndex].GetComponent<Weapon>();
+        //    equipWeapon.gameObject.SetActive(true);
+        //    equipWeaponImages[equipWeaponIndex].SetActive(true);
+        //}
+    }
     public void Swap()
     {
         if (s1Down && (!hasweapons[0] || equipWeaponIndex == 0)) return;
@@ -276,20 +276,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
         if (s3Down && hasweapons[2]) weaponIndex = 2;
         if ((s1Down || s2Down || s3Down) && !isDodge && !isSwap)
         {
-            if (equipWeapon != null)
-            {
-                equipWeapon.gameObject.SetActive(false);
-                for (int i = 0; i < equipWeaponImages.Length; i++)
-                {
-                    equipWeaponImages[i].SetActive(false);
-                }
-            }
-
-            equipWeaponIndex = weaponIndex;
-            equipWeapon = weapons[weaponIndex].GetComponent<Weapon>();
-            equipWeapon.gameObject.SetActive(true);
-            equipWeaponImages[equipWeaponIndex].SetActive(true);
-
+            pv.RPC("PunSwap", RpcTarget.All, weaponIndex);
             anim.SetTrigger("doSwap");
             isSwap = true;
             Invoke("SwapOut", 0.5f);
@@ -302,7 +289,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
 
     void AimSetCamPosition()
     {
-        if (!equipWeapon || equipWeapon.type == Weapon.Type.Melee) return;
+        if (!equipWeapon || equipWeapon.type == PhotonWeapon.Type.melee) return;
         anim.SetBool("isAim", f2Down);
         if (f2Down && !isDodge)
         {
@@ -317,7 +304,6 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
             crossHair.SetActive(false);
         }
     }
-    [PunRPC]
     public void CameraRotation()
     {
         if (isDodge) return;
@@ -326,14 +312,20 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
         currentCameraRotation = Mathf.Clamp(currentCameraRotation, cameraRotationMinLimit, cameraRotationMaxLimit);
         currentCameraRotation -= camerRotationX;
         Camera.transform.localEulerAngles = new Vector3(currentCameraRotation, 0, 0);
-        playerHead.transform.localEulerAngles = new Vector3(currentCameraRotation, 0, 0);
-        bulletPos.transform.localEulerAngles = new Vector3(currentCameraRotation, 0, 0);
+        
+        pv.RPC("PunCameraRotation", RpcTarget.All, currentCameraRotation);
+        
+
+    }
+    [PunRPC]
+    public void PunCameraRotation(float cameraRt)
+    {
+        playerHead.transform.localEulerAngles = new Vector3(cameraRt, 0, 0);
+        bulletPos.transform.localEulerAngles = new Vector3(cameraRt, 0, 0);
         if (f2Down)
         {
-            playerWeaponHand.transform.localEulerAngles = new Vector3(playerWeaponHandRt.x, playerWeaponHandRt.y, playerWeaponHandRt.z - currentCameraRotation);
-            //new Vector3(playerHandRt.localEulerAngles.x, playerHandRt.localEulerAngles.y, playerHandRt.localEulerAngles.z - currentCameraRotation);
+            playerWeaponHand.transform.localEulerAngles = new Vector3(playerWeaponHandRt.x, playerWeaponHandRt.y, playerWeaponHandRt.z - cameraRt);
         }
-
     }
     void Turn()
     {
@@ -346,7 +338,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
     void Reload()
     {
         if (!equipWeapon) return;
-        if (equipWeapon.type == Weapon.Type.Melee) return;
+        if (equipWeapon.type == PhotonWeapon.Type.melee) return;
         if (hasAmmo == 0) return;
 
         if ((rDown && !isDodge & !isSwap && isFireReady) || (equipWeapon.curAmmo == 0 && fDown && !isReload))
