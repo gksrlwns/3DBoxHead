@@ -2434,11 +2434,7 @@ MonoBehaviour:
   rate: 0.15
   meleeArea: {fileID: 0}
   trailEff: {fileID: 0}
-  bulletPrefab: {fileID: 497207874061601198, guid: 5ba3c71a0998b2048b04ff30a56e23b5,
-    type: 3}
   bulletPos: {fileID: 570659166}
-  bulletCase: {fileID: 3119811399364674251, guid: f848436b06f978641a7e817d9220242f,
-    type: 3}
   bulletCasePos: {fileID: 1266576580}
   weaponPv: {fileID: 0}
 --- !u!114 &9164448113738694049
@@ -2495,9 +2491,7 @@ MonoBehaviour:
   rate: 0.7
   meleeArea: {fileID: 638728829}
   trailEff: {fileID: 1585632566}
-  bulletPrefab: {fileID: 0}
   bulletPos: {fileID: 0}
-  bulletCase: {fileID: 0}
   bulletCasePos: {fileID: 0}
   weaponPv: {fileID: 0}
 --- !u!114 &6483368272105728158
@@ -2541,11 +2535,7 @@ MonoBehaviour:
   rate: 0.4
   meleeArea: {fileID: 0}
   trailEff: {fileID: 0}
-  bulletPrefab: {fileID: 2083275205025106382, guid: 1874f4b332df4784fbe2b8aedbfeda1f,
-    type: 3}
   bulletPos: {fileID: 570659166}
-  bulletCase: {fileID: 3119811399364674251, guid: f848436b06f978641a7e817d9220242f,
-    type: 3}
   bulletCasePos: {fileID: 96883251}
   weaponPv: {fileID: 0}
 --- !u!114 &4482689769356470863

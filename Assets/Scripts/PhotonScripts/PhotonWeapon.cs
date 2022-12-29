@@ -14,9 +14,7 @@ public class PhotonWeapon : MonoBehaviourPunCallbacks
     public float rate;
     public BoxCollider meleeArea;
     public TrailRenderer trailEff;
-    public GameObject bulletPrefab;
     public Transform bulletPos;
-    public GameObject bulletCase;
     public Transform bulletCasePos;
     public PhotonView weaponPv;
 
@@ -37,14 +35,14 @@ public class PhotonWeapon : MonoBehaviourPunCallbacks
         else if (type == Type.range && curAmmo != 0)
         {
             curAmmo--;
-            weaponPv.RPC("ShotRPC", RpcTarget.AllBuffered, weaponIndex);
+            StartCoroutine("Shot",weaponIndex);
         }
     }
-    [PunRPC]
-    public void ShotRPC(int weaponIndex)
-    {
-        StartCoroutine("Shot", weaponIndex);
-    }
+    //[PunRPC]
+    //public void ShotRPC(int weaponIndex)
+    //{
+    //    StartCoroutine("Shot", weaponIndex);
+    //}
 
     IEnumerator Swing()
     {
@@ -71,14 +69,22 @@ public class PhotonWeapon : MonoBehaviourPunCallbacks
         bulletClone.GetComponent<PhotonView>().RPC("BulletDamege", RpcTarget.All, damage);
         Rigidbody bulletRigid = bulletClone.GetComponent<Rigidbody>();
         bulletRigid.velocity = bulletPos.forward * 50f;
-        Destroy(bulletClone, 5f);
-
         yield return null;
         GameObject bulletCaseClone = PhotonNetwork.Instantiate("PhotonBulletCase", bulletCasePos.position, bulletCasePos.rotation);
+        Debug.Log("총알집 생성");
         Rigidbody bulletCaseRigid = bulletCaseClone.GetComponent<Rigidbody>();
         bulletCaseRigid.AddForce(bulletCasePos.forward * Random.Range(-3, -2) + Vector3.up * Random.Range(2, 3), ForceMode.Impulse);
         bulletCaseRigid.AddTorque(Vector3.up * 10, ForceMode.Impulse);
-
+        //Destroy(bulletClone, 5f);
+    }
+    IEnumerator ShotBulletCase()
+    {
+        yield return null;
+        GameObject bulletCaseClone = PhotonNetwork.Instantiate("PhotonBulletCase", bulletCasePos.position, bulletCasePos.rotation);
+        Debug.Log("총알집 생성");
+        Rigidbody bulletCaseRigid = bulletCaseClone.GetComponent<Rigidbody>();
+        bulletCaseRigid.AddForce(bulletCasePos.forward * Random.Range(-3, -2) + Vector3.up * Random.Range(2, 3), ForceMode.Impulse);
+        bulletCaseRigid.AddTorque(Vector3.up * 10, ForceMode.Impulse);
     }
 }
 //    [PunRPC]

@@ -15,6 +15,11 @@ public class PhotonBullet : MonoBehaviourPunCallbacks
         bulletPv = GetComponent<PhotonView>();
     }
 
+    private void Start()
+    {
+        Destroy(this.gameObject, 3f);
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Floor"))

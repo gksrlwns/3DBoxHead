@@ -277,7 +277,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
         if (s3Down && hasweapons[2]) weaponIndex = 2;
         if ((s1Down || s2Down || s3Down) && !isDodge && !isSwap)
         {
-            pv.RPC("PunSwap", RpcTarget.All, weaponIndex);
+            pv.RPC("PunSwap", RpcTarget.AllBuffered, weaponIndex);
             anim.SetTrigger("doSwap");
             isSwap = true;
             Invoke("SwapOut", 0.5f);
