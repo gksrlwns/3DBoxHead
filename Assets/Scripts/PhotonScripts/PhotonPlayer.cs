@@ -355,6 +355,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
     {
         int reAmmo = hasAmmo < equipWeapon.maxAmmo ? hasAmmo : equipWeapon.maxAmmo;
         Debug.Log($"리로드{reAmmo},{hasAmmo}");
+        hasAmmo += equipWeapon.curAmmo;
         equipWeapon.curAmmo = reAmmo;
         hasAmmo -= reAmmo;
         isReload = false;

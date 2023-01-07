@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -4556619913839442392}
   - component: {fileID: 4710304038236962032}
   m_Layer: 9
-  m_Name: PhotonBullet HandGun
+  m_Name: PhotonBulletHandGun
   m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -204,7 +204,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 4710304038236962032}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0

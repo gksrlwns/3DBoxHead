@@ -60,7 +60,7 @@ public class PhotonWeapon : MonoBehaviourPunCallbacks
         yield return null;
         if(weaponIndex == 1)
         {
-            bulletClone = PhotonNetwork.Instantiate("PhotonBullet HandGun", bulletPos.position, bulletPos.rotation);
+            bulletClone = PhotonNetwork.Instantiate("PhotonBulletHandGun", bulletPos.position, bulletPos.rotation);
         }
         else if( weaponIndex == 2)
         {

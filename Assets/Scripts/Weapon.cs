@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-    public enum Type { Melee, Range };
+    public enum Type { Melee, Range, Granade };
     public Type type;
     public int damage;
     public int curAmmo;
@@ -29,6 +29,10 @@ public class Weapon : MonoBehaviour
         {
             curAmmo--;
             StartCoroutine("Shot");
+        }
+        else if(type== Type.Granade)
+        {
+            StartCoroutine("Throw");
         }
     }
 
@@ -59,5 +63,10 @@ public class Weapon : MonoBehaviour
         bulletCaseRigid.AddForce(bulletCasePos.forward * Random.Range(-3, -2) + Vector3.up * Random.Range(2, 3), ForceMode.Impulse);
         bulletCaseRigid.AddTorque(Vector3.up * 10, ForceMode.Impulse);
 
+    }
+
+    IEnumerator Throw()
+    {
+        yield return null;
     }
 }
