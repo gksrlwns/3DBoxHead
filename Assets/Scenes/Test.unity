@@ -693,6 +693,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1080030156, guid: be088041be0f442468a0f00974221200, type: 3}
+      propertyPath: throwAngle
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1080030156, guid: be088041be0f442468a0f00974221200, type: 3}
       propertyPath: grenadePref
       value: 
       objectReference: {fileID: 7209417620919649187, guid: c5cd22583cd1a60418326908221215f1,
@@ -940,7 +944,7 @@ Transform:
   m_GameObject: {fileID: 1408754896}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 100, y: 1, z: 100}
+  m_LocalScale: {x: 200, y: 1, z: 200}
   m_Children: []
   m_Father: {fileID: 769657066}
   m_RootOrder: 0

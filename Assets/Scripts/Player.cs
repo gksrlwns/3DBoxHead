@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
     public float moveSpeed;
     public float mouseSensitivity;
     public float cameraSpeed;
+    public float throwAngle;
 
     [Header("카메라")]
     public float cameraRotationMaxLimit;
@@ -211,8 +212,8 @@ public class Player : MonoBehaviour
     }
     void Throw()
     {
-        Vector3 vo = CalculateVelcoity(throwHit.point, equipWeapon.transform.position, 1f);
-        Rigidbody voRigid = Instantiate(grenadePref, equipWeapon.transform.position, equipWeapon.transform.rotation).GetComponent<Rigidbody>();
+        Vector3 vo = CalculateVelcoity(throwHit.point, equipWeapon.transform.position, 1.5f);
+        Rigidbody voRigid = Instantiate(grenadePref, equipWeapon.transform.position, Quaternion.identity).GetComponent<Rigidbody>();
         voRigid.velocity = vo;
     }
     void Swap()
@@ -309,12 +310,21 @@ public class Player : MonoBehaviour
     }
     void AimThrow()
     {
-        Debug.DrawLine(playerHead.transform.position, playerHead.transform.forward, Color.blue);
-        if (Physics.Linecast(playerHead.transform.position,Vector3.one * 100f, out throwHit))
+        var target = AngleToDirection(throwAngle);
+        int layerMask = 1 << LayerMask.NameToLayer("Floor");
+        Debug.DrawLine(playerCamera.transform.position, playerCamera.transform.forward * 50f, Color.blue);
+        if (Physics.Raycast(playerCamera.transform.position, target.normalized, out throwHit, 50f, layerMask))
         {
-            Debug.DrawLine(playerHead.transform.position, throwHit.point, Color.red);
-            
+            Debug.DrawLine(playerCamera.transform.position, throwHit.point, Color.red);
         }
+        //else도 만들어서 Raycast 없는 경우 사거리에 맞게 + 라인렌더러 만들어서 포물선 보여주기.
+    }
+    Vector3 AngleToDirection(float angle)
+    {
+        Vector3 dir = playerCamera.transform.forward;
+        var quat = Quaternion.Euler(angle, 0, 0);
+        Vector3 newDir = quat * dir;
+        return newDir;
     }
     Vector3 CalculateVelcoity(Vector3 target, Vector3 origin, float time)
     {
