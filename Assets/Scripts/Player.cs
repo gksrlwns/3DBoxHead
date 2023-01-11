@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     public float mouseSensitivity;
     public float cameraSpeed;
     public float throwAngle;
+    public LineRenderer lr;
 
     [Header("카메라")]
     public float cameraRotationMaxLimit;
@@ -315,9 +316,31 @@ public class Player : MonoBehaviour
         Debug.DrawLine(playerCamera.transform.position, playerCamera.transform.forward * 50f, Color.blue);
         if (Physics.Raycast(playerCamera.transform.position, target.normalized, out throwHit, 50f, layerMask))
         {
+            Vector3 vo = CalculateVelcoity(throwHit.point, equipWeapon.transform.position, 1.5f);
+            DrawPath(vo);
+            //Rigidbody voRigid = Instantiate(throwLine, equipWeapon.transform.position, Quaternion.identity).GetComponent<Rigidbody>();
+            //voRigid.velocity = vo;
             Debug.DrawLine(playerCamera.transform.position, throwHit.point, Color.red);
         }
         //else도 만들어서 Raycast 없는 경우 사거리에 맞게 + 라인렌더러 만들어서 포물선 보여주기.
+    }
+    void DrawPath(Vector3 velocity)
+    {
+        Vector3 previousDrawPoint = equipWeapon.transform.position;
+        //int resolution = 30;
+        //lineRenderer.positionCount = resolution;
+        for (int i = 1; i <= lr.positionCount; i++)
+        {
+            //float simulationTime = i / (float)resolution * launchData.timeToTarget;
+            float simulationTime = i / (float)lr.positionCount * 1f;
+
+            Vector3 displacement = velocity * simulationTime + Vector3.up * Physics.gravity.y * simulationTime * simulationTime / 2f;
+            Vector3 drawPoint = equipWeapon.transform.position + displacement;
+            //DebugExtension.DebugPoint(drawPoint, 1, 1000f);//유니티 에셋스토어 Debug Extension
+            Debug.DrawLine(previousDrawPoint, drawPoint, Color.green);
+            lr.SetPosition(i - 1, drawPoint);
+            previousDrawPoint = drawPoint;
+        }
     }
     Vector3 AngleToDirection(float angle)
     {
