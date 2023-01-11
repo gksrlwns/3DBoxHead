@@ -1,3 +1,15 @@
+스크립트 변동
+-플레이어 : aimsetcamPosition(if문 추가 수류탄), input(스왑4, ), swap(스왑4 추가),
+CameraRotation, Attack(), 
+추가 함수 : CalculateVelcoity()
+
+-웨폰
+프리펩 변동
+-플레이어 : 캔버스(수류탄이미지), 오른손(수류탄)
+
+수류탄 던지는 애니메이션 수정
+조준했을 때 만들기
+
 정상 작동 : 애니메이션, 동작
 겹치는것 : 캔버스(v)
 보이지 않는 것 : 착용 무기(v), rotation(v), 총알, 총알집,

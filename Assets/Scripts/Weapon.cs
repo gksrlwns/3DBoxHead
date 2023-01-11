@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-    public enum Type { Melee, Range, Granade };
+    public enum Type { Melee, Range, Grenade };
     public Type type;
     public int damage;
     public int curAmmo;
@@ -30,7 +30,7 @@ public class Weapon : MonoBehaviour
             curAmmo--;
             StartCoroutine("Shot");
         }
-        else if(type== Type.Granade)
+        else if(type== Type.Grenade)
         {
             StartCoroutine("Throw");
         }

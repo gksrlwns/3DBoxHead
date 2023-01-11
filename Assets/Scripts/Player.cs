@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Photon.Pun;
 
 public class Player : MonoBehaviour
 {
@@ -10,6 +9,7 @@ public class Player : MonoBehaviour
     public GameObject[] weapons;
     public bool[] hasweapons;
     public GameObject bulletPos;
+    public GameObject grenadePref;
 
     [Header("속도")]
     public float moveSpeed;
@@ -54,6 +54,7 @@ public class Player : MonoBehaviour
     bool s1Down;
     bool s2Down;
     bool s3Down;
+    bool s4Down;
     bool fDown;
     bool f2Down;
     
@@ -78,6 +79,7 @@ public class Player : MonoBehaviour
     Weapon equipWeapon;
     MeshRenderer[] meshs;
     Camera playerCamera;
+    RaycastHit throwHit;
 
 
     private void Awake()
@@ -107,7 +109,7 @@ public class Player : MonoBehaviour
         Reload();
         Swap();
         Attack();
-        AimTarget();
+        //AimTarget();
         PlayerState();
 
         if (health == 0)
@@ -143,36 +145,7 @@ public class Player : MonoBehaviour
             ammoText.text = $"{equipWeapon.curAmmo} / {hasAmmo}";
         coinText.text = $"{coin}";
     }
-    void AimTarget()
-    {
-        //Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * 100f, Color.red, 0.5f);
-        RaycastHit hit;
-        RaycastHit bulHit;
-        int layerMask = 1 << LayerMask.NameToLayer("MiddleWall");
-        if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit))
-        {
-            //hit 과 bulhit이 같은 지점이 아니라면 blockedAim true
-            Debug.DrawLine(playerCamera.transform.position, hit.point);
-            bulletPos.transform.LookAt(hit.point);
-            //layer로 bullet과 충돌 x, bulhit을 플레이어 방향으로 조금 이동
-            if(Physics.Linecast(bulletPos.transform.position, hit.point, out bulHit, layerMask))
-            {
-                Debug.DrawLine(bulletPos.transform.position, bulHit.point);
-                if(hit.point != bulHit.point)
-                    blockedAim.SetActive(true);
-                else
-                    blockedAim.SetActive(false);
-                Vector3 dir = transform.position - bulHit.point;
-                dir.Normalize();
-                blockedAim.transform.forward = dir;
-                blockedAim.transform.position = bulHit.point + dir * 0.5f;
-                //Debug.Log(bulHit.point);
-            }
-            //Debug.DrawRay(bulletPos.transform.position, bulletPos.transform.forward * 100f, Color.green, 0.5f);
-        }
-        
-        
-    }
+    
 
     #region 플레이어 동작
 
@@ -186,6 +159,7 @@ public class Player : MonoBehaviour
         s1Down = Input.GetButtonDown("Swap1");
         s2Down = Input.GetButtonDown("Swap2");
         s3Down = Input.GetButtonDown("Swap3");
+        s4Down = Input.GetButtonDown("Swap4");
         fDown = Input.GetButton("Fire1");
         f2Down = Input.GetButton("Fire2");
     }
@@ -205,61 +179,54 @@ public class Player : MonoBehaviour
         anim.SetBool("isWalk", shiftDown);
         anim.SetBool("isRun", moveVec != Vector3.zero);
     }
-    //void Dodge()
-    //{
-    //    if (spaceDown && moveVec != Vector3.zero && !isDodge && !shiftDown && !isSwap)
-    //    {
-    //        isMove = false;
-    //        dodgeVec = new Vector3(0, moveVec.y, 0);
-    //        mesh.transform.rotation = Quaternion.Lerp(mesh.transform.rotation, Quaternion.LookRotation(moveVec), 10f);
-    //        // transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(dir), Time.deltaTime * rotateSpeed);
-    //        //Vector3 playerRotationY = new Vector3(0, yRotation, 0) * mouseSensitivity;
-    //        //rigid.MoveRotation(rigid.rotation * Quaternion.Euler(playerRotationY));
-    //        //dodgeVec = moveVec;
-    //        //mesh.transform.localRotation = Quaternion.Euler(0,moveVec.y,0);
-    //        rigid.AddForce(moveVec * 2f, ForceMode.Impulse);
-    //        //moveSpeed *= 2;
-    //        anim.SetTrigger("doDodge");
-    //        isDodge = true;
-    //        //playerCamera.enabled = false;
-    //        //secondCamera.enabled = true;
-    //        Invoke("DodgeOut", 0.5f);
-    //    }
-    //}
-    //void DodgeOut()
-    //{
-    //    //moveSpeed /= 2;
-    //    rigid.velocity = Vector3.zero;
-    //    //playerCamera.enabled = true;
-    //    //secondCamera.enabled = false;
-    //    isMove = true;
-    //    isDodge = false;
-    //}
 
     void Attack()
     {
         if (equipWeapon == null) return;
-        if (equipWeapon.type == Weapon.Type.Range && equipWeapon.curAmmo == 0) return;
+        if (equipWeapon.type == Weapon.Type.Range && equipWeapon.curAmmo == 0) return;        
         fireDelay += Time.deltaTime;
         isFireReady = equipWeapon.rate < fireDelay;
         
         if (fDown && isFireReady && !isDodge && !isSwap)
         {
-            equipWeapon.Use();
-            anim.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
+            switch (equipWeapon.type)
+            {
+                case Weapon.Type.Melee:
+                    equipWeapon.Use();
+                    anim.SetTrigger("doSwing");
+                    break;
+                case Weapon.Type.Range:
+                    equipWeapon.Use();
+                    anim.SetTrigger("doShot");
+                    break;
+                case Weapon.Type.Grenade:
+                    Throw();
+                    anim.SetTrigger("doThrow");
+                    AimThrow();
+                    break;
+            }
+            //anim.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
             fireDelay = 0;
         }
+    }
+    void Throw()
+    {
+        Vector3 vo = CalculateVelcoity(throwHit.point, equipWeapon.transform.position, 1f);
+        Rigidbody voRigid = Instantiate(grenadePref, equipWeapon.transform.position, equipWeapon.transform.rotation).GetComponent<Rigidbody>();
+        voRigid.velocity = vo;
     }
     void Swap()
     {
         if (s1Down && (!hasweapons[0] || equipWeaponIndex == 0)) return;
         if (s2Down && (!hasweapons[1] || equipWeaponIndex == 1)) return;
         if (s3Down && (!hasweapons[2] || equipWeaponIndex == 2)) return;
+        if (s4Down && (!hasweapons[3] || equipWeaponIndex == 3)) return;
         int weaponIndex = -1;
         if (s1Down && hasweapons[0]) weaponIndex = 0;
         if (s2Down && hasweapons[1]) weaponIndex = 1;
         if (s3Down && hasweapons[2]) weaponIndex = 2;
-        if((s1Down || s2Down || s3Down) && !isDodge && !isSwap)
+        if (s4Down && hasweapons[2]) weaponIndex = 3;
+        if((s1Down || s2Down || s3Down || s4Down) && !isDodge && !isSwap)
         {
             if (equipWeapon != null)
             {
@@ -288,12 +255,22 @@ public class Player : MonoBehaviour
     void AimSetCamPosition()
     {
         if (!equipWeapon || equipWeapon.type == Weapon.Type.Melee) return;
-        anim.SetBool("isAim", f2Down);
+        if (equipWeapon.type == Weapon.Type.Range) anim.SetBool("isAim", f2Down);
+        else if (equipWeapon.type == Weapon.Type.Grenade) anim.SetBool("isThrowAim", f2Down);
         if (f2Down && !isDodge)
         {
             curCamTr.position = Vector3.Lerp(curCamTr.position, Camera2Tr.position, cameraSpeed * Time.deltaTime);
-            crossHair.SetActive(true);
-            AimTarget();
+            
+            if(equipWeapon.type == Weapon.Type.Range)
+            {
+                AimShot();
+                crossHair.SetActive(true);
+            }
+            else if(equipWeapon.type == Weapon.Type.Grenade)
+            {
+                AimThrow();
+            }
+            
         }
         else
         {
@@ -301,6 +278,64 @@ public class Player : MonoBehaviour
             curCamTr.position = Vector3.Lerp(curCamTr.position, CameraTr.position, cameraSpeed * Time.deltaTime);
             crossHair.SetActive(false);
         }
+    }
+    void AimShot()
+    {
+        //Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * 100f, Color.red, 0.5f);
+        RaycastHit hit;
+        RaycastHit bulHit;
+        int layerMask = 1 << LayerMask.NameToLayer("MiddleWall");
+        if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit))
+        {
+            //hit 과 bulhit이 같은 지점이 아니라면 blockedAim true
+            Debug.DrawLine(playerCamera.transform.position, hit.point);
+            bulletPos.transform.LookAt(hit.point);
+            //layer로 bullet과 충돌 x, bulhit을 플레이어 방향으로 조금 이동
+            if (Physics.Linecast(bulletPos.transform.position, hit.point, out bulHit, layerMask))
+            {
+                Debug.DrawLine(bulletPos.transform.position, bulHit.point);
+                if (hit.point != bulHit.point)
+                    blockedAim.SetActive(true);
+                else
+                    blockedAim.SetActive(false);
+                Vector3 dir = transform.position - bulHit.point;
+                dir.Normalize();
+                blockedAim.transform.forward = dir;
+                blockedAim.transform.position = bulHit.point + dir * 0.5f;
+                //Debug.Log(bulHit.point);
+            }
+            //Debug.DrawRay(bulletPos.transform.position, bulletPos.transform.forward * 100f, Color.green, 0.5f);
+        }
+    }
+    void AimThrow()
+    {
+        Debug.DrawLine(playerHead.transform.position, playerHead.transform.forward, Color.blue);
+        if (Physics.Linecast(playerHead.transform.position,Vector3.one * 100f, out throwHit))
+        {
+            Debug.DrawLine(playerHead.transform.position, throwHit.point, Color.red);
+            
+        }
+    }
+    Vector3 CalculateVelcoity(Vector3 target, Vector3 origin, float time)
+    {
+        //define the distance x and y first
+        Vector3 distance = target - origin;
+        Vector3 distanceXZ = distance; //x와z의 평면이면 기본적으로 거리와 같은 벡터
+        distanceXZ.y = 0f;//y는 0으로 설정
+
+        //create a float the represent our distance
+        float Sy = distance.y;//세로 높이의 거리를 지정
+        float Sxz = distanceXZ.magnitude;
+
+        //속도 계산
+        float Vxz = Sxz / time;
+        float Vy = Sy / time + 0.5f * Mathf.Abs(Physics.gravity.y) * time;
+
+        //계산으로 인해 두축의 초기 속도 가지고 새로운 벡터를 만들수 있음
+        Vector3 result = distanceXZ.normalized;
+        result *= Vxz;
+        result.y = Vy;
+        return result;
     }
     void CameraRotation()
     {
@@ -312,7 +347,7 @@ public class Player : MonoBehaviour
         playerCamera.transform.localEulerAngles = new Vector3(currentCameraRotation, 0, 0);
         playerHead.transform.localEulerAngles = new Vector3(currentCameraRotation, 0, 0);
         bulletPos.transform.localEulerAngles = new Vector3(currentCameraRotation, 0, 0);
-        if (f2Down)
+        if (f2Down && equipWeapon.type == Weapon.Type.Range)
         {
             playerWeaponHand.transform.localEulerAngles = new Vector3(playerWeaponHandRt.x, playerWeaponHandRt.y, playerWeaponHandRt.z - currentCameraRotation);
                 //new Vector3(playerHandRt.localEulerAngles.x, playerHandRt.localEulerAngles.y, playerHandRt.localEulerAngles.z - currentCameraRotation);
@@ -330,7 +365,7 @@ public class Player : MonoBehaviour
     void Reload()
     {
         if (!equipWeapon) return;
-        if (equipWeapon.type == Weapon.Type.Melee) return;
+        if (equipWeapon.type != Weapon.Type.Range) return;
         if (hasAmmo == 0) return;
 
         if((rDown && !isDodge & !isSwap && isFireReady ) || (equipWeapon.curAmmo == 0 && fDown && !isReload))
