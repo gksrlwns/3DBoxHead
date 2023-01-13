@@ -599,6 +599,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4462523135328065168, guid: 3303c9daed0626843a4a9930f10d9586,
         type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.0000002
+      objectReference: {fileID: 0}
+    - target: {fileID: 4462523135328065168, guid: 3303c9daed0626843a4a9930f10d9586,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.0000002
+      objectReference: {fileID: 0}
+    - target: {fileID: 4462523135328065168, guid: 3303c9daed0626843a4a9930f10d9586,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -660,7 +670,7 @@ GameObject:
   - component: {fileID: 527709746}
   - component: {fileID: 527709745}
   m_Layer: 0
-  m_Name: Line
+  m_Name: LineRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -736,6 +746,26 @@ LineRenderer:
   - {x: 0, y: 0, z: 1}
   - {x: 0, y: 0, z: 1}
   - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 0.1
@@ -756,7 +786,7 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 1, b: 1, a: 1}
+      key0: {r: 1, g: 0, b: 0.80021286, a: 1}
       key1: {r: 1, g: 1, b: 1, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
@@ -798,7 +828,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 527709744}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -853,6 +883,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 527709745}
     - target: {fileID: 1080030156, guid: be088041be0f442468a0f00974221200, type: 3}
+      propertyPath: lRobj
+      value: 
+      objectReference: {fileID: 527709744}
+    - target: {fileID: 1080030156, guid: be088041be0f442468a0f00974221200, type: 3}
       propertyPath: throwLine
       value: 
       objectReference: {fileID: 833559004223749240, guid: 7196510f9a689d04489a70694cd72fb7,
@@ -866,6 +900,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 7209417620919649187, guid: c5cd22583cd1a60418326908221215f1,
         type: 3}
+    - target: {fileID: 1080030156, guid: be088041be0f442468a0f00974221200, type: 3}
+      propertyPath: lineRendererObj
+      value: 
+      objectReference: {fileID: 527709744}
     - target: {fileID: 5461052779654786451, guid: be088041be0f442468a0f00974221200,
         type: 3}
       propertyPath: m_Name

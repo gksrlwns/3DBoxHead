@@ -3,7 +3,7 @@
 CameraRotation, Attack(), AimTarget -> AimShot
 추가 함수 : CalculateVelcoity(), Throw, AimThrow
 
-수류탄 문제점 : Ray가 없을 경우도 만들기
+
 -웨폰
 프리펩 변동
 -플레이어 : 캔버스(수류탄이미지), 오른손(수류탄)

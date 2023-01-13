@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
     public float mouseSensitivity;
     public float cameraSpeed;
     public float throwAngle;
-    public LineRenderer lr;
+    public GameObject lineRendererObj;
 
     [Header("카메라")]
     public float cameraRotationMaxLimit;
@@ -82,6 +82,7 @@ public class Player : MonoBehaviour
     MeshRenderer[] meshs;
     Camera playerCamera;
     RaycastHit throwHit;
+    LineRenderer lr;
 
 
     private void Awake()
@@ -89,6 +90,7 @@ public class Player : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         rigid = GetComponent<Rigidbody>();
         meshs = GetComponentsInChildren<MeshRenderer>();
+        lr = lineRendererObj.GetComponent<LineRenderer>();
         playerCamera = Camera.main;
     }
     void Start()
@@ -271,6 +273,7 @@ public class Player : MonoBehaviour
             else if(equipWeapon.type == Weapon.Type.Grenade)
             {
                 AimThrow();
+                lineRendererObj.SetActive(true);
             }
             
         }
@@ -279,6 +282,7 @@ public class Player : MonoBehaviour
             if (curCamTr.position == CameraTr.position) return;
             curCamTr.position = Vector3.Lerp(curCamTr.position, CameraTr.position, cameraSpeed * Time.deltaTime);
             crossHair.SetActive(false);
+            lineRendererObj.SetActive(false);
         }
     }
     void AimShot()
@@ -316,7 +320,7 @@ public class Player : MonoBehaviour
         Debug.DrawLine(playerCamera.transform.position, playerCamera.transform.forward * 50f, Color.blue);
         if (Physics.Raycast(playerCamera.transform.position, target.normalized, out throwHit, 50f, layerMask))
         {
-            Vector3 vo = CalculateVelcoity(throwHit.point, equipWeapon.transform.position, 1.5f);
+            Vector3 vo = CalculateVelcoity(throwHit.point, equipWeapon.transform.position, 1f);
             DrawPath(vo);
             //Rigidbody voRigid = Instantiate(throwLine, equipWeapon.transform.position, Quaternion.identity).GetComponent<Rigidbody>();
             //voRigid.velocity = vo;
@@ -327,6 +331,7 @@ public class Player : MonoBehaviour
     void DrawPath(Vector3 velocity)
     {
         Vector3 previousDrawPoint = equipWeapon.transform.position;
+        
         //int resolution = 30;
         //lineRenderer.positionCount = resolution;
         for (int i = 1; i <= lr.positionCount; i++)
