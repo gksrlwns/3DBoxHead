@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
     public float mouseSensitivity;
     public float cameraSpeed;
     public float throwAngle;
-    public GameObject lineRendererObj;
+    public GameObject lineRendererPrefab;
 
     [Header("카메라")]
     public float cameraRotationMaxLimit;
@@ -87,10 +87,11 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
+        //lr = Instantiate(lineRendererPrefab, transform.position, transform.rotation).GetComponent<LineRenderer>();
         anim = GetComponentInChildren<Animator>();
         rigid = GetComponent<Rigidbody>();
         meshs = GetComponentsInChildren<MeshRenderer>();
-        lr = lineRendererObj.GetComponent<LineRenderer>();
+        lr = lineRendererPrefab.GetComponent<LineRenderer>();
         playerCamera = Camera.main;
     }
     void Start()
@@ -273,7 +274,7 @@ public class Player : MonoBehaviour
             else if(equipWeapon.type == Weapon.Type.Grenade)
             {
                 AimThrow();
-                lineRendererObj.SetActive(true);
+                lineRendererPrefab.SetActive(true);
             }
             
         }
@@ -282,7 +283,7 @@ public class Player : MonoBehaviour
             if (curCamTr.position == CameraTr.position) return;
             curCamTr.position = Vector3.Lerp(curCamTr.position, CameraTr.position, cameraSpeed * Time.deltaTime);
             crossHair.SetActive(false);
-            lineRendererObj.SetActive(false);
+            lineRendererPrefab.SetActive(false);
         }
     }
     void AimShot()

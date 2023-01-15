@@ -177,8 +177,13 @@ public class Enemy : MonoBehaviour
             Destroy(other.gameObject);
         }
     }
-
-    IEnumerator OnDamage(Vector3 reactVec)
+    public void HitByGrenade(Vector3 explosionPos, int damage)
+    {
+        curHp -= damage;
+        Vector3 reactVec = transform.position - explosionPos;
+        StartCoroutine(OnDamage(reactVec,true));
+    }
+    IEnumerator OnDamage(Vector3 reactVec, bool isGrenade = false)
     {
         for (int i = 0; i < meshs.Length; i++)
         {
@@ -200,10 +205,23 @@ public class Enemy : MonoBehaviour
             isChase = false;
             isDead = true;
             nav.enabled = false;
+            if (isGrenade)
+            {
+                reactVec = reactVec.normalized;
+                reactVec += Vector3.up;
+                rigid.freezeRotation = false;
+                rigid.AddForce(reactVec * 5, ForceMode.Impulse);
+                rigid.AddTorque(reactVec * 5, ForceMode.Impulse);
+            }
+            else
+            {
+                reactVec = reactVec.normalized;
+                reactVec += Vector3.up;
+                rigid.AddForce(reactVec * 10, ForceMode.Impulse);
+            }
+            
             //넉백
-            reactVec = reactVec.normalized;
-            reactVec += Vector3.up;
-            rigid.AddForce(reactVec * 10, ForceMode.Impulse);
+            
             anim.SetTrigger("doDie");
             Destroy(this.gameObject, 2f);
         }
