@@ -74,24 +74,29 @@ public class Player : MonoBehaviour
 
     public int equipWeaponIndex = -1;
     float fireDelay;
-    
+    float hitpointDistance;
+
+
     Vector3 moveVec;
+    Vector3 hitDir;
+    Vector3 hitPointVec;
+    Vector3 vo;
+    RaycastHit throwHit;
     Animator anim;
     Rigidbody rigid;
     Weapon equipWeapon;
     MeshRenderer[] meshs;
     Camera playerCamera;
-    RaycastHit throwHit;
     LineRenderer lr;
-
+    GameObject lrObj;
 
     private void Awake()
     {
-        //lr = Instantiate(lineRendererPrefab, transform.position, transform.rotation).GetComponent<LineRenderer>();
+        lrObj = Instantiate(lineRendererPrefab, Vector3.zero, Quaternion.identity);
         anim = GetComponentInChildren<Animator>();
         rigid = GetComponent<Rigidbody>();
         meshs = GetComponentsInChildren<MeshRenderer>();
-        lr = lineRendererPrefab.GetComponent<LineRenderer>();
+        lr = lrObj.GetComponent<LineRenderer>();
         playerCamera = Camera.main;
     }
     void Start()
@@ -207,7 +212,6 @@ public class Player : MonoBehaviour
                 case Weapon.Type.Grenade:
                     Throw();
                     anim.SetTrigger("doThrow");
-                    AimThrow();
                     break;
             }
             //anim.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
@@ -216,8 +220,9 @@ public class Player : MonoBehaviour
     }
     void Throw()
     {
-        Vector3 vo = CalculateVelcoity(throwHit.point, equipWeapon.transform.position, 1.5f);
+        //Vector3 vo = CalculateVelcoity(throwHit.point, equipWeapon.transform.position, 1.5f);
         Rigidbody voRigid = Instantiate(grenadePref, equipWeapon.transform.position, Quaternion.identity).GetComponent<Rigidbody>();
+        Debug.Log($"던지는 Pos{equipWeapon.transform.position}");
         voRigid.velocity = vo;
     }
     void Swap()
@@ -271,10 +276,15 @@ public class Player : MonoBehaviour
                 AimShot();
                 crossHair.SetActive(true);
             }
-            else if(equipWeapon.type == Weapon.Type.Grenade)
+            else if(equipWeapon.type == Weapon.Type.Grenade && isFireReady)
             {
                 AimThrow();
-                lineRendererPrefab.SetActive(true);
+                lrObj.SetActive(true);
+            }
+            else
+            {
+                crossHair.SetActive(false);
+                lrObj.SetActive(false);
             }
             
         }
@@ -283,7 +293,7 @@ public class Player : MonoBehaviour
             if (curCamTr.position == CameraTr.position) return;
             curCamTr.position = Vector3.Lerp(curCamTr.position, CameraTr.position, cameraSpeed * Time.deltaTime);
             crossHair.SetActive(false);
-            lineRendererPrefab.SetActive(false);
+            lrObj.SetActive(false);
         }
     }
     void AimShot()
@@ -316,17 +326,30 @@ public class Player : MonoBehaviour
     }
     void AimThrow()
     {
-        var target = AngleToDirection(throwAngle);
+        //var target = AngleToDirection(throwAngle);       
         int layerMask = 1 << LayerMask.NameToLayer("Floor");
-        Debug.DrawLine(playerCamera.transform.position, playerCamera.transform.forward * 50f, Color.blue);
-        if (Physics.Raycast(playerCamera.transform.position, target.normalized, out throwHit, 50f, layerMask))
+        //Debug.DrawLine(playerCamera.transform.position, playerCamera.transform.forward * 50f, Color.blue);
+        
+        //if (Physics.Raycast(playerCamera.transform.position, target.normalized, out throwHit, 50f, layerMask))
+        if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out throwHit, layerMask))
         {
-            Vector3 vo = CalculateVelcoity(throwHit.point, equipWeapon.transform.position, 1f);
-            DrawPath(vo);
-            //Rigidbody voRigid = Instantiate(throwLine, equipWeapon.transform.position, Quaternion.identity).GetComponent<Rigidbody>();
-            //voRigid.velocity = vo;
-            Debug.DrawLine(playerCamera.transform.position, throwHit.point, Color.red);
+            //Debug.Log(throwHit.point);
+            //Debug.DrawLine(playerCamera.transform.position, throwHit.point, Color.red);
+            if (throwHit.point != Vector3.zero)
+            {
+                hitPointVec = throwHit.point;
+                hitpointDistance = Vector3.Distance(playerCamera.transform.position, throwHit.point);
+            }
         }
+        else
+        {
+            hitPointVec = playerCamera.transform.position + playerCamera.transform.forward * hitpointDistance;
+            Debug.DrawLine(playerCamera.transform.position, hitPointVec, Color.black);
+        }
+        //Debug.Log($"{hitpointDistance}");
+        //Debug.Log($"{throwHit.point}\n{hitPointVec}");
+        vo = CalculateVelcoity(hitPointVec, equipWeapon.transform.position, 1.5f);
+        DrawPath(vo);
         //else도 만들어서 Raycast 없는 경우 사거리에 맞게 + 라인렌더러 만들어서 포물선 보여주기.
     }
     void DrawPath(Vector3 velocity)

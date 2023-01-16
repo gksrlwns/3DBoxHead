@@ -2863,9 +2863,14 @@ MonoBehaviour:
   - {fileID: 7209417622196060677}
   hasweapons: 01010101
   bulletPos: {fileID: 570659165}
+  grenadePref: {fileID: 7209417620919649187, guid: c5cd22583cd1a60418326908221215f1,
+    type: 3}
   moveSpeed: 30
   mouseSensitivity: 1
   cameraSpeed: 5
+  throwAngle: 20
+  lineRendererPrefab: {fileID: 7330608257018173482, guid: 9e2a4ba1826eae844ab0956620d48c3b,
+    type: 3}
   cameraRotationMaxLimit: 15
   cameraRotationMinLimit: -25
   currentCameraRotation: 0
