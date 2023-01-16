@@ -35,14 +35,17 @@ public class Player : MonoBehaviour
     public int hasAmmo;
     public int coin;
     public int health;
+    public int hasGrenade;
     public int maxAmmo;
     public int maxCoin;
     public int maxHealth;
+    public int maxGrenade;
 
     [Header("UI")]
     public Text hpText;
     public Text ammoText;
     public Text coinText;
+    public Text grenadeText;
     public GameObject[] equipWeaponImages;
     public GameManager gameManager;
     
@@ -110,6 +113,7 @@ public class Player : MonoBehaviour
     {
         //if (!gameManager.isGame) return;
         if (isDead) return;
+        
         GetInput();
         Move();
         CameraRotation();
@@ -154,6 +158,7 @@ public class Player : MonoBehaviour
         else if (equipWeapon.type == Weapon.Type.Range)
             ammoText.text = $"{equipWeapon.curAmmo} / {hasAmmo}";
         coinText.text = $"{coin}";
+        grenadeText.text = $"{hasGrenade}";
     }
     
 
@@ -193,7 +198,8 @@ public class Player : MonoBehaviour
     void Attack()
     {
         if (equipWeapon == null) return;
-        if (equipWeapon.type == Weapon.Type.Range && equipWeapon.curAmmo == 0) return;        
+        if (equipWeapon.type == Weapon.Type.Range && equipWeapon.curAmmo == 0) return;
+        if (equipWeapon.type == Weapon.Type.Grenade && hasGrenade == 0) return;
         fireDelay += Time.deltaTime;
         isFireReady = equipWeapon.rate < fireDelay;
         
@@ -222,6 +228,7 @@ public class Player : MonoBehaviour
     {
         //Vector3 vo = CalculateVelcoity(throwHit.point, equipWeapon.transform.position, 1.5f);
         Rigidbody voRigid = Instantiate(grenadePref, equipWeapon.transform.position, Quaternion.identity).GetComponent<Rigidbody>();
+        hasGrenade--;
         Debug.Log($"던지는 Pos{equipWeapon.transform.position}");
         voRigid.velocity = vo;
     }
@@ -231,11 +238,25 @@ public class Player : MonoBehaviour
         if (s2Down && (!hasweapons[1] || equipWeaponIndex == 1)) return;
         if (s3Down && (!hasweapons[2] || equipWeaponIndex == 2)) return;
         if (s4Down && (!hasweapons[3] || equipWeaponIndex == 3)) return;
+
         int weaponIndex = -1;
+        //if (equipWeapon.type == Weapon.Type.Grenade && hasGrenade == 0)
+        //{
+        //    weaponIndex = -1;
+        //    equipWeapon = null;
+        //    equipWeapon.gameObject.SetActive(false);
+        //    for (int i = 0; i < equipWeaponImages.Length; i++)
+        //    {
+        //        equipWeaponImages[i].SetActive(false);
+        //    }
+        //    anim.SetTrigger("doSwap");
+        //    isSwap = true;
+        //    Invoke("SwapOut", 0.5f);
+        //}
         if (s1Down && hasweapons[0]) weaponIndex = 0;
         if (s2Down && hasweapons[1]) weaponIndex = 1;
         if (s3Down && hasweapons[2]) weaponIndex = 2;
-        if (s4Down && hasweapons[2]) weaponIndex = 3;
+        if (s4Down && hasweapons[3] && hasGrenade != 0) weaponIndex = 3;
         if((s1Down || s2Down || s3Down || s4Down) && !isDodge && !isSwap)
         {
             if (equipWeapon != null)

@@ -88,7 +88,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8018429946725390617}
-  - component: {fileID: 6814172014068187316}
+  - component: {fileID: -7579586826321835478}
   m_Layer: 0
   m_Name: Weapon Grenade
   m_TagString: Untagged
@@ -111,7 +111,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6814172014068187316
+--- !u!114 &-7579586826321835478
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -120,17 +120,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 7209417620919649187}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 912e01d257e2a954db25165d3680ed11, type: 3}
+  m_Script: {fileID: 11500000, guid: fb83b6d8413a2414790ed7503d401293, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 2
-  damage: 100
-  curAmmo: 0
-  maxAmmo: 0
-  rate: 0
-  meleeArea: {fileID: 0}
-  trailEff: {fileID: 0}
-  bulletPrefab: {fileID: 0}
-  bulletPos: {fileID: 0}
-  bulletCase: {fileID: 0}
-  bulletCasePos: {fileID: 0}
+  type: 4
+  value: 3

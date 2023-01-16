@@ -30,7 +30,7 @@ public class Weapon : MonoBehaviour
             curAmmo--;
             StartCoroutine("Shot");
         }
-        else if(type== Type.Grenade)
+        else if (type == Type.Grenade)
         {
             StartCoroutine("Throw");
         }
@@ -64,9 +64,5 @@ public class Weapon : MonoBehaviour
         bulletCaseRigid.AddTorque(Vector3.up * 10, ForceMode.Impulse);
 
     }
-
-    IEnumerator Throw()
-    {
-        yield return null;
-    }
 }
+

@@ -1,7 +1,10 @@
 스크립트 변동
--플레이어 : aimsetcamPosition(if문 추가 수류탄), input(스왑4, ), swap(스왑4 추가),
+-플레이어 : aimsetcamPosition(if문 추가 수류탄), input(스왑4, ), swap(스왑4 추가,
+수류탄 다 사용했을 때 추가),
 CameraRotation, Attack(), AimTarget -> AimShot, DrawPath(), 
 수류탄 스크립트 추가, 에너미에 수류탄스크립트관련 함수 추가hitbyGrenade()
+
+캔버스 :  수류탄 이미지, 텍스트 추가
 추가 함수 : CalculateVelcoity(), Throw, AimThrow
 
 
