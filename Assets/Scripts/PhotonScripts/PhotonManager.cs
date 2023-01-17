@@ -14,6 +14,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public InputField nickInput;
     public GameObject connectOBJ;
     public GameObject chatOBJ;
+    public GameObject choiceObj;
     [Header("로비")]
     public GameObject LobbyObj;
     public GameObject roomPrefab;
@@ -38,6 +39,13 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         print("00. 포톤 매니저 시작");
     }
 
+    public void CloseLobbyPanel()
+    {
+        LobbyObj.SetActive(false);
+        choiceObj.SetActive(true);
+        //창 닫기를 누르면 포톤네트워크의 접속을 끊어야함
+        Disconnect();
+    }
     public void Disconnect() => PhotonNetwork.Disconnect();
 
     public void OnClickConnect()

@@ -237,7 +237,7 @@ public class Player : MonoBehaviour
         if (s1Down && (!hasweapons[0] || equipWeaponIndex == 0)) return;
         if (s2Down && (!hasweapons[1] || equipWeaponIndex == 1)) return;
         if (s3Down && (!hasweapons[2] || equipWeaponIndex == 2)) return;
-        if (s4Down && (!hasweapons[3] || equipWeaponIndex == 3)) return;
+        if (s4Down && (!hasweapons[3] || equipWeaponIndex == 3 || hasGrenade == 0)) return;
 
         int weaponIndex = -1;
         //if (equipWeapon.type == Weapon.Type.Grenade && hasGrenade == 0)

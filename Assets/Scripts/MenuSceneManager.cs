@@ -10,6 +10,7 @@ public class MenuSceneManager : MonoBehaviour
     public GameObject startBtn;
     public GameObject choiceObj;
     public GameObject NickObj;
+    public GameObject optionPanel;
     Animation anim;
 
     private void Awake()
@@ -33,6 +34,15 @@ public class MenuSceneManager : MonoBehaviour
     {
         choiceObj.SetActive(false);
         NickObj.SetActive(true);
+    }
+    public void OptionBtn()
+    {
+        optionPanel.SetActive(true);
+    }
+
+    public void CloseOptionPanel()
+    {
+        optionPanel.SetActive(false);
     }
 
 }
