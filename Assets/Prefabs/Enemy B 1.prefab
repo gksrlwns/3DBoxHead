@@ -124,11 +124,14 @@ MonoBehaviour:
   enemyBulletPos: {fileID: 0}
   maxHp: 80
   curHp: 80
+  enemyScore: 20
   targetRadius: 3
   targeAttackRange: 20
   targetSearchRange: 100
   enemyPhysicalDamage: 20
   enemyBulletDamage: 0
+  bossSpawnEnemy: 0
+  isDead: 0
 --- !u!1001 &4106025580532918517
 PrefabInstance:
   m_ObjectHideFlags: 0

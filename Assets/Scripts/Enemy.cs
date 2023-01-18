@@ -13,6 +13,7 @@ public class Enemy : MonoBehaviour
     public Transform enemyBulletPos;
     public float maxHp;
     public float curHp;
+    public int enemyScore;
     public float targetRadius = 1.5f;
     public float targeAttackRange = 2f;
     public float targetSearchRange = 20f;
@@ -43,6 +44,7 @@ public class Enemy : MonoBehaviour
         if (enemyType != Type.D)
             Invoke("ChaseOn", 2f);
     }
+
     
     void FixedUpdate()
     {
@@ -65,6 +67,8 @@ public class Enemy : MonoBehaviour
     {
         if(!bossSpawnEnemy)
             gameManager.enemyCnt--;
+        gameManager.playerScore += enemyScore;
+        
     }
 
     void ChaseOn()
@@ -219,9 +223,7 @@ public class Enemy : MonoBehaviour
                 reactVec += Vector3.up;
                 rigid.AddForce(reactVec * 10, ForceMode.Impulse);
             }
-            
             //넉백
-            
             anim.SetTrigger("doDie");
             Destroy(this.gameObject, 2f);
         }

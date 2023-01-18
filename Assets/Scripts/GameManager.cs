@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     public GameObject playerPrefab;
     public Transform enemys;
     public int enemyCnt;
+    public int playerScore;
 
     //public Text stageText;
     public Text timerText;
@@ -42,11 +43,14 @@ public class GameManager : MonoBehaviour
     {
         playerClone = Instantiate(playerPrefab, playerSpawnSpot.position, playerSpawnSpot.rotation);
         player = playerClone.GetComponent<Player>();
+        playerScore = player.score;
         player.gameManager = this;
         StartCoroutine(ShowTimer());
     }
     private void Update()
     {
+        //플레이어 스코어 동기화
+        player.score = playerScore;
         if (isGame)
         {
             timer += Time.deltaTime;
@@ -72,10 +76,12 @@ public class GameManager : MonoBehaviour
         if (player.isDead)
             GameDefeat();
     }
+    //게임이 끝나면 쌓인 플레이어의 스코어가 적립된다.
     void GameVictory()
     {
         isGame = false;
         victoryPanel.SetActive(true);
+        
     }
     void GameDefeat()
     {

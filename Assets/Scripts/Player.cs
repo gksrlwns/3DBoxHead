@@ -33,18 +33,18 @@ public class Player : MonoBehaviour
     
     [Header("아이템")]
     public int hasAmmo;
-    public int coin;
+    public int score;
     public int health;
     public int hasGrenade;
     public int maxAmmo;
-    public int maxCoin;
+    public int maxScore;
     public int maxHealth;
     public int maxGrenade;
 
     [Header("UI")]
     public Text hpText;
     public Text ammoText;
-    public Text coinText;
+    public Text scoreText;
     public Text grenadeText;
     public GameObject[] equipWeaponImages;
     public GameManager gameManager;
@@ -157,7 +157,7 @@ public class Player : MonoBehaviour
             ammoText.text = $" - / {hasAmmo}";
         else if (equipWeapon.type == Weapon.Type.Range)
             ammoText.text = $"{equipWeapon.curAmmo} / {hasAmmo}";
-        coinText.text = $"{coin}";
+        scoreText.text = $"{score}";
         grenadeText.text = $"{hasGrenade}";
     }
     
@@ -513,11 +513,7 @@ public class Player : MonoBehaviour
                 case Item.Type.Heart:
                     health += item.value;
                     if (health > maxHealth) health = maxHealth;
-                    break;
-                case Item.Type.Coin:
-                    coin += item.value;
-                    if (coin > maxCoin) coin = maxCoin;
-                    break;
+                    break; 
             }
             Destroy(other.gameObject);
         }

@@ -115,11 +115,14 @@ MonoBehaviour:
   enemyBulletPos: {fileID: 1713794878}
   maxHp: 200
   curHp: 200
+  enemyScore: 30
   targetRadius: 1.5
   targeAttackRange: 50
   targetSearchRange: 100
   enemyPhysicalDamage: 10
   enemyBulletDamage: 30
+  bossSpawnEnemy: 0
+  isDead: 0
 --- !u!195 &384042276
 NavMeshAgent:
   m_ObjectHideFlags: 0
