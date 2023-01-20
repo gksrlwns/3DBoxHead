@@ -3075,7 +3075,7 @@ MonoBehaviour:
   blockedAim: {fileID: 419415237}
   hasAmmo: 300
   score: 0
-  health: 10
+  health: 100
   hasGrenade: 3
   maxAmmo: 999
   maxScore: 999999
@@ -3083,7 +3083,7 @@ MonoBehaviour:
   maxGrenade: 3
   hpText: {fileID: 768297910}
   ammoText: {fileID: 1377302627}
-  coinText: {fileID: 763712456}
+  scoreText: {fileID: 763712456}
   grenadeText: {fileID: 1950286702}
   equipWeaponImages:
   - {fileID: 1573103737}

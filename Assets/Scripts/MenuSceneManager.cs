@@ -8,7 +8,7 @@ public class MenuSceneManager : MonoBehaviour
 {
     public GameObject title;
     public GameObject startBtn;
-    public GameObject choiceObj;
+    public GameObject loginChoiceObj;
     public GameObject NickObj;
     public GameObject optionPanel;
     Animation anim;
@@ -23,7 +23,7 @@ public class MenuSceneManager : MonoBehaviour
         //타이틀과 이미지가 위로 올라가고 새로운 버튼 생성
         anim.Play();
         startBtn.SetActive(false);
-        choiceObj.SetActive(true);
+        loginChoiceObj.SetActive(true);
     }
     public void PlayBtn()
     {
@@ -32,17 +32,12 @@ public class MenuSceneManager : MonoBehaviour
 
     public void CoBtn()
     {
-        choiceObj.SetActive(false);
+        loginChoiceObj.SetActive(false);
         NickObj.SetActive(true);
     }
-    public void OptionBtn()
+    public void OptionBtn(bool isActive)
     {
-        optionPanel.SetActive(true);
-    }
-
-    public void CloseOptionPanel()
-    {
-        optionPanel.SetActive(false);
+        optionPanel.SetActive(isActive);
     }
 
 }

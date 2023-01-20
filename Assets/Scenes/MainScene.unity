@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -504,7 +504,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &313283112
 MonoBehaviour:
@@ -1225,16 +1225,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1584227370}
-        m_MethodName: PlayBtn
-        m_Mode: 1
+      - m_Target: {fileID: 1584227371}
+        m_MethodName: SetSignInPanel
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &419775363
 MonoBehaviour:
@@ -1470,8 +1470,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1638826303}
-        m_MethodName: OnClickCreateRoom
+      - m_Target: {fileID: 1584227371}
+        m_MethodName: BackendSignUp
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3310,7 +3310,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1513263333}
-  - {fileID: 1497479398}
   - {fileID: 1649755886}
   - {fileID: 1216169458}
   m_Father: {fileID: 1417995057}
@@ -4141,7 +4140,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1089617519}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -4191,9 +4190,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1638826303}
-        m_MethodName: CloseLobbyPanel
-        m_Mode: 1
+      - m_Target: {fileID: 1584227371}
+        m_MethodName: SetSignInPanel
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4984,12 +4983,12 @@ RectTransform:
   m_Children:
   - {fileID: 1231326488}
   - {fileID: 1605514117}
-  m_Father: {fileID: 1089617519}
-  m_RootOrder: 1
+  m_Father: {fileID: 1513263333}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -10}
+  m_AnchoredPosition: {x: 0, y: -70}
   m_SizeDelta: {x: 200, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1497479399
@@ -5255,6 +5254,7 @@ RectTransform:
   m_Children:
   - {fileID: 1578820590}
   - {fileID: 2020962395}
+  - {fileID: 1497479398}
   m_Father: {fileID: 1089617519}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5561,9 +5561,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1638826303}
-        m_MethodName: CloseLobbyPanel
-        m_Mode: 1
+      - m_Target: {fileID: 1584227371}
+        m_MethodName: SetSignUpPanel
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -5691,16 +5691,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1584227370}
-        m_MethodName: CoBtn
-        m_Mode: 1
+      - m_Target: {fileID: 1584227371}
+        m_MethodName: SetSignUpPanel
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &1556759383
 MonoBehaviour:
@@ -5905,6 +5905,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1584227369}
   - component: {fileID: 1584227370}
+  - component: {fileID: 1584227371}
   m_Layer: 0
   m_Name: MenuSceneManager
   m_TagString: Untagged
@@ -5924,7 +5925,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1584227370
 MonoBehaviour:
@@ -5940,9 +5941,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: {fileID: 1098282185}
   startBtn: {fileID: 1098954196}
-  choiceObj: {fileID: 2057021006}
+  loginChoiceObj: {fileID: 465657431}
   NickObj: {fileID: 288763214}
   optionPanel: {fileID: 1030234865}
+--- !u!114 &1584227371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1584227368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b26a649bb2f8a14080f83adf154e7ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  signuppanal: {fileID: 1536657956}
+  signupIdInput: {fileID: 1051412599}
+  signupPwInput: {fileID: 692704719}
+  signupNickInput: {fileID: 728541026}
+  loginPanel: {fileID: 1089617518}
+  loginIdInput: {fileID: 1513263334}
+  loginPwInput: {fileID: 1497479399}
+  nickName: 
+  nickText: {fileID: 0}
+  nowid: 
 --- !u!1 &1605514116
 GameObject:
   m_ObjectHideFlags: 0
@@ -6107,7 +6130,7 @@ RectTransform:
   m_Children:
   - {fileID: 504786885}
   m_Father: {fileID: 1089617519}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -6157,8 +6180,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1638826303}
-        m_MethodName: OnClickCreateRoom
+      - m_Target: {fileID: 1584227371}
+        m_MethodName: BackendSignIn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7420,7 +7443,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2082391923
 GameObject:

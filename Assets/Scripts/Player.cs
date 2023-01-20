@@ -111,7 +111,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        //if (!gameManager.isGame) return;
+        if (!gameManager.isGame) return;
         if (isDead) return;
         
         GetInput();
