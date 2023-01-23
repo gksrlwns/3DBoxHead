@@ -27,6 +27,9 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public Text chattingText;
     public InputField chatInput;
 
+    [Header("백엔드")]
+    public BackendManager backendManager;
+
     Dictionary<string, GameObject> roomDict = new Dictionary<string, GameObject>();
     bool isConnect = false;
     private void Awake()
@@ -44,15 +47,16 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         LobbyObj.SetActive(false);
         choiceObj.SetActive(true);
         //창 닫기를 누르면 포톤네트워크의 접속을 끊어야함
-        Disconnect();
+        PhotonNetwork.LeaveLobby();
     }
     public void Disconnect() => PhotonNetwork.Disconnect();
 
+
     public void OnClickConnect()
     {
-        if (nickInput.text == "") nickInput.text = $"User{Random.Range(0, 100)}";
+        //if (nickInput.text == "") nickInput.text = $"User{Random.Range(0, 100)}";
         //PhotonView 스크립트에 Controller에 저장됨
-        PhotonNetwork.LocalPlayer.NickName = nickInput.text;
+        PhotonNetwork.LocalPlayer.NickName = backendManager.nickname;
         PhotonNetwork.ConnectUsingSettings();
     }
     public void OnClickCreateRoom()
@@ -65,14 +69,14 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         PhotonNetwork.CreateRoom($"room{Random.Range(0, 50)}", ro);
     }
 
-    public void JoinRoom()
-    {
-        if(isConnect)
-        {
-            PhotonNetwork.JoinRoom("room_1");
-            print("방에 입장하였습니다.");
-        }
-    }
+    //public void JoinRoom()
+    //{
+    //    if(isConnect)
+    //    {
+    //        PhotonNetwork.JoinRoom("room_1");
+    //        print("방에 입장하였습니다.");
+    //    }
+    //}
 
     private void Update()
     {

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class Player : MonoBehaviour
+public class PhotonPlayer : MonoBehaviourPunCallbacks
 {
     [Header("무기")]
     public GameObject[] weapons;
@@ -30,7 +32,7 @@ public class Player : MonoBehaviour
     public GameObject playerWeaponHand;
     public GameObject crossHair;
     public GameObject blockedAim;
-    
+
     [Header("아이템")]
     public int hasAmmo;
     public int score;
@@ -47,8 +49,9 @@ public class Player : MonoBehaviour
     public Text scoreText;
     public Text grenadeText;
     public GameObject[] equipWeaponImages;
+    public GameObject playerCanvas;
     public GameManager gameManager;
-    
+
 
     float hAxis;
     float vAxis;
@@ -62,7 +65,7 @@ public class Player : MonoBehaviour
     bool s4Down;
     bool fDown;
     bool f2Down;
-    
+
 
     bool isRun;
     bool isReload;
@@ -73,7 +76,7 @@ public class Player : MonoBehaviour
     bool isAim;
     bool isMove = true;
     public bool isDead;
-    
+
 
     public int equipWeaponIndex = -1;
     float fireDelay;
@@ -104,7 +107,8 @@ public class Player : MonoBehaviour
     }
     void Start()
     {
-        SetCamera();
+        //SetCamera();
+        PlayerState();
         //Debug.Log(playerHandRt.localEulerAngles);
         //secondCamera.enabled = false;
     }
@@ -113,7 +117,7 @@ public class Player : MonoBehaviour
     {
         if (!gameManager.isGame) return;
         if (isDead) return;
-        
+        PlayerState();
         GetInput();
         Move();
         CameraRotation();
@@ -124,7 +128,7 @@ public class Player : MonoBehaviour
         Swap();
         Attack();
         //AimTarget();
-        PlayerState();
+
 
         if (health == 0)
         {
@@ -148,6 +152,14 @@ public class Player : MonoBehaviour
         playerCamera.transform.localPosition = Vector3.zero;
         playerCamera.transform.localRotation = Quaternion.identity;
     }
+
+    public void SetPlayer()
+    {
+        Camera.main.transform.parent = curCamTr;
+        Camera.main.transform.localPosition = Vector3.zero;
+        Camera.main.transform.localRotation = Quaternion.identity;
+        playerCanvas.SetActive(true);
+    }
     void PlayerState()
     {
         hpText.text = $"{health} / {maxHealth}";
@@ -160,7 +172,7 @@ public class Player : MonoBehaviour
         scoreText.text = $"{score}";
         grenadeText.text = $"{hasGrenade}";
     }
-    
+
 
     #region 플레이어 동작
 
@@ -202,7 +214,7 @@ public class Player : MonoBehaviour
         if (equipWeapon.type == Weapon.Type.Grenade && hasGrenade == 0) return;
         fireDelay += Time.deltaTime;
         isFireReady = equipWeapon.rate < fireDelay;
-        
+
         if (fDown && isFireReady && !isDodge && !isSwap)
         {
             switch (equipWeapon.type)
@@ -257,7 +269,7 @@ public class Player : MonoBehaviour
         if (s2Down && hasweapons[1]) weaponIndex = 1;
         if (s3Down && hasweapons[2]) weaponIndex = 2;
         if (s4Down && hasweapons[3] && hasGrenade != 0) weaponIndex = 3;
-        if((s1Down || s2Down || s3Down || s4Down) && !isDodge && !isSwap)
+        if ((s1Down || s2Down || s3Down || s4Down) && !isDodge && !isSwap)
         {
             if (equipWeapon != null)
             {
@@ -267,7 +279,7 @@ public class Player : MonoBehaviour
                     equipWeaponImages[i].SetActive(false);
                 }
             }
-                
+
             equipWeaponIndex = weaponIndex;
             equipWeapon = weapons[weaponIndex].GetComponent<Weapon>();
             equipWeapon.gameObject.SetActive(true);
@@ -291,13 +303,13 @@ public class Player : MonoBehaviour
         if (f2Down && !isDodge)
         {
             curCamTr.position = Vector3.Lerp(curCamTr.position, Camera2Tr.position, cameraSpeed * Time.deltaTime);
-            
-            if(equipWeapon.type == Weapon.Type.Range)
+
+            if (equipWeapon.type == Weapon.Type.Range)
             {
                 AimShot();
                 crossHair.SetActive(true);
             }
-            else if(equipWeapon.type == Weapon.Type.Grenade && isFireReady)
+            else if (equipWeapon.type == Weapon.Type.Grenade && isFireReady)
             {
                 AimThrow();
                 lrObj.SetActive(true);
@@ -307,7 +319,7 @@ public class Player : MonoBehaviour
                 crossHair.SetActive(false);
                 lrObj.SetActive(false);
             }
-            
+
         }
         else
         {
@@ -350,7 +362,7 @@ public class Player : MonoBehaviour
         //var target = AngleToDirection(throwAngle);       
         int layerMask = 1 << LayerMask.NameToLayer("Floor");
         //Debug.DrawLine(playerCamera.transform.position, playerCamera.transform.forward * 50f, Color.blue);
-        
+
         //if (Physics.Raycast(playerCamera.transform.position, target.normalized, out throwHit, 50f, layerMask))
         if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out throwHit, layerMask))
         {
@@ -376,7 +388,7 @@ public class Player : MonoBehaviour
     void DrawPath(Vector3 velocity)
     {
         Vector3 previousDrawPoint = equipWeapon.transform.position;
-        
+
         //int resolution = 30;
         //lineRenderer.positionCount = resolution;
         for (int i = 1; i <= lr.positionCount; i++)
@@ -433,7 +445,7 @@ public class Player : MonoBehaviour
         if (f2Down && equipWeapon.type == Weapon.Type.Range)
         {
             playerWeaponHand.transform.localEulerAngles = new Vector3(playerWeaponHandRt.x, playerWeaponHandRt.y, playerWeaponHandRt.z - currentCameraRotation);
-                //new Vector3(playerHandRt.localEulerAngles.x, playerHandRt.localEulerAngles.y, playerHandRt.localEulerAngles.z - currentCameraRotation);
+            //new Vector3(playerHandRt.localEulerAngles.x, playerHandRt.localEulerAngles.y, playerHandRt.localEulerAngles.z - currentCameraRotation);
         }
 
     }
@@ -444,14 +456,14 @@ public class Player : MonoBehaviour
         Vector3 playerRotationY = new Vector3(0, yRotation, 0) * mouseSensitivity;
         rigid.MoveRotation(rigid.rotation * Quaternion.Euler(playerRotationY));
     }
-    
+
     void Reload()
     {
         if (!equipWeapon) return;
         if (equipWeapon.type != Weapon.Type.Range) return;
         if (hasAmmo == 0) return;
 
-        if((rDown && !isDodge & !isSwap && isFireReady ) || (equipWeapon.curAmmo == 0 && fDown && !isReload))
+        if ((rDown && !isDodge & !isSwap && isFireReady) || (equipWeapon.curAmmo == 0 && fDown && !isReload))
         {
             isReload = true;
             anim.SetTrigger("doReload");
@@ -481,7 +493,7 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("Enemy"))
         {
             if (!isDamage)
             {
@@ -490,21 +502,21 @@ public class Player : MonoBehaviour
                 StartCoroutine(OnDamage());
             }
         }
-        
+
     }
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Weapon"))
+        if (other.CompareTag("Weapon"))
         {
             Item item = other.GetComponent<Item>();
             int weaponIndex = item.value;
             hasweapons[weaponIndex] = true;
             Destroy(other.gameObject);
         }
-        if(other.CompareTag("Item"))
+        if (other.CompareTag("Item"))
         {
             Item item = other.GetComponent<Item>();
-            switch(item.type)
+            switch (item.type)
             {
                 case Item.Type.Ammo:
                     hasAmmo += item.value;
@@ -513,7 +525,7 @@ public class Player : MonoBehaviour
                 case Item.Type.Heart:
                     health += item.value;
                     if (health > maxHealth) health = maxHealth;
-                    break; 
+                    break;
             }
             Destroy(other.gameObject);
         }
@@ -529,7 +541,7 @@ public class Player : MonoBehaviour
                 if (health < 0)
                     health = 0;
             }
-            if(!bullet.isMelee)
+            if (!bullet.isMelee)
                 Destroy(other.gameObject);
         }
     }
