@@ -5,7 +5,8 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class PhotonPlayer : MonoBehaviourPunCallbacks
+
+public class TestPhotonPlayer : MonoBehaviourPunCallbacks
 {
     [Header("무기")]
     public GameObject[] weapons;
@@ -105,7 +106,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
     {
         //if (!gameManager.isGame) return;
         if (isDead) return;
-        if(pv.IsMine)
+        if (pv.IsMine)
         {
             GetInput();
             Move();
@@ -314,9 +315,9 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
         currentCameraRotation = Mathf.Clamp(currentCameraRotation, cameraRotationMinLimit, cameraRotationMaxLimit);
         currentCameraRotation -= camerRotationX;
         Camera.transform.localEulerAngles = new Vector3(currentCameraRotation, 0, 0);
-        
+
         pv.RPC("PunCameraRotation", RpcTarget.All, currentCameraRotation);
-        
+
 
     }
     [PunRPC]
