@@ -7,15 +7,12 @@
 
 ★문제점★
 <<<<<<< HEAD
-<<<<<<< HEAD
 보스문제
 - 벽 사이에서 에너미 생성 시 에너미들이 고장 남
 - 게임이 끝나도 에너미들이 행동함
 
 
 
-=======
->>>>>>> parent of 8775d91 (Backend Complete)
 =======
 >>>>>>> parent of 8775d91 (Backend Complete)
 
