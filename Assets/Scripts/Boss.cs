@@ -122,13 +122,13 @@ public class Boss : Enemy
         nav.isStopped = false;
         anim.SetTrigger("doTaunt");
         tauntVec = target.position;
-        //boxCollider.enabled = false;
+        boxCollider.enabled = false;
         yield return new WaitForSeconds(1.5f);
         bossMeleeArea.enabled = true;
         yield return new WaitForSeconds(0.5f);
-        bossMeleeArea.enabled = false;        
+        bossMeleeArea.enabled = false;
         yield return new WaitForSeconds(2f);
-        //boxCollider.enabled = true;
+        boxCollider.enabled = true;
         isLockOn = true;
         nav.isStopped = true;
         StartCoroutine(BossPattern());

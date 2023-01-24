@@ -17,13 +17,11 @@ public class BackendAuthentication : MonoBehaviour
     public GameObject loginPanel;
     public InputField loginIdInput;
     public InputField loginPwInput;
-    public GameObject userObj;
 
     [Header("닉네임")]
-    string nickName;
-    public Text userNickText;
-    public Text errorText;
-    public BackendManager backendManager;
+    public string nickName;
+    public Text nickText;
+    public string nowid;
 
     public void SetSignUpPanel(bool isActive)
     {
@@ -49,23 +47,20 @@ public class BackendAuthentication : MonoBehaviour
         if (signupIdInput.text == "")
         {
             print("아이디를 입력해주세요!");
-            StartCoroutine(ErrorText("아이디를 입력해주세요!"));
             return;
         }
 
         if (signupPwInput.text == "")
         {
             print("비밀번호를 입력해주세요!");
-            StartCoroutine(ErrorText("비밀번호를 입력해주세요!"));
             return;
         }
 
-        if (signupNickInput.text == "") signupNickInput.text = $"User{Random.Range(0, 100)}";
-        //if (signupNickInput.text == "")
-        //{
-        //    print("닉네임을 적어주세요!");
-        //    return;
-        //}
+        if (signupNickInput.text == "")
+        {
+            print("닉네임을 적어주세요!");
+            return;
+        }
 
 
         BackendReturnObject bro =
@@ -80,7 +75,6 @@ public class BackendAuthentication : MonoBehaviour
         else
         {
             print(bro.GetMessage());
-            StartCoroutine(ErrorText(bro.GetMessage()));
         }
     }
     public void UserInfoInsert()
@@ -96,7 +90,6 @@ public class BackendAuthentication : MonoBehaviour
         if (bro.IsSuccess())
         {
             //업로드에 성공 했을 때
-            StartCoroutine(ErrorText("회원가입시 유저정보 업로드에 성공하였습니다!"));
             print("회원가입시 유저정보 업로드에 성공하였습니다!");
             SetSignUpPanel(false);
         }
@@ -105,7 +98,6 @@ public class BackendAuthentication : MonoBehaviour
             //업로드에 실패했을 때
             print("회원가입시 유저정보 업로드에 실패하였습니다!");
             print(bro.GetMessage());
-            StartCoroutine(ErrorText(bro.GetMessage()));
         }
     }
     public void BackendSignIn()
@@ -116,30 +108,13 @@ public class BackendAuthentication : MonoBehaviour
         {
             Debug.Log("로그인에 성공했습니다");
             loginPanel.SetActive(false);
-            GetNickname();
-            backendManager.id = loginIdInput.text;
-            backendManager.nickname = nickName;
-            userNickText.text = nickName;
-            userObj.SetActive(true);
+            nowid = loginIdInput.text;
         }
         else
         {
             //에러코드까지 나오게 하면 더 좋다
-            Debug.Log(bro.GetMessage());
-            StartCoroutine(ErrorText(bro.GetMessage()));
+            print(bro.GetMessage());
         }
-    }
-    void GetNickname()
-    {
-        Where where = new Where();
-        where.Equal("id", loginIdInput.text);
-        nickName = backendManager.BackendGetInfo("user", where, "nickname");
-    }
-    IEnumerator ErrorText(string error)
-    {
-        errorText.text = error;
-        yield return new WaitForSeconds(1f);
-        errorText.text = "";
     }
     
 }

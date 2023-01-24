@@ -9,7 +9,6 @@ public class MenuSceneManager : MonoBehaviour
     public GameObject title;
     public GameObject startBtn;
     public GameObject loginChoiceObj;
-    public GameObject modeChoiceObj;
     public GameObject NickObj;
     public GameObject optionPanel;
     Animation anim;
@@ -26,16 +25,16 @@ public class MenuSceneManager : MonoBehaviour
         startBtn.SetActive(false);
         loginChoiceObj.SetActive(true);
     }
-    public void ChoiceModeBtn()
-    {
-        loginChoiceObj.SetActive(false);
-        modeChoiceObj.SetActive(true);
-    }
     public void PlayBtn()
     {
         SceneManager.LoadScene("SoloGameScene");
     }
 
+    public void CoBtn()
+    {
+        loginChoiceObj.SetActive(false);
+        NickObj.SetActive(true);
+    }
     public void OptionBtn(bool isActive)
     {
         optionPanel.SetActive(isActive);

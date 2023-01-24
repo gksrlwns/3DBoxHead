@@ -105,7 +105,6 @@ public class Player : MonoBehaviour
     void Start()
     {
         SetCamera();
-        PlayerState();
         //Debug.Log(playerHandRt.localEulerAngles);
         //secondCamera.enabled = false;
     }
@@ -114,7 +113,7 @@ public class Player : MonoBehaviour
     {
         if (!gameManager.isGame) return;
         if (isDead) return;
-        PlayerState();
+        
         GetInput();
         Move();
         CameraRotation();
@@ -125,7 +124,7 @@ public class Player : MonoBehaviour
         Swap();
         Attack();
         //AimTarget();
-        
+        PlayerState();
 
         if (health == 0)
         {
