@@ -27,6 +27,9 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public Text chattingText;
     public InputField chatInput;
 
+    [Header("백엔드")]
+    public BackendManager backendManager;
+
     Dictionary<string, GameObject> roomDict = new Dictionary<string, GameObject>();
     bool isConnect = false;
     private void Awake()
@@ -50,9 +53,9 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     public void OnClickConnect()
     {
-        if (nickInput.text == "") nickInput.text = $"User{Random.Range(0, 100)}";
+        //if (nickInput.text == "") nickInput.text = $"User{Random.Range(0, 100)}";
         //PhotonView 스크립트에 Controller에 저장됨
-        PhotonNetwork.LocalPlayer.NickName = nickInput.text;
+        PhotonNetwork.LocalPlayer.NickName = backendManager.nickname;
         PhotonNetwork.ConnectUsingSettings();
     }
     public void OnClickCreateRoom()
