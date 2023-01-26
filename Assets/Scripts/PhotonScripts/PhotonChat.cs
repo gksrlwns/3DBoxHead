@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Chat;
 using Photon.Pun;
+using UnityEngine.SceneManagement;
 
 
 public class PhotonChat : MonoBehaviour
@@ -38,6 +39,11 @@ public class PhotonChat : MonoBehaviour
         chatOBJ.SetActive(true);
     }
 
+    public void OnClickLeaveRoom()
+    {
+        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.LoadLevel("MainScene");
+    }
     public void SendMessage()
     {
         //if 1, 채팅을 보낼 내용이 없으면? : 그냥 채팅 송신을 하지 말자.
