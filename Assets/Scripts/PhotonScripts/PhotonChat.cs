@@ -42,7 +42,8 @@ public class PhotonChat : MonoBehaviour
     public void OnClickLeaveRoom()
     {
         PhotonNetwork.LeaveRoom();
-        PhotonNetwork.LoadLevel("MainScene");
+        SceneManager.LoadScene("MainScene");
+        //PhotonNetwork.LoadLevel("MainScene");
     }
     public void SendMessage()
     {

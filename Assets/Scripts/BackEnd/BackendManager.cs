@@ -7,12 +7,27 @@ using LitJson;
 
 public class BackendManager : MonoBehaviour
 {
+    public static BackendManager instance;
     public string nickname;
     public string id;
+    public bool isPhoton;
 
     private void Awake()
     {
+        if (!instance)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Destroy(instance.gameObject);
+        }
         DontDestroyOnLoad(this.gameObject);
+        //var obj = FindObjectsOfType<BackendManager>();
+        //if (obj.Length == 1)
+        //    DontDestroyOnLoad(this.gameObject);
+        //else
+        //    Destroy(this.gameObject);
     }
 
     private void Start()

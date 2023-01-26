@@ -31,14 +31,12 @@ public class GameManager : MonoBehaviour
     Player player;
     Boss boss;
     GameObject playerClone;
-    BackendManager backendManager;
     float timer = 0;
 
 
     private void Awake()
     {
         Application.targetFrameRate = 60;
-        backendManager = FindObjectOfType<BackendManager>();
         //crossHair = gamePanel.transform.Find("Crosshair").gameObject;
     }
 
@@ -47,8 +45,8 @@ public class GameManager : MonoBehaviour
         playerClone = Instantiate(playerPrefab, playerSpawnSpot.position, playerSpawnSpot.rotation);
         player = playerClone.GetComponent<Player>();
         Where _where = new Where();
-        _where.Equal("id", backendManager.id);
-        player.score = int.Parse(backendManager.BackendGetInfo("user", _where, "highscore"));
+        _where.Equal("id", BackendManager.instance.id);
+        player.score = int.Parse(BackendManager.instance.BackendGetInfo("user", _where, "highscore"));
         playerScore = player.score;
         player.gameManager = this;
         StartCoroutine(ShowTimer());
@@ -89,9 +87,9 @@ public class GameManager : MonoBehaviour
         victoryPanel.SetActive(true);
         Where _where = new Where();
         Param _param = new Param();
-        _where.Equal("id", backendManager.id);
+        _where.Equal("id", BackendManager.instance.id);
         _param.Add("highscore", playerScore);
-        backendManager.BackendUpdateInfo("user", _where, _param);
+        BackendManager.instance.BackendUpdateInfo("user", _where, _param);
 
     }
     void GameDefeat()
@@ -116,9 +114,9 @@ public class GameManager : MonoBehaviour
         isGame = true;
         yield return new WaitForSeconds(1f);
         showTimeText.text = "";
-        StartCoroutine(SpawnEnemy());
+        //StartCoroutine(SpawnEnemy());
         StartCoroutine(SpawnItem());
-        //StartCoroutine(TestSpawn());
+        StartCoroutine(TestSpawn());
     }
     IEnumerator TestSpawn()
     {
