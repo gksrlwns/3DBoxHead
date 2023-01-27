@@ -6135,6 +6135,7 @@ MonoBehaviour:
   modeChoiceObj: {fileID: 2057021006}
   NickObj: {fileID: 288763214}
   optionPanel: {fileID: 1030234865}
+  backendAuthentication: {fileID: 1584227371}
 --- !u!114 &1584227371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7716,6 +7717,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nickname: 
   id: 
+  isPhoton: 0
 --- !u!4 &2068841756
 Transform:
   m_ObjectHideFlags: 0

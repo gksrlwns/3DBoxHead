@@ -23,7 +23,6 @@ public class BackendAuthentication : MonoBehaviour
     string nickName;
     public Text userNickText;
     public Text errorText;
-    public BackendManager backendManager;
 
     public void SetSignUpPanel(bool isActive)
     {
@@ -117,8 +116,8 @@ public class BackendAuthentication : MonoBehaviour
             Debug.Log("로그인에 성공했습니다");
             loginPanel.SetActive(false);
             GetNickname();
-            backendManager.id = loginIdInput.text;
-            backendManager.nickname = nickName;
+            BackendManager.instance.id = loginIdInput.text;
+            BackendManager.instance.nickname = nickName;
             userNickText.text = nickName;
             userObj.SetActive(true);
         }
@@ -133,7 +132,7 @@ public class BackendAuthentication : MonoBehaviour
     {
         Where where = new Where();
         where.Equal("id", loginIdInput.text);
-        nickName = backendManager.BackendGetInfo("user", where, "nickname");
+        nickName = BackendManager.instance.BackendGetInfo("user", where, "nickname");
     }
     IEnumerator ErrorText(string error)
     {
