@@ -6,7 +6,7 @@ using Photon.Realtime;
 
 public class PhotonWeapon : MonoBehaviourPunCallbacks
 {
-    public enum Type { melee, range };
+    public enum Type { Melee, Range, Grenade };
     public Type type;
     public int damage;
     public int curAmmo;
@@ -27,12 +27,12 @@ public class PhotonWeapon : MonoBehaviourPunCallbacks
 
     public void Use(int weaponIndex)
     {
-        if (type == Type.melee)
+        if (type == Type.Melee)
         {
             StopCoroutine("Swing");
             StartCoroutine("Swing");
         }
-        else if (type == Type.range && curAmmo != 0)
+        else if (type == Type.Range && curAmmo != 0)
         {
             curAmmo--;
             StartCoroutine("Shot",weaponIndex);

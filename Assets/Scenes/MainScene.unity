@@ -6158,7 +6158,6 @@ MonoBehaviour:
   userObj: {fileID: 416565275}
   userNickText: {fileID: 1786332245}
   errorText: {fileID: 1010100504}
-  backendManager: {fileID: 2068841755}
 --- !u!1 &1605514116
 GameObject:
   m_ObjectHideFlags: 0
@@ -6291,7 +6290,6 @@ MonoBehaviour:
   scrollContent: {fileID: 737309722}
   chattingText: {fileID: 0}
   chatInput: {fileID: 0}
-  backendManager: {fileID: 2068841755}
 --- !u!1 &1649755885
 GameObject:
   m_ObjectHideFlags: 0
@@ -7717,7 +7715,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nickname: 
   id: 
-  isPhoton: 0
 --- !u!4 &2068841756
 Transform:
   m_ObjectHideFlags: 0

@@ -23,32 +23,16 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         var player = PhotonNetwork.Instantiate("PhotonPlayer", playerSpots[0].position, playerSpots[0].rotation);
         player.GetComponent<PhotonPlayer>().SetPlayer();
+        player.GetComponent<PhotonPlayer>().playerCanvas.SetActive(false);
     }
     private void Update()
     {
-        roomInfoText.text = $"{PhotonNetwork.CurrentRoom.Name} : {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
+        //roomInfoText.text = $"{PhotonNetwork.CurrentRoom.Name} : {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
         if(Input.GetKey(KeyCode.Return) && !chatInput.isFocused)
         {
             SendMessage();
             scrollRect.verticalNormalizedPosition = 0f;
         }
-    }
-    #region 채팅기능 관리
-    //PhotonView(컴포넌트/스크립트) : 포톤에 접속할 수 있는 기본단위(유저 개개인)
-
-    //1. 채팅이 올라오는 텍스트 창
-    //2. 채팅을 입력할 수 있는 입력창
-    //3. 채팅을 보낼 수 있는 보내기 버튼
-
-    //0. 채팅에 성공적으로 접속했을 때 실행할 함수
-    //1. 채팅을 보내는 함수(RPC 보내는 함수)
-    //2. 1의 보내진 함수를 토대로, 적어진 채팅을 띄워주는 함수(RPC)
-
-    void InitChat()
-    {
-        //1. 접속창(닉네임을 입력받아서, 포톤서버에 접속할 수 있도록 하는 창)을 꺼ㅝ야한다.
-        //2. 채팅요소들을 ON(채팅창, 입력창, 보내기버튼)
-        chatOBJ.SetActive(true);
     }
     public override void OnJoinedRoom()
     {
@@ -57,15 +41,17 @@ public class RoomManager : MonoBehaviourPunCallbacks
     }
     public override void OnLeftRoom()
     {
-        _photonView.RPC("ReceiveMessage", RpcTarget.All,
+        _photonView.RPC("ReceiveMessage", RpcTarget.AllBuffered,
             PhotonNetwork.LocalPlayer.NickName, "님이 퇴장하셨습니다.");
+        SceneManager.LoadScene("MainScene");
     }
     public void OnClickLeaveRoom()
     {
-        PhotonNetwork.LoadLevel("MainScene");
+        //PhotonNetwork.LoadLevel("MainScene");
         PhotonNetwork.LeaveRoom();
-        //SceneManager.LoadScene("MainScene");
     }
+    #region 채팅기능 관리
+    
     public void SendMessage()
     {
         //if 1, 채팅을 보낼 내용이 없으면? : 그냥 채팅 송신을 하지 말자.
