@@ -7,19 +7,31 @@ using Photon.Pun;
 using UnityEngine.SceneManagement;
 
 
-public class PhotonChat : MonoBehaviour
+public class RoomManager : MonoBehaviourPunCallbacks
 {
     public Transform[] playerSpots;
     public GameObject chatOBJ;
     public PhotonView _photonView;
+    public ScrollRect scrollRect;
     public InputField chatInput;
     public Text chattingText;
+    public Text roomInfoText;
+    public GameObject startBtn;
 
 
     private void Start()
     {
         var player = PhotonNetwork.Instantiate("PhotonPlayer", playerSpots[0].position, playerSpots[0].rotation);
         player.GetComponent<PhotonPlayer>().SetPlayer();
+    }
+    private void Update()
+    {
+        roomInfoText.text = $"{PhotonNetwork.CurrentRoom.Name} : {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
+        if(Input.GetKey(KeyCode.Return) && !chatInput.isFocused)
+        {
+            SendMessage();
+            scrollRect.verticalNormalizedPosition = 0f;
+        }
     }
     #region 채팅기능 관리
     //PhotonView(컴포넌트/스크립트) : 포톤에 접속할 수 있는 기본단위(유저 개개인)
@@ -38,22 +50,33 @@ public class PhotonChat : MonoBehaviour
         //2. 채팅요소들을 ON(채팅창, 입력창, 보내기버튼)
         chatOBJ.SetActive(true);
     }
-
+    public override void OnJoinedRoom()
+    {
+        _photonView.RPC("ReceiveMessage", RpcTarget.All,
+            PhotonNetwork.LocalPlayer.NickName, "님이 입장하셨습니다.");
+    }
+    public override void OnLeftRoom()
+    {
+        _photonView.RPC("ReceiveMessage", RpcTarget.All,
+            PhotonNetwork.LocalPlayer.NickName, "님이 퇴장하셨습니다.");
+    }
     public void OnClickLeaveRoom()
     {
+        PhotonNetwork.LoadLevel("MainScene");
         PhotonNetwork.LeaveRoom();
-        SceneManager.LoadScene("MainScene");
-        //PhotonNetwork.LoadLevel("MainScene");
+        //SceneManager.LoadScene("MainScene");
     }
     public void SendMessage()
     {
         //if 1, 채팅을 보낼 내용이 없으면? : 그냥 채팅 송신을 하지 말자.
         if (chatInput.text == "") return;
         //우리가 보낼 채팅을, 누가 보냇느냐와 함께 RPC함수에 전송
-        _photonView.RPC("ReceiveMessage", RpcTarget.AllBuffered,
+        _photonView.RPC("ReceiveMessage", RpcTarget.All,
             PhotonNetwork.LocalPlayer.NickName, chatInput.text);
         //if 2,채팅을 보내고 난 다음에, 입력창은?
+        chatInput.ActivateInputField();
         chatInput.text = "";
+        
     }
 
     [PunRPC]
@@ -68,8 +91,8 @@ public class PhotonChat : MonoBehaviour
         //(기존에 있는 텍스트는 보존)
 
         //[닉네임] : 채팅쓴 내용 
-        string line = "[" + nickname + "]" + ":" + msg;
-        line = $"[{nickname}]: {msg}";
+        //string line = "[" + nickname + "]" + ":" + msg;
+        string line = $"[{nickname}]: {msg}";
 
         chattingText.text = chattingText.text + "\n" + line;
 
