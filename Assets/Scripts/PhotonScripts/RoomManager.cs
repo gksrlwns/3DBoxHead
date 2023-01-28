@@ -17,17 +17,18 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public Text chattingText;
     public Text roomInfoText;
     public GameObject startBtn;
-
+    GameObject player;
 
     private void Start()
     {
-        var player = PhotonNetwork.Instantiate("PhotonPlayer", playerSpots[0].position, playerSpots[0].rotation);
+        player = PhotonNetwork.Instantiate("PhotonPlayer", playerSpots[0].position, playerSpots[0].rotation);
         player.GetComponent<PhotonPlayer>().SetPlayer();
         player.GetComponent<PhotonPlayer>().playerCanvas.SetActive(false);
     }
     private void Update()
     {
-        //roomInfoText.text = $"{PhotonNetwork.CurrentRoom.Name} : {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
+        if (!player) return;
+        roomInfoText.text = $"{PhotonNetwork.CurrentRoom.Name} : {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
         if(Input.GetKey(KeyCode.Return) && !chatInput.isFocused)
         {
             SendMessage();
@@ -41,14 +42,15 @@ public class RoomManager : MonoBehaviourPunCallbacks
     }
     public override void OnLeftRoom()
     {
-        _photonView.RPC("ReceiveMessage", RpcTarget.AllBuffered,
-            PhotonNetwork.LocalPlayer.NickName, "님이 퇴장하셨습니다.");
         SceneManager.LoadScene("MainScene");
     }
     public void OnClickLeaveRoom()
     {
         //PhotonNetwork.LoadLevel("MainScene");
+        _photonView.RPC("ReceiveMessage", RpcTarget.AllBuffered,
+            PhotonNetwork.LocalPlayer.NickName, "님이 퇴장하셨습니다.");
         PhotonNetwork.LeaveRoom();
+        
     }
     #region 채팅기능 관리
     

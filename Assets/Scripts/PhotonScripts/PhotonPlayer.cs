@@ -241,7 +241,9 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
     void Throw()
     {
         //Vector3 vo = CalculateVelcoity(throwHit.point, equipWeapon.transform.position, 1.5f);
-        Rigidbody voRigid = Instantiate(grenadePref, equipWeapon.transform.position, Quaternion.identity).GetComponent<Rigidbody>();
+        //bulletClone = PhotonNetwork.Instantiate("PhotonBulletHandGun", bulletPos.position, bulletPos.rotation);
+        //Rigidbody voRigid = Instantiate(grenadePref, equipWeapon.transform.position, Quaternion.identity).GetComponent<Rigidbody>();
+        Rigidbody voRigid = PhotonNetwork.Instantiate("PhotonBulletGrenade", equipWeapon.transform.position, Quaternion.identity).GetComponent<Rigidbody>();
         hasGrenade--;
         //Debug.Log($"던지는 Pos{equipWeapon.transform.position}");
         voRigid.velocity = vo;
