@@ -35,6 +35,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
             scrollRect.verticalNormalizedPosition = 0f;
         }
     }
+    public void GameStartBtn()
+    {
+
+    }
     public override void OnJoinedRoom()
     {
         _photonView.RPC("ReceiveMessage", RpcTarget.All,
