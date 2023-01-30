@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 using BackEnd;
 
-public class MultiGameManager : MonoBehaviour
+public class MultiGameManager : MonoBehaviourPunCallbacks
 {
     public Transform[] playerSpots;
     public Transform[] enemySpawnSpots;
@@ -26,7 +27,7 @@ public class MultiGameManager : MonoBehaviour
     public RectTransform bossHp;
     public GameObject victoryPanel;
     public GameObject DefeatPanel;
-    public PhotonView photonView;
+    //public PhotonView photonView;
 
     public bool isGame;
 
@@ -35,7 +36,6 @@ public class MultiGameManager : MonoBehaviour
     GameObject playerClone;
     float timer = 0;
     int spotPoint;
-    bool isEscape;
     private void Start()
     {
         spotPoint = PhotonNetwork.IsMasterClient ? 0 : 1;
@@ -44,24 +44,13 @@ public class MultiGameManager : MonoBehaviour
            playerSpots[spotPoint].rotation);
         photonPlayer = player.GetComponent<PhotonPlayer>();
         photonPlayer.SetPlayer();
+        photonPlayer.multiGameManager = this;
         StartCoroutine(ShowTimer());
     }
     private void Update()
     {
         //플레이어 스코어 동기화
         photonPlayer.score = playerScore;
-        isEscape = Input.GetKey(KeyCode.Escape);
-        if (isEscape)
-        {
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-        }
-        else
-        {
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-
         if (isGame)
         {
             timer += Time.deltaTime;
@@ -104,6 +93,10 @@ public class MultiGameManager : MonoBehaviour
         isGame = false;
         DefeatPanel.SetActive(true);
     }
+    public override void OnLeftRoom()
+    {
+        SceneManager.LoadScene("MainScene");
+    }
     IEnumerator ShowTimer()
     {
         showTimeText.text = "3";
@@ -117,18 +110,32 @@ public class MultiGameManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         showTimeText.text = "";
         //StartCoroutine(SpawnEnemy());
-        StartCoroutine(SpawnItem());
+        //StartCoroutine(SpawnItem());
         if (PhotonNetwork.IsMasterClient)
-            photonView.RPC("SpawnMonsterRPC", RpcTarget.All);
+        {
+            StartCoroutine(TestSpawn());
+        }
+        //StartCoroutine(TestSpawn2());
     }
-    [PunRPC]
-    public IEnumerator TestSpawn()
+    IEnumerator TestSpawn2()
     {
         yield return null;
         var enemyClone = Instantiate(enemyPrefabs[0], enemySpawnSpots[0].position, enemySpawnSpots[0].rotation, enemys);
         Enemy enemy = enemyClone.GetComponent<Enemy>();
-        //enemy.gameManager = this;
+        //enemy.multiGameManager = this;
         enemyCnt++;
+    }
+    IEnumerator TestSpawn()
+    {
+        yield return null;
+        for (int i = 0; i < enemySpawnSpots.Length; i++)
+        {
+            var enemyClone = PhotonNetwork.Instantiate("PhotonEnemyA", enemySpawnSpots[i].position, enemySpawnSpots[i].rotation);
+            PhotonEnemy enemy = enemyClone.GetComponent<PhotonEnemy>();
+            enemy.multiGameManager = this;
+            enemyCnt++;
+        }
+        
     }
     IEnumerator SpawnEnemy()
     {

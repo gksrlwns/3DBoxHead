@@ -25,12 +25,13 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public InputField chatInput;
 
     Dictionary<string, GameObject> roomDict = new Dictionary<string, GameObject>();
-    bool isConnect = false;
+    //bool isConnect;
     private void Awake()
     {
         //_photonView = GetComponent<PhotonView>();
         PhotonNetwork.AutomaticallySyncScene = true;
     }
+   
     public void CloseLobbyPanel()
     {
         LobbyObj.SetActive(false);
@@ -73,7 +74,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         string nick = PhotonNetwork.LocalPlayer.NickName;
         print($"당신의 이름은 {nick} 입니다.");
         userText.text = nick;
-        isConnect = true;
+        //isConnect = true;
         PhotonNetwork.JoinLobby();
     }
     public override void OnJoinedLobby()
@@ -105,7 +106,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     {
         print("04. 방 입장 완료");
         if (PhotonNetwork.IsMasterClient)
-            PhotonNetwork.LoadLevel("RoomScene");
+            //PhotonNetwork.LoadLevel("RoomScene");
+            PhotonNetwork.LoadLevel("MultiGameScene");
         //JoinRoom이 성공적으로 실행되엇을 때 호출
         //base.OnJoinedRoom();
         //InitChat();

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Photon.Pun;
+using Photon.Realtime;
 
 public class PhotonEnemy : MonoBehaviour
 {
@@ -9,7 +11,7 @@ public class PhotonEnemy : MonoBehaviour
     public Type enemyType;
     public Transform target;
     public GameObject enemyBulletPrefab;
-    public GameManager gameManager;
+    public MultiGameManager multiGameManager;
     public Transform enemyBulletPos;
     public float maxHp;
     public float curHp;
@@ -20,6 +22,7 @@ public class PhotonEnemy : MonoBehaviour
     public int enemyPhysicalDamage = 10;
     public int enemyBulletDamage;
     public bool bossSpawnEnemy = false;
+    public PhotonView pv;
 
     bool isChase;
     bool isAttack;
@@ -52,7 +55,7 @@ public class PhotonEnemy : MonoBehaviour
     }
     private void Update()
     {
-        if (!gameManager.isGame) return;
+        if (!multiGameManager.isGame) return;
         TargetSearching();
         if (!target)
         {
@@ -65,9 +68,9 @@ public class PhotonEnemy : MonoBehaviour
     }
     private void OnDestroy()
     {
-        if (!bossSpawnEnemy)
-            gameManager.enemyCnt--;
-        gameManager.playerScore += enemyScore;
+        //if (!bossSpawnEnemy)
+        //    gameManager.enemyCnt--;
+        //gameManager.playerScore += enemyScore;
 
     }
 
@@ -173,7 +176,7 @@ public class PhotonEnemy : MonoBehaviour
 
         if (other.CompareTag("Bullet"))
         {
-            Bullet bullet = other.GetComponent<Bullet>();
+            PhotonBullet bullet = other.GetComponent<PhotonBullet>();
             curHp -= bullet.bullet_damage;
             Vector3 reactVec = transform.position - other.transform.position;
             Debug.Log("원거리" + bullet.bullet_damage);

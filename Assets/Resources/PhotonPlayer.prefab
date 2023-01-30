@@ -2766,7 +2766,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1992935628
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3210,7 +3210,7 @@ MonoBehaviour:
   - {fileID: 1160530229}
   - {fileID: 1260492596}
   - {fileID: 1508427711}
-  gameManager: {fileID: 0}
+  multiGameManager: {fileID: 0}
   playerCanvas: {fileID: 1992935627}
   isDead: 0
   equipWeaponIndex: -1

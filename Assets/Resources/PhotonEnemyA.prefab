@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4462523135328065168}
   - component: {fileID: 1698830831}
   - component: {fileID: 1698830830}
-  - component: {fileID: 1698830833}
+  - component: {fileID: 7340101473567653094}
   - component: {fileID: 1698830834}
   - component: {fileID: 1288608469519353395}
   - component: {fileID: -1093644698542419031}
@@ -67,7 +67,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 3, y: 3, z: 3}
   m_Center: {x: 0, y: 1.5, z: 1}
---- !u!114 &1698830833
+--- !u!114 &7340101473567653094
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -76,23 +76,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 328409505970683906}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ab2c75a9d8e9664697aca8a7d45639d, type: 3}
+  m_Script: {fileID: 11500000, guid: 0913bf726d24871489c8b507b4d6c9d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   enemyType: 0
   target: {fileID: 0}
   enemyBulletPrefab: {fileID: 0}
-  gameManager: {fileID: 0}
+  multiGameManager: {fileID: 0}
   enemyBulletPos: {fileID: 0}
   maxHp: 50
   curHp: 50
   enemyScore: 10
   targetRadius: 1.5
   targeAttackRange: 2
-  targetSearchRange: 100
+  targetSearchRange: 200
   enemyPhysicalDamage: 10
   enemyBulletDamage: 0
   bossSpawnEnemy: 0
+  pv: {fileID: 1288608469519353395}
   isDead: 0
 --- !u!195 &1698830834
 NavMeshAgent:
@@ -137,6 +138,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: -1093644698542419031}
   - {fileID: -3529378191879978132}
+  - {fileID: 8859096388318768897}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0

@@ -49,7 +49,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
     public Text scoreText;
     public Text grenadeText;
     public GameObject[] equipWeaponImages;
-    public GameManager gameManager;
+    public MultiGameManager multiGameManager;
     public GameObject playerCanvas;
 
 
@@ -65,6 +65,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
     bool s4Down;
     bool fDown;
     bool f2Down;
+    bool isEscape;
 
 
     bool isRun;
@@ -108,8 +109,14 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
     }
     void Start()
     {
+
         //SetCamera();
-        PlayerState();
+        if(pv.IsMine)
+        {
+            PlayerState();
+            playerCanvas.SetActive(true);
+        }
+        
         //Debug.Log(playerHandRt.localEulerAngles);
         //secondCamera.enabled = false;
     }
@@ -120,6 +127,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
         if (isDead) return;
         if(pv.IsMine)
         {
+            isEscape = Input.GetKey(KeyCode.Escape);
             PlayerState();
             GetInput();
             Move();
@@ -129,6 +137,17 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
             Reload();
             Swap();
             Attack();
+            if (!multiGameManager) return;
+            if (isEscape)
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+            }
+            else
+            {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
 
         }
 
@@ -191,6 +210,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
         s4Down = Input.GetButtonDown("Swap4");
         fDown = Input.GetButton("Fire1");
         f2Down = Input.GetButton("Fire2");
+        
     }
 
     void Move()
@@ -520,7 +540,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
         {
             if (!isDamage)
             {
-                Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+                PhotonEnemy enemy = collision.gameObject.GetComponent<PhotonEnemy>();
                 health -= enemy.enemyPhysicalDamage;
                 StartCoroutine(OnDamage());
             }

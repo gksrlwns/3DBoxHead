@@ -164,7 +164,7 @@ public class Enemy : MonoBehaviour
     {
         if(other.CompareTag("Melee"))
         {
-            PhotonWeapon weapon = other.GetComponent<PhotonWeapon>();
+            Weapon weapon = other.GetComponent<Weapon>();
             curHp -= weapon.damage;
             Vector3 reactVec = transform.position - other.transform.position;
             Debug.Log("근접"+weapon.damage);

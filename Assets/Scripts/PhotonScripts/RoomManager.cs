@@ -18,6 +18,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public Text roomInfoText;
     public GameObject startBtn;
     public GameObject multiGameManager;
+    
     GameObject player;
 
     private void Start()
