@@ -17,11 +17,15 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public Text chattingText;
     public Text roomInfoText;
     public GameObject startBtn;
+    public GameObject multiGameManager;
     GameObject player;
 
     private void Start()
     {
-        player = PhotonNetwork.Instantiate("PhotonPlayer", playerSpots[0].position, playerSpots[0].rotation);
+        PhotonNetwork.AutomaticallySyncScene = true;
+        player = PhotonNetwork.Instantiate
+            ("PhotonPlayer", playerSpots[(int)PhotonNetwork.CurrentRoom.PlayerCount-1].position,
+            playerSpots[(int)PhotonNetwork.CurrentRoom.PlayerCount-1].rotation);
         player.GetComponent<PhotonPlayer>().SetPlayer();
         player.GetComponent<PhotonPlayer>().playerCanvas.SetActive(false);
     }
@@ -34,10 +38,16 @@ public class RoomManager : MonoBehaviourPunCallbacks
             SendMessage();
             scrollRect.verticalNormalizedPosition = 0f;
         }
+
+        if ((int)PhotonNetwork.CurrentRoom.PlayerCount == 2 && PhotonNetwork.IsMasterClient)
+            startBtn.SetActive(true);
+        else
+            startBtn.SetActive(false);
+
     }
     public void GameStartBtn()
     {
-
+        PhotonNetwork.LoadLevel("MultiGameScene");
     }
     public override void OnJoinedRoom()
     {

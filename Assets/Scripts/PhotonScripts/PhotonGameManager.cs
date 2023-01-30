@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MultiGameManager : MonoBehaviour
+public class PhotonGameManager : MonoBehaviour
 {
-   
+    
 }

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Enemy : MonoBehaviour
+public class PhotonEnemy : MonoBehaviour
 {
-    public enum Type {A, B, C, D};
+    public enum Type { A, B, C, D };
     public Type enemyType;
     public Transform target;
     public GameObject enemyBulletPrefab;
@@ -29,7 +29,7 @@ public class Enemy : MonoBehaviour
     protected Rigidbody rigid;
     protected MeshRenderer[] meshs;
     protected Animator anim;
-    
+
 
     private void Awake()
     {
@@ -45,7 +45,7 @@ public class Enemy : MonoBehaviour
             Invoke("ChaseOn", 2f);
     }
 
-    
+
     void FixedUpdate()
     {
         FixRotation();
@@ -65,10 +65,10 @@ public class Enemy : MonoBehaviour
     }
     private void OnDestroy()
     {
-        if(!bossSpawnEnemy)
+        if (!bossSpawnEnemy)
             gameManager.enemyCnt--;
         gameManager.playerScore += enemyScore;
-        
+
     }
 
     void ChaseOn()
@@ -87,7 +87,7 @@ public class Enemy : MonoBehaviour
     protected void TargetSearching()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, targetSearchRange);
-        
+
         float shortesDistance = Mathf.Infinity;
         GameObject nearPlayer = null;
         for (int i = 0; i < colliders.Length; i++)
@@ -117,7 +117,7 @@ public class Enemy : MonoBehaviour
 
         RaycastHit[] raycastHits = Physics.SphereCastAll(transform.position, targetRadius, transform.forward, targeAttackRange, LayerMask.GetMask("Player"));
 
-        if(raycastHits.Length > 0 && !isAttack)
+        if (raycastHits.Length > 0 && !isAttack)
         {
             StartCoroutine(Attack());
         }
@@ -140,7 +140,7 @@ public class Enemy : MonoBehaviour
                 yield return new WaitForSeconds(3f);
                 break;
             case Type.C:
-                var enemyBulletClone = Instantiate(enemyBulletPrefab, enemyBulletPos.position,enemyBulletPos.rotation);
+                var enemyBulletClone = Instantiate(enemyBulletPrefab, enemyBulletPos.position, enemyBulletPos.rotation);
                 Rigidbody enemyBulletRigid = enemyBulletClone.GetComponent<Rigidbody>();
                 Bullet enemyBullet = enemyBulletClone.GetComponent<Bullet>();
                 enemyBullet.bullet_damage = enemyBulletDamage;
@@ -162,16 +162,16 @@ public class Enemy : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Melee"))
+        if (other.CompareTag("Melee"))
         {
             PhotonWeapon weapon = other.GetComponent<PhotonWeapon>();
             curHp -= weapon.damage;
             Vector3 reactVec = transform.position - other.transform.position;
-            Debug.Log("근접"+weapon.damage);
+            Debug.Log("근접" + weapon.damage);
             StartCoroutine(OnDamage(reactVec));
         }
 
-        if(other.CompareTag("Bullet"))
+        if (other.CompareTag("Bullet"))
         {
             Bullet bullet = other.GetComponent<Bullet>();
             curHp -= bullet.bullet_damage;
@@ -185,7 +185,7 @@ public class Enemy : MonoBehaviour
     {
         curHp -= damage;
         Vector3 reactVec = transform.position - explosionPos;
-        StartCoroutine(OnDamage(reactVec,true));
+        StartCoroutine(OnDamage(reactVec, true));
     }
     IEnumerator OnDamage(Vector3 reactVec, bool isGrenade = false)
     {
@@ -229,3 +229,4 @@ public class Enemy : MonoBehaviour
         }
     }
 }
+
