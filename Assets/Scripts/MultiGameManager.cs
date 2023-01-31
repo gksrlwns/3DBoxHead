@@ -7,7 +7,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using BackEnd;
 
-public class MultiGameManager : MonoBehaviourPunCallbacks
+public class MultiGameManager : MonoBehaviourPunCallbacks ,IPunObservable
 {
     public Transform[] playerSpots;
     public Transform[] enemySpawnSpots;
@@ -38,12 +38,17 @@ public class MultiGameManager : MonoBehaviourPunCallbacks
     int spotPoint;
     private void Start()
     {
+        PhotonNetwork.IsMessageQueueRunning = true;
         spotPoint = PhotonNetwork.IsMasterClient ? 0 : 1;
         var player = PhotonNetwork.Instantiate
            ("PhotonPlayer", playerSpots[spotPoint].position,
            playerSpots[spotPoint].rotation);
         photonPlayer = player.GetComponent<PhotonPlayer>();
         photonPlayer.SetPlayer();
+        Where _where = new Where();
+        _where.Equal("id", BackendManager.instance.id);
+        photonPlayer.score = int.Parse(BackendManager.instance.BackendGetInfo("user", _where, "highscore"));
+        playerScore = photonPlayer.score;
         photonPlayer.multiGameManager = this;
         StartCoroutine(ShowTimer());
     }
@@ -63,10 +68,11 @@ public class MultiGameManager : MonoBehaviourPunCallbacks
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
-        //if (enemyCnt == 0 && timer > 10 && !boss)
-        //{
-        //    StartCoroutine(SpawnBoss());
-        //}
+        if (enemyCnt == 0 && timer > 10 && !boss)
+        {
+            GameVictory();
+            //StartCoroutine(SpawnBoss());
+        }
         if (boss)
         {
             bossHp.localScale = new Vector3(boss.curHp / boss.maxHp, 1, 1);
@@ -76,6 +82,7 @@ public class MultiGameManager : MonoBehaviourPunCallbacks
         if (photonPlayer.isDead)
             GameDefeat();
     }
+    
     //게임이 끝나면 쌓인 플레이어의 스코어가 적립된다.
     void GameVictory()
     {
@@ -93,9 +100,14 @@ public class MultiGameManager : MonoBehaviourPunCallbacks
         isGame = false;
         DefeatPanel.SetActive(true);
     }
-    public override void OnLeftRoom()
+    //public override void OnLeftRoom()
+    //{
+    //    SceneManager.LoadScene("MainScene");
+    //}
+    public void RoomLoadBtn()
     {
-        SceneManager.LoadScene("MainScene");
+        PhotonNetwork.IsMessageQueueRunning = false;
+        PhotonNetwork.LoadLevel("RoomScene");
     }
     IEnumerator ShowTimer()
     {
@@ -190,4 +202,20 @@ public class MultiGameManager : MonoBehaviourPunCallbacks
 
     }
 
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            //stream.SendNext(timer);
+            stream.SendNext(enemyCnt);
+            //stream.SendNext(isGame);
+
+        }
+        else
+        {
+            //timer = (float)stream.ReceiveNext();
+            enemyCnt = (int)stream.ReceiveNext();
+            //isGame = (bool)stream.ReceiveNext();
+        }
+    }
 }

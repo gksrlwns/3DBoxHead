@@ -17,6 +17,7 @@ public class BackendAuthentication : MonoBehaviour
     public GameObject loginPanel;
     public InputField loginIdInput;
     public InputField loginPwInput;
+    public Text scoreText;
     public GameObject userObj;
 
     [Header("닉네임")]
@@ -118,6 +119,9 @@ public class BackendAuthentication : MonoBehaviour
             GetNickname();
             BackendManager.instance.id = loginIdInput.text;
             BackendManager.instance.nickname = nickName;
+            Where _where = new Where();
+            _where.Equal("id", BackendManager.instance.id);
+            scoreText.text = BackendManager.instance.BackendGetInfo("user", _where, "highscore");
             userNickText.text = nickName;
             userObj.SetActive(true);
         }

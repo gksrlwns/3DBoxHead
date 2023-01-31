@@ -106,8 +106,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     {
         print("04. 방 입장 완료");
         if (PhotonNetwork.IsMasterClient)
-            //PhotonNetwork.LoadLevel("RoomScene");
-            PhotonNetwork.LoadLevel("MultiGameScene");
+            PhotonNetwork.LoadLevel("RoomScene");
+            //PhotonNetwork.LoadLevel("MultiGameScene");
         //JoinRoom이 성공적으로 실행되엇을 때 호출
         //base.OnJoinedRoom();
         //InitChat();

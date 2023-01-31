@@ -23,12 +23,13 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        PhotonNetwork.IsMessageQueueRunning = true;
         PhotonNetwork.AutomaticallySyncScene = true;
         player = PhotonNetwork.Instantiate
             ("PhotonPlayer", playerSpots[(int)PhotonNetwork.CurrentRoom.PlayerCount-1].position,
             playerSpots[(int)PhotonNetwork.CurrentRoom.PlayerCount-1].rotation);
         player.GetComponent<PhotonPlayer>().SetPlayer();
-        player.GetComponent<PhotonPlayer>().playerCanvas.SetActive(false);
+        //player.GetComponent<PhotonPlayer>().playerCanvas.SetActive(false);
     }
     private void Update()
     {
@@ -48,6 +49,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     }
     public void GameStartBtn()
     {
+        PhotonNetwork.IsMessageQueueRunning = false;
         PhotonNetwork.LoadLevel("MultiGameScene");
     }
     public override void OnJoinedRoom()

@@ -49,6 +49,9 @@ MonoBehaviour:
   - ShotRPC
   - BulletDamege
   - TestSpawn
+  - OnDamage
+  - PunOnDamage
+  - Dead
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

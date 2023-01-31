@@ -44,8 +44,6 @@ public class Enemy : MonoBehaviour
         if (enemyType != Type.D)
             Invoke("ChaseOn", 2f);
     }
-
-    
     void FixedUpdate()
     {
         FixRotation();

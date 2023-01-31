@@ -55,7 +55,8 @@ public class PhotonEnemy : MonoBehaviour
     }
     private void Update()
     {
-        if (!multiGameManager.isGame) return;
+        //if (!multiGameManager.isGame) return;
+        if (!PhotonNetwork.IsMasterClient) return;
         TargetSearching();
         if (!target)
         {
@@ -68,9 +69,10 @@ public class PhotonEnemy : MonoBehaviour
     }
     private void OnDestroy()
     {
-        //if (!bossSpawnEnemy)
-        //    gameManager.enemyCnt--;
-        //gameManager.playerScore += enemyScore;
+        if (!PhotonNetwork.IsMasterClient) return;
+        if (!bossSpawnEnemy)
+            multiGameManager.enemyCnt--;
+        multiGameManager.playerScore += enemyScore;
 
     }
 
@@ -171,6 +173,7 @@ public class PhotonEnemy : MonoBehaviour
             curHp -= weapon.damage;
             Vector3 reactVec = transform.position - other.transform.position;
             Debug.Log("근접" + weapon.damage);
+            //pv.RPC("PunOnDamage", RpcTarget.All, reactVec, false);
             StartCoroutine(OnDamage(reactVec));
         }
 
@@ -180,6 +183,7 @@ public class PhotonEnemy : MonoBehaviour
             curHp -= bullet.bullet_damage;
             Vector3 reactVec = transform.position - other.transform.position;
             Debug.Log("원거리" + bullet.bullet_damage);
+           // pv.RPC("PunOnDamage", RpcTarget.All, reactVec, false);
             StartCoroutine(OnDamage(reactVec));
             Destroy(other.gameObject);
         }
@@ -188,7 +192,37 @@ public class PhotonEnemy : MonoBehaviour
     {
         curHp -= damage;
         Vector3 reactVec = transform.position - explosionPos;
+        //pv.RPC("PunOnDamage", RpcTarget.All, reactVec, true);
         StartCoroutine(OnDamage(reactVec, true));
+    }
+    [PunRPC]
+    public void Dead(Vector3 reactVec, bool isGrenade = false)
+    {
+        for (int i = 0; i < meshs.Length; i++)
+        {
+            meshs[i].material.color = Color.gray;
+        }
+        this.gameObject.layer = 14;
+        isChase = false;
+        isDead = true;
+        nav.enabled = false;
+        if (isGrenade)
+        {
+            reactVec = reactVec.normalized;
+            reactVec += Vector3.up;
+            rigid.freezeRotation = false;
+            rigid.AddForce(reactVec * 5, ForceMode.Impulse);
+            rigid.AddTorque(reactVec * 5, ForceMode.Impulse);
+        }
+        else
+        {
+            reactVec = reactVec.normalized;
+            reactVec += Vector3.up;
+            rigid.AddForce(reactVec * 10, ForceMode.Impulse);
+        }
+        //넉백
+        anim.SetTrigger("doDie");
+        Destroy(this.gameObject, 2f);
     }
     IEnumerator OnDamage(Vector3 reactVec, bool isGrenade = false)
     {
@@ -198,38 +232,45 @@ public class PhotonEnemy : MonoBehaviour
         }
         yield return new WaitForSeconds(0.1f);
         if (curHp > 0)
+        {
             for (int i = 0; i < meshs.Length; i++)
             {
                 meshs[i].material.color = Color.white;
             }
+        }
         else
         {
-            for (int i = 0; i < meshs.Length; i++)
-            {
-                meshs[i].material.color = Color.gray;
-            }
-            this.gameObject.layer = 14;
-            isChase = false;
-            isDead = true;
-            nav.enabled = false;
-            if (isGrenade)
-            {
-                reactVec = reactVec.normalized;
-                reactVec += Vector3.up;
-                rigid.freezeRotation = false;
-                rigid.AddForce(reactVec * 5, ForceMode.Impulse);
-                rigid.AddTorque(reactVec * 5, ForceMode.Impulse);
-            }
-            else
-            {
-                reactVec = reactVec.normalized;
-                reactVec += Vector3.up;
-                rigid.AddForce(reactVec * 10, ForceMode.Impulse);
-            }
-            //넉백
-            anim.SetTrigger("doDie");
-            Destroy(this.gameObject, 2f);
+            if(PhotonNetwork.IsMasterClient&&pv.IsMine)
+                pv.RPC("Dead", RpcTarget.All, reactVec, true);
         }
+        //else
+        //{
+        //    for (int i = 0; i < meshs.Length; i++)
+        //    {
+        //        meshs[i].material.color = Color.gray;
+        //    }
+        //    this.gameObject.layer = 14;
+        //    isChase = false;
+        //    isDead = true;
+        //    nav.enabled = false;
+        //    if (isGrenade)
+        //    {
+        //        reactVec = reactVec.normalized;
+        //        reactVec += Vector3.up;
+        //        rigid.freezeRotation = false;
+        //        rigid.AddForce(reactVec * 5, ForceMode.Impulse);
+        //        rigid.AddTorque(reactVec * 5, ForceMode.Impulse);
+        //    }
+        //    else
+        //    {
+        //        reactVec = reactVec.normalized;
+        //        reactVec += Vector3.up;
+        //        rigid.AddForce(reactVec * 10, ForceMode.Impulse);
+        //    }
+        //    //넉백
+        //    anim.SetTrigger("doDie");
+        //    Destroy(this.gameObject, 2f);
+        //}
     }
 }
 

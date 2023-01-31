@@ -15,6 +15,7 @@ public class PhotonGrenade : MonoBehaviourPunCallbacks
     {
         StartCoroutine(Explosion());
     }
+
     IEnumerator Explosion()
     {
         yield return new WaitForSeconds(3f);
@@ -25,7 +26,7 @@ public class PhotonGrenade : MonoBehaviourPunCallbacks
         RaycastHit[] hits = Physics.SphereCastAll(transform.position, explosionRadius, Vector3.up, 0f, LayerMask.GetMask("Enemy"));
         foreach (RaycastHit hit in hits)
         {
-            hit.transform.GetComponent<Enemy>().HitByGrenade(transform.position, grenadeDamage);
+            hit.transform.GetComponent<PhotonEnemy>().HitByGrenade(transform.position, grenadeDamage);
         }
         Destroy(gameObject, 5);
     }

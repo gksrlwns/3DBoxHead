@@ -88,6 +88,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8018429946725390617}
+  - component: {fileID: -5026801465432412673}
   - component: {fileID: 6483848328772285413}
   - component: {fileID: 8207001587898157681}
   - component: {fileID: 2191644598034955637}
@@ -116,7 +117,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6483848328772285413
+--- !u!114 &-5026801465432412673
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -124,6 +125,24 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7209417620919649187}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b59e1b60e15cba4f840233fe467b1ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explosionEff: {fileID: 1599315237706161997}
+  mesh: {fileID: 6490352389010560924}
+  rigid: {fileID: 8207001587898157681}
+  grenadeDamage: 100
+  explosionRadius: 15
+  pv: {fileID: -3875278213247361311}
+--- !u!114 &6483848328772285413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7209417620919649187}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b197c311eec794349acedfd80e6dd5d6, type: 3}
   m_Name: 

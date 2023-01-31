@@ -111,7 +111,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
     {
 
         //SetCamera();
-        if(pv.IsMine)
+        if(pv.IsMine && multiGameManager)
         {
             PlayerState();
             playerCanvas.SetActive(true);
@@ -123,7 +123,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
 
     void Update()
     {
-        //if (!gameManager.isGame) return;
+        if (multiGameManager && !multiGameManager.isGame) return;
         if (isDead) return;
         if(pv.IsMine)
         {
@@ -148,14 +148,15 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
                 Cursor.visible = false;
                 Cursor.lockState = CursorLockMode.Locked;
             }
+            if (health == 0)
+            {
+                pv.RPC("Dead", RpcTarget.All);
+            }
 
         }
 
 
-        if (health == 0)
-        {
-            Dead();
-        }
+        
     }
 
     void FixRotation()
@@ -487,7 +488,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
     {
         playerHead.transform.localEulerAngles = new Vector3(cameraRt, 0, 0);
         bulletPos.transform.localEulerAngles = new Vector3(cameraRt, 0, 0);
-        if (f2Down && equipWeapon.type == PhotonWeapon.Type.Range)
+        if (f2Down && equipWeapon && equipWeapon.type == PhotonWeapon.Type.Range)
         {
             playerWeaponHand.transform.localEulerAngles = new Vector3(playerWeaponHandRt.x, playerWeaponHandRt.y, playerWeaponHandRt.z - cameraRt);
         }
@@ -523,7 +524,8 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
         hasAmmo -= reAmmo;
         isReload = false;
     }
-    void Dead()
+    [PunRPC]
+    public void Dead()
     {
         anim.SetTrigger("doDie");
         isDead = true;
