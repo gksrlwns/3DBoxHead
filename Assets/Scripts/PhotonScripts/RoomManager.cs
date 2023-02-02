@@ -20,14 +20,19 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public GameObject multiGameManager;
     
     GameObject player;
+    int spotPoint;
 
     private void Start()
     {
         PhotonNetwork.IsMessageQueueRunning = true;
         PhotonNetwork.AutomaticallySyncScene = true;
+        spotPoint = PhotonNetwork.IsMasterClient ? 0 : 1;
         player = PhotonNetwork.Instantiate
-            ("PhotonPlayer", playerSpots[(int)PhotonNetwork.CurrentRoom.PlayerCount-1].position,
-            playerSpots[(int)PhotonNetwork.CurrentRoom.PlayerCount-1].rotation);
+           ("PhotonPlayer", playerSpots[spotPoint].position,
+           playerSpots[spotPoint].rotation);
+        //player = PhotonNetwork.Instantiate
+        //    ("PhotonPlayer", playerSpots[(int)PhotonNetwork.CurrentRoom.PlayerCount-1].position,
+        //    playerSpots[(int)PhotonNetwork.CurrentRoom.PlayerCount-1].rotation);
         player.GetComponent<PhotonPlayer>().SetPlayer();
         //player.GetComponent<PhotonPlayer>().playerCanvas.SetActive(false);
     }
@@ -40,7 +45,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
             SendMessage();
             scrollRect.verticalNormalizedPosition = 0f;
         }
-
+        if ((int)PhotonNetwork.CurrentRoom.PlayerCount == 2)
+            PhotonNetwork.CurrentRoom.IsOpen = false;
+        else
+            PhotonNetwork.CurrentRoom.IsOpen = true;
         if ((int)PhotonNetwork.CurrentRoom.PlayerCount == 2 && PhotonNetwork.IsMasterClient)
             startBtn.SetActive(true);
         else

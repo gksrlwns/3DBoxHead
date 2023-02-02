@@ -19,10 +19,12 @@ public class MultiGameManager : MonoBehaviourPunCallbacks ,IPunObservable
     public Transform enemys;
     public int enemyCnt;
     public int playerScore;
+    public int playerDieCount;
 
     //public Text stageText;
     public Text timerText;
     public Text showTimeText;
+    public Text dieText;
     public GameObject bossGameobj;
     public RectTransform bossHp;
     public GameObject victoryPanel;
@@ -35,21 +37,25 @@ public class MultiGameManager : MonoBehaviourPunCallbacks ,IPunObservable
     Boss boss;
     GameObject playerClone;
     float timer = 0;
+    bool isMaster;
     int spotPoint;
+    
     private void Start()
     {
         PhotonNetwork.IsMessageQueueRunning = true;
-        spotPoint = PhotonNetwork.IsMasterClient ? 0 : 1;
+        isMaster = PhotonNetwork.IsMasterClient ? true : false;
+        spotPoint = isMaster ? 1 : 0;
         var player = PhotonNetwork.Instantiate
            ("PhotonPlayer", playerSpots[spotPoint].position,
            playerSpots[spotPoint].rotation);
         photonPlayer = player.GetComponent<PhotonPlayer>();
         photonPlayer.SetPlayer();
+        photonPlayer.multiGameManager = this;
         Where _where = new Where();
         _where.Equal("id", BackendManager.instance.id);
         photonPlayer.score = int.Parse(BackendManager.instance.BackendGetInfo("user", _where, "highscore"));
         playerScore = photonPlayer.score;
-        photonPlayer.multiGameManager = this;
+        playerDieCount = 0;
         StartCoroutine(ShowTimer());
     }
     private void Update()
@@ -70,35 +76,70 @@ public class MultiGameManager : MonoBehaviourPunCallbacks ,IPunObservable
         }
         if (enemyCnt == 0 && timer > 10 && !boss)
         {
-            GameVictory();
+            GameVictory(isMaster);
             //StartCoroutine(SpawnBoss());
         }
-        if (boss)
-        {
-            bossHp.localScale = new Vector3(boss.curHp / boss.maxHp, 1, 1);
-            if (boss.isDead)
-                GameVictory();
-        }
-        if (photonPlayer.isDead)
-            GameDefeat();
+        //if (boss)
+        //{
+        //    bossHp.localScale = new Vector3(boss.curHp / boss.maxHp, 1, 1);
+        //    if (boss.isDead)
+        //        GameVictory();
+        //}
+        if (photonPlayer.isDead && photonPlayer)
+            PlayerDie();
+            
     }
     
     //게임이 끝나면 쌓인 플레이어의 스코어가 적립된다.
-    void GameVictory()
+    void GameVictory(bool isMaster)
     {
         isGame = false;
-        victoryPanel.SetActive(true);
         Where _where = new Where();
         Param _param = new Param();
         _where.Equal("id", BackendManager.instance.id);
         _param.Add("highscore", playerScore);
         BackendManager.instance.BackendUpdateInfo("user", _where, _param);
+        if (isMaster)
+        {
+            dieText.text = "";
+            victoryPanel.SetActive(true);
+        }
+        else
+        {
+            dieText.text = "승리";
+        }
+        
 
     }
-    void GameDefeat()
+    void GameDefeat(bool isMaster)
     {
         isGame = false;
-        DefeatPanel.SetActive(true);
+        if (isMaster)
+        {
+            dieText.text = "";
+            DefeatPanel.SetActive(true);
+        }
+        else
+        {
+            dieText.text = "패배";
+        }
+        
+        
+    }
+    void PlayerDie()
+    {
+        isGame = false;
+        dieText.text = "You Die";
+        Destroy(photonPlayer, 1f);
+        StartCoroutine(FindPlayer());
+    }
+    IEnumerator FindPlayer()
+    {
+        yield return new WaitForSeconds(1.1f);
+        GameObject[] a = GameObject.FindGameObjectsWithTag("Player");
+        if(a.Length == 0)
+            GameDefeat(isMaster);
+
     }
     //public override void OnLeftRoom()
     //{

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using BackEnd;
 
 public class MenuSceneManager : MonoBehaviour
 {
@@ -28,6 +29,9 @@ public class MenuSceneManager : MonoBehaviour
             startBtn.SetActive(false);
             modeChoiceObj.SetActive(true);
             backendAuthentication.userNickText.text = BackendManager.instance.nickname;
+            Where _where = new Where();
+            _where.Equal("id", BackendManager.instance.id);
+            backendAuthentication.scoreText.text = BackendManager.instance.BackendGetInfo("user", _where, "highscore");
             backendAuthentication.userObj.SetActive(true);
         }
     }
