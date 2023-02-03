@@ -179,7 +179,7 @@ public class Player : MonoBehaviour
         fDown = Input.GetButton("Fire1");
         f2Down = Input.GetButton("Fire2");
     }
-
+    
     void Move()
     {
         //dodgeVec = new Vector3(hAxis, 0, vAxis).normalized;
@@ -340,9 +340,12 @@ public class Player : MonoBehaviour
                 Vector3 dir = transform.position - bulHit.point;
                 dir.Normalize();
                 blockedAim.transform.forward = dir;
-                blockedAim.transform.position = bulHit.point + dir * 0.5f;
+                blockedAim.transform.position = bulHit.point + dir * 0.1f;
                 //Debug.Log(bulHit.point);
             }
+            else
+                blockedAim.SetActive(false);
+            //blockedAim.SetActive(false);
             //Debug.DrawRay(bulletPos.transform.position, bulletPos.transform.forward * 100f, Color.green, 0.5f);
         }
     }
@@ -370,7 +373,7 @@ public class Player : MonoBehaviour
         }
         //Debug.Log($"{hitpointDistance}");
         //Debug.Log($"{throwHit.point}\n{hitPointVec}");
-        vo = CalculateVelcoity(hitPointVec, equipWeapon.transform.position, 1.5f);
+        vo = CalculateVelcoity(hitPointVec, equipWeapon.transform.position, 2f);
         DrawPath(vo);
         //else도 만들어서 Raycast 없는 경우 사거리에 맞게 + 라인렌더러 만들어서 포물선 보여주기.
     }

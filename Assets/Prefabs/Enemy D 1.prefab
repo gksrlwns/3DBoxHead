@@ -276,8 +276,8 @@ MonoBehaviour:
   enemyBulletPrefab: {fileID: 0}
   gameManager: {fileID: 0}
   enemyBulletPos: {fileID: 0}
-  maxHp: 200
-  curHp: 200
+  maxHp: 2000
+  curHp: 2000
   enemyScore: 100
   targetRadius: 1.5
   targeAttackRange: 2

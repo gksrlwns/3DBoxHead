@@ -114,9 +114,9 @@ public class GameManager : MonoBehaviour
         isGame = true;
         yield return new WaitForSeconds(1f);
         showTimeText.text = "";
-        //StartCoroutine(SpawnEnemy());
+        StartCoroutine(SpawnEnemy());
         StartCoroutine(SpawnItem());
-        StartCoroutine(TestSpawn());
+        //StartCoroutine(TestSpawn());
     }
     IEnumerator TestSpawn()
     {

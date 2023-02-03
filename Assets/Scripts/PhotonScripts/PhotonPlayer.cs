@@ -191,7 +191,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
             ammoText.text = $" - / {hasAmmo}";
         else if (equipWeapon.type == PhotonWeapon.Type.Range)
             ammoText.text = $"{equipWeapon.curAmmo} / {hasAmmo}";
-        scoreText.text = $"{score}";
+        //scoreText.text = $"{score}";
         grenadeText.text = $"{hasGrenade}";
     }
 

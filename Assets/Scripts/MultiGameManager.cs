@@ -18,7 +18,6 @@ public class MultiGameManager : MonoBehaviourPunCallbacks ,IPunObservable
     public GameObject playerPrefab;
     public Transform enemys;
     public int enemyCnt;
-    public int playerScore;
     public int playerDieCount;
 
     //public Text stageText;
@@ -35,7 +34,6 @@ public class MultiGameManager : MonoBehaviourPunCallbacks ,IPunObservable
 
     PhotonPlayer photonPlayer;
     Boss boss;
-    GameObject playerClone;
     float timer = 0;
     bool isMaster;
     int spotPoint;
@@ -51,17 +49,14 @@ public class MultiGameManager : MonoBehaviourPunCallbacks ,IPunObservable
         photonPlayer = player.GetComponent<PhotonPlayer>();
         photonPlayer.SetPlayer();
         photonPlayer.multiGameManager = this;
-        Where _where = new Where();
-        _where.Equal("id", BackendManager.instance.id);
-        photonPlayer.score = int.Parse(BackendManager.instance.BackendGetInfo("user", _where, "highscore"));
-        playerScore = photonPlayer.score;
-        playerDieCount = 0;
+        //Where _where = new Where();
+        //_where.Equal("id", BackendManager.instance.id);
+        //photonPlayer.score = int.Parse(BackendManager.instance.BackendGetInfo("user", _where, "highscore"));
+        //playerScore = photonPlayer.score; 
         StartCoroutine(ShowTimer());
     }
     private void Update()
     {
-        //플레이어 스코어 동기화
-        photonPlayer.score = playerScore;
         if (isGame)
         {
             timer += Time.deltaTime;
@@ -94,11 +89,11 @@ public class MultiGameManager : MonoBehaviourPunCallbacks ,IPunObservable
     void GameVictory(bool isMaster)
     {
         isGame = false;
-        Where _where = new Where();
-        Param _param = new Param();
-        _where.Equal("id", BackendManager.instance.id);
-        _param.Add("highscore", playerScore);
-        BackendManager.instance.BackendUpdateInfo("user", _where, _param);
+        //Where _where = new Where();
+        //Param _param = new Param();
+        //_where.Equal("id", BackendManager.instance.id);
+        //_param.Add("highscore", playerScore);
+        //BackendManager.instance.BackendUpdateInfo("user", _where, _param);
         if (isMaster)
         {
             dieText.text = "";

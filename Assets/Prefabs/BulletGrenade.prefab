@@ -89,7 +89,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8018429946725390617}
   - component: {fileID: 8207001587898157681}
-  - component: {fileID: 2191644598034955637}
+  - component: {fileID: 2074217939544046572}
   - component: {fileID: 6483848328772285413}
   m_Layer: 9
   m_Name: BulletGrenade
@@ -130,8 +130,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &2191644598034955637
-BoxCollider:
+--- !u!135 &2074217939544046572
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -141,7 +141,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Radius: 0.7
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6483848328772285413
 MonoBehaviour:
