@@ -113,8 +113,8 @@ MonoBehaviour:
     type: 3}
   gameManager: {fileID: 0}
   enemyBulletPos: {fileID: 1713794878}
-  maxHp: 200
-  curHp: 200
+  maxHp: 100
+  curHp: 100
   enemyScore: 30
   targetRadius: 1.5
   targeAttackRange: 50

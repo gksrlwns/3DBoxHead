@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -547,7 +547,7 @@ Transform:
   m_GameObject: {fileID: 233644755}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 30, y: 5.5, z: 50}
-  m_LocalScale: {x: 45, y: 10, z: 5}
+  m_LocalScale: {x: 45, y: 10, z: 10}
   m_Children: []
   m_Father: {fileID: 1451877811}
   m_RootOrder: 1
@@ -788,7 +788,7 @@ Transform:
   m_GameObject: {fileID: 555342301}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 30, y: 5.5, z: -50}
-  m_LocalScale: {x: 45, y: 10, z: 5}
+  m_LocalScale: {x: 45, y: 10, z: 10}
   m_Children: []
   m_Father: {fileID: 1451877811}
   m_RootOrder: 10
@@ -898,7 +898,7 @@ Transform:
   m_GameObject: {fileID: 559126826}
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 50, y: 5.5, z: 0}
-  m_LocalScale: {x: 100.00004, y: 10, z: 5}
+  m_LocalScale: {x: 100.00004, y: 10, z: 10}
   m_Children: []
   m_Father: {fileID: 1451877811}
   m_RootOrder: 2
@@ -2240,7 +2240,7 @@ Transform:
   m_GameObject: {fileID: 984335002}
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
   m_LocalPosition: {x: -50, y: 5.5, z: 0}
-  m_LocalScale: {x: 100.00004, y: 10, z: 5}
+  m_LocalScale: {x: 100.00004, y: 10, z: 10}
   m_Children: []
   m_Father: {fileID: 1451877811}
   m_RootOrder: 3
@@ -3085,7 +3085,7 @@ Transform:
   m_GameObject: {fileID: 1440483436}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -30, y: 5.5, z: 50}
-  m_LocalScale: {x: 45, y: 10, z: 5}
+  m_LocalScale: {x: 45, y: 10, z: 10}
   m_Children: []
   m_Father: {fileID: 1451877811}
   m_RootOrder: 8
@@ -3503,7 +3503,7 @@ Transform:
   m_GameObject: {fileID: 1503597784}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -30, y: 5.5, z: -50}
-  m_LocalScale: {x: 45, y: 10, z: 5}
+  m_LocalScale: {x: 45, y: 10, z: 10}
   m_Children: []
   m_Father: {fileID: 1451877811}
   m_RootOrder: 9

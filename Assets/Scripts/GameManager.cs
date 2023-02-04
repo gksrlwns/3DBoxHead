@@ -169,11 +169,14 @@ public class GameManager : MonoBehaviour
 
     IEnumerator SpawnItem()
     {
-        while(isGame)
+        int spawnIndex = 0;
+        while (isGame)
         {
             int itemIndex = Random.Range(0, itemPrefabs.Length);
-            int spawnIndex = Random.Range(0, itemSpawnSpots.Length);
+            if (spawnIndex == 4) spawnIndex = 0;
             var itemClone = Instantiate(itemPrefabs[itemIndex], itemSpawnSpots[spawnIndex].position, Quaternion.identity);
+            spawnIndex++;
+            Debug.Log(spawnIndex);
             yield return new WaitForSeconds(10f);
         }
         

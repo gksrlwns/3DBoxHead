@@ -276,8 +276,8 @@ MonoBehaviour:
   enemyBulletPrefab: {fileID: 0}
   gameManager: {fileID: 0}
   enemyBulletPos: {fileID: 0}
-  maxHp: 2000
-  curHp: 2000
+  maxHp: 1000
+  curHp: 1000
   enemyScore: 100
   targetRadius: 1.5
   targeAttackRange: 2
@@ -291,7 +291,6 @@ MonoBehaviour:
   enemyPrefabs:
   - {fileID: 328409505970683906, guid: 3303c9daed0626843a4a9930f10d9586, type: 3}
   - {fileID: 9187343066701982198, guid: d44efe7c568431d42a034cf03f1c9536, type: 3}
-  - {fileID: 3320669544841490502, guid: 4685edb939934a24f9e2d2bb745a4169, type: 3}
   BossBulletDamage: 30
   BossBulletPosA: {fileID: 2024728786}
   BossBulletPosB: {fileID: 1872302817}

@@ -59,10 +59,10 @@ public class MultiGameManager : MonoBehaviourPunCallbacks ,IPunObservable
     {
         if (isGame)
         {
-            timer += Time.deltaTime;
-            timerText.text = timer.ToString("00");
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
+            timer += Time.deltaTime;
+            timerText.text = timer.ToString("00");
         }
         else
         {
@@ -242,14 +242,14 @@ public class MultiGameManager : MonoBehaviourPunCallbacks ,IPunObservable
     {
         if (stream.IsWriting)
         {
-            //stream.SendNext(timer);
+            stream.SendNext(timer);
             stream.SendNext(enemyCnt);
             //stream.SendNext(isGame);
 
         }
         else
         {
-            //timer = (float)stream.ReceiveNext();
+            timer = (float)stream.ReceiveNext();
             enemyCnt = (int)stream.ReceiveNext();
             //isGame = (bool)stream.ReceiveNext();
         }

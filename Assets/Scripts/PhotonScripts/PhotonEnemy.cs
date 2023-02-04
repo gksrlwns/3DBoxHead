@@ -55,8 +55,7 @@ public class PhotonEnemy : MonoBehaviour
     }
     private void Update()
     {
-        if (!multiGameManager.isGame) return;
-        if (!PhotonNetwork.IsMasterClient) return;
+        if (multiGameManager && !multiGameManager.isGame) return;
         TargetSearching();
         if (!target)
         {

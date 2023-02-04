@@ -373,7 +373,7 @@ public class Player : MonoBehaviour
         }
         //Debug.Log($"{hitpointDistance}");
         //Debug.Log($"{throwHit.point}\n{hitPointVec}");
-        vo = CalculateVelcoity(hitPointVec, equipWeapon.transform.position, 2f);
+        vo = CalculateVelcoity(hitPointVec, equipWeapon.transform.position, 1.5f);
         DrawPath(vo);
         //else도 만들어서 Raycast 없는 경우 사거리에 맞게 + 라인렌더러 만들어서 포물선 보여주기.
     }

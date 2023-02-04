@@ -45,10 +45,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
             SendMessage();
             scrollRect.verticalNormalizedPosition = 0f;
         }
-        if ((int)PhotonNetwork.CurrentRoom.PlayerCount == 2)
-            PhotonNetwork.CurrentRoom.IsOpen = false;
-        else
-            PhotonNetwork.CurrentRoom.IsOpen = true;
         if ((int)PhotonNetwork.CurrentRoom.PlayerCount == 2 && PhotonNetwork.IsMasterClient)
             startBtn.SetActive(true);
         else
