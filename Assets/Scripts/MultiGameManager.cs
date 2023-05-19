@@ -134,7 +134,6 @@ public class MultiGameManager : MonoBehaviourPunCallbacks ,IPunObservable
         GameObject[] a = GameObject.FindGameObjectsWithTag("Player");
         if(a.Length == 0)
             GameDefeat(isMaster);
-
     }
     //public override void OnLeftRoom()
     //{

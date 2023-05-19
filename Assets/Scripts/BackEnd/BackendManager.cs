@@ -23,11 +23,7 @@ public class BackendManager : MonoBehaviour
             if (instance != this)
                 Destroy(this.gameObject);
         }
-        //var obj = FindObjectsOfType<BackendManager>();
-        //if (obj.Length == 1)
-        //    DontDestroyOnLoad(this.gameObject);
-        //else
-        //    Destroy(this.gameObject);
+
     }
 
     private void Start()

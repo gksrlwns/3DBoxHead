@@ -289,7 +289,7 @@ public class Player : MonoBehaviour
         if (!equipWeapon || equipWeapon.type == Weapon.Type.Melee) return;
         if (equipWeapon.type == Weapon.Type.Range) anim.SetBool("isAim", f2Down);
         else if (equipWeapon.type == Weapon.Type.Grenade) anim.SetBool("isThrowAim", f2Down);
-        if (f2Down && !isDodge)
+        if (f2Down)
         {
             curCamTr.position = Vector3.Lerp(curCamTr.position, Camera2Tr.position, cameraSpeed * Time.deltaTime);
             

@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     public RectTransform bossHp;
     public GameObject victoryPanel;
     public GameObject DefeatPanel;
+
     
     public bool isGame;
 

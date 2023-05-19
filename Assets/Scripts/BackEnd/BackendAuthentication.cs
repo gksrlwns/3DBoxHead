@@ -61,13 +61,6 @@ public class BackendAuthentication : MonoBehaviour
         }
 
         if (signupNickInput.text == "") signupNickInput.text = $"User{Random.Range(0, 100)}";
-        //if (signupNickInput.text == "")
-        //{
-        //    print("닉네임을 적어주세요!");
-        //    return;
-        //}
-
-
         BackendReturnObject bro =
             Backend.BMember.CustomSignUp
             (signupIdInput.text,

@@ -7,6 +7,7 @@ using Photon.Realtime;
 
 public class PhotonEnemy : MonoBehaviour
 {
+    #region Members
     public enum Type { A, B, C, D };
     public Type enemyType;
     public Transform target;
@@ -32,7 +33,9 @@ public class PhotonEnemy : MonoBehaviour
     protected Rigidbody rigid;
     protected MeshRenderer[] meshs;
     protected Animator anim;
+    #endregion
 
+    #region Unity
 
     private void Awake()
     {
@@ -40,7 +43,9 @@ public class PhotonEnemy : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         meshs = GetComponentsInChildren<MeshRenderer>();
         anim = GetComponentInChildren<Animator>();
+        
     }
+
     private void Start()
     {
         //nav.enabled = false;
@@ -73,7 +78,8 @@ public class PhotonEnemy : MonoBehaviour
             multiGameManager.enemyCnt--;
 
     }
-
+    #endregion
+    
     void ChaseOn()
     {
         isChase = true;
@@ -241,6 +247,7 @@ public class PhotonEnemy : MonoBehaviour
             if(PhotonNetwork.IsMasterClient&&pv.IsMine)
                 pv.RPC("Dead", RpcTarget.All, reactVec, true);
         }
+
         //else
         //{
         //    for (int i = 0; i < meshs.Length; i++)
@@ -269,6 +276,7 @@ public class PhotonEnemy : MonoBehaviour
         //    anim.SetTrigger("doDie");
         //    Destroy(this.gameObject, 2f);
         //}
+
     }
 }
 

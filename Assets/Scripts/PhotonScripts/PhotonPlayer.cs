@@ -390,6 +390,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
             //Debug.DrawRay(bulletPos.transform.position, bulletPos.transform.forward * 100f, Color.green, 0.5f);
         }
     }
+    
     void AimThrow()
     {
         //var target = AngleToDirection(throwAngle);       
@@ -418,6 +419,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
         DrawPath(vo);
         //else도 만들어서 Raycast 없는 경우 사거리에 맞게 + 라인렌더러 만들어서 포물선 보여주기.
     }
+    
     void DrawPath(Vector3 velocity)
     {
         Vector3 previousDrawPoint = equipWeapon.transform.position;

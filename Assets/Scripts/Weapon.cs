@@ -62,7 +62,6 @@ public class Weapon : MonoBehaviour
         Rigidbody bulletCaseRigid = bulletCaseClone.GetComponent<Rigidbody>();
         bulletCaseRigid.AddForce(bulletCasePos.forward * Random.Range(-3, -2) + Vector3.up * Random.Range(2, 3), ForceMode.Impulse);
         bulletCaseRigid.AddTorque(Vector3.up * 10, ForceMode.Impulse);
-
     }
 }
 
